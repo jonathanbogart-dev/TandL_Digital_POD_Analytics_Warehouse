@@ -1,0 +1,146 @@
+version: 2
+
+models:
+  # ── Printful ──────────────────────────────────────────────────────────────
+
+  - name: stg_printful__orders
+    description: Printful orders cleaned, typed, and renamed from the raw source.
+    columns:
+      - name: order_id
+        description: Printful order ID (primary key).
+        tests: [not_null, unique]
+      - name: external_order_id
+        description: Order ID from the upstream storefront.
+      - name: created_at
+        description: Timestamp when the order was created.
+        tests: [not_null]
+      - name: updated_at
+        description: Timestamp of the last status update.
+      - name: ingested_at
+        description: Timestamp when this record was loaded into the warehouse.
+        tests: [not_null]
+      - name: order_status
+        description: Current order status (pending, inprocess, fulfilled, etc.).
+        tests: [not_null]
+      - name: order_total_usd
+        description: Total retail value of the order in USD.
+
+  # ── Printify ──────────────────────────────────────────────────────────────
+
+  - name: stg_printify__orders
+    description: Printify orders cleaned and renamed.
+    columns:
+      - name: order_id
+        description: Printify order ID.
+        tests: [not_null, unique]
+      - name: shop_id
+        description: Printify shop this order belongs to.
+        tests: [not_null]
+      - name: created_at
+        description: Order creation timestamp.
+        tests: [not_null]
+      - name: ingested_at
+        description: Warehouse ingestion timestamp.
+        tests: [not_null]
+      - name: order_status
+        description: Current order status.
+        tests: [not_null]
+      - name: order_total_usd
+        description: Order total in USD (converted from cents).
+
+  # ── Etsy ──────────────────────────────────────────────────────────────────
+
+  - name: stg_etsy__orders
+    description: Etsy receipts (orders) cleaned and renamed.
+    columns:
+      - name: order_id
+        description: Etsy receipt ID (primary key).
+        tests: [not_null, unique]
+      - name: customer_id
+        description: Etsy buyer user ID.
+      - name: created_at
+        description: Receipt creation timestamp.
+        tests: [not_null]
+      - name: ingested_at
+        description: Warehouse ingestion timestamp.
+        tests: [not_null]
+      - name: order_status
+        description: Receipt status (open, completed, cancelled).
+      - name: currency
+        description: Currency code for this order.
+      - name: order_total_usd
+        description: Grand total in USD.
+
+  # ── Shopify ───────────────────────────────────────────────────────────────
+
+  - name: stg_shopify__orders
+    description: Shopify orders cleaned and renamed.
+    columns:
+      - name: order_id
+        description: Shopify order ID (primary key).
+        tests: [not_null, unique]
+      - name: order_name
+        description: Human-readable order name (e.g. #1001).
+      - name: created_at
+        description: Order creation timestamp.
+        tests: [not_null]
+      - name: ingested_at
+        description: Warehouse ingestion timestamp.
+        tests: [not_null]
+      - name: customer_email
+        description: Customer email address.
+      - name: financial_status
+        description: Payment status (paid, refunded, pending, etc.).
+        tests:
+          - accepted_values:
+              values: ["paid", "pending", "refunded", "partially_refunded", "voided", "authorized"]
+      - name: fulfillment_status
+        description: Fulfillment status (null, partial, fulfilled).
+      - name: currency
+        description: Order currency code.
+      - name: order_total_usd
+        description: Total order value in USD.
+
+  # ── Stripe ────────────────────────────────────────────────────────────────
+
+  - name: stg_stripe__charges
+    description: Stripe charges cleaned and converted from cents to dollars.
+    columns:
+      - name: charge_id
+        description: Stripe charge ID (primary key).
+        tests: [not_null, unique]
+      - name: created_at
+        description: Charge creation timestamp.
+        tests: [not_null]
+      - name: ingested_at
+        description: Warehouse ingestion timestamp.
+        tests: [not_null]
+      - name: charge_status
+        description: Charge status (succeeded, pending, failed).
+        tests:
+          - accepted_values:
+              values: ["succeeded", "pending", "failed"]
+      - name: currency
+        description: Charge currency code.
+      - name: amount_usd
+        description: Charge amount in USD.
+
+  - name: stg_stripe__refunds
+    description: Stripe refunds cleaned and converted from cents to dollars.
+    columns:
+      - name: refund_id
+        description: Stripe refund ID (primary key).
+        tests: [not_null, unique]
+      - name: charge_id
+        description: ID of the original charge.
+        tests: [not_null]
+      - name: created_at
+        description: Refund creation timestamp.
+        tests: [not_null]
+      - name: ingested_at
+        description: Warehouse ingestion timestamp.
+        tests: [not_null]
+      - name: refund_status
+        description: Refund status.
+      - name: refund_amount_usd
+        description: Refund amount in USD.

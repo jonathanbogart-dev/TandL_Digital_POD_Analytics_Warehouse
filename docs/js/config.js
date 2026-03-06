@@ -9,13 +9,15 @@ const CONFIG = {
   /**
    * Base URL for your backend REST API.
    * Set to an empty string ("") to disable live API calls and use static
-   * data only (useful for local dev before a backend exists).
+   * data only (useful for GitHub Pages deployment without a backend).
    *
-   * Examples:
-   *   "https://api.yourdomain.com/v1"
+   * Local dev (FastAPI running via `make api-dev` or `docker compose up`):
    *   "http://localhost:8000/api"
+   *
+   * Production:
+   *   "https://api.yourdomain.com/api"
    */
-  API_BASE_URL: "",
+  API_BASE_URL: "",  // ← set to "http://localhost:8000/api" for local dev
 
   /**
    * Path prefix for static JSON data files (relative to this page).

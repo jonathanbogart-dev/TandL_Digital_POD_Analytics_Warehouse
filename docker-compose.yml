@@ -1,0 +1,87 @@
+version: "3.9"
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL — primary data warehouse for local development
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: pod_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-pod_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pod_password}
+      POSTGRES_DB: ${POSTGRES_DB:-pod_warehouse}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pod_user} -d ${POSTGRES_DB:-pod_warehouse}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # FastAPI backend — serves /kpis, /orders/recent, /revenue/by-source
+  # ---------------------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: pod_api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-pod_user}:${POSTGRES_PASSWORD:-pod_password}@postgres:5432/${POSTGRES_DB:-pod_warehouse}
+      ENV: development
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./api:/app/api
+
+  # ---------------------------------------------------------------------------
+  # Airflow — pipeline orchestration (lightweight single-node setup)
+  # ---------------------------------------------------------------------------
+  airflow:
+    image: apache/airflow:2.9-python3.11
+    container_name: pod_airflow
+    restart: unless-stopped
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER:-pod_user}:${POSTGRES_PASSWORD:-pod_password}@postgres:5432/airflow
+      AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW__CORE__FERNET_KEY:-}
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW__WEBSERVER__SECRET_KEY:-change_me_in_prod}
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      # Source API credentials forwarded from .env
+      PRINTFUL_API_KEY: ${PRINTFUL_API_KEY:-}
+      PRINTIFY_API_KEY: ${PRINTIFY_API_KEY:-}
+      PRINTIFY_SHOP_ID: ${PRINTIFY_SHOP_ID:-}
+      ETSY_API_KEY: ${ETSY_API_KEY:-}
+      ETSY_API_SECRET: ${ETSY_API_SECRET:-}
+      ETSY_SHOP_ID: ${ETSY_SHOP_ID:-}
+      SHOPIFY_STORE_URL: ${SHOPIFY_STORE_URL:-}
+      SHOPIFY_ACCESS_TOKEN: ${SHOPIFY_ACCESS_TOKEN:-}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./pipelines/dags:/opt/airflow/dags
+      - ./ingestion:/opt/airflow/ingestion
+      - airflow_logs:/opt/airflow/logs
+    command: >
+      bash -c "airflow db upgrade && airflow users create
+        --username admin --password admin
+        --firstname Admin --lastname User
+        --role Admin --email admin@example.com 2>/dev/null || true &&
+        airflow webserver & airflow scheduler"
+
+volumes:
+  postgres_data:
+  airflow_logs:

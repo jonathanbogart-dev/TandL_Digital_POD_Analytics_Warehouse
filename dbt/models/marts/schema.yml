@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: >
+      Analytics-ready fact table for all POD orders unified across Printful,
+      Printify, Etsy, and Shopify. One row per order. Grain: source + order_id.
+    columns:
+      - name: order_key
+        description: Globally unique surrogate key (source-order_id).
+        tests: [not_null, unique]
+      - name: order_id
+        description: Order ID from the originating source system.
+        tests: [not_null]
+      - name: source
+        description: Source system that generated the order.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["printful", "printify", "etsy", "shopify"]
+      - name: order_date
+        description: Calendar date the order was placed.
+        tests: [not_null]
+      - name: order_week
+        description: ISO week start date.
+      - name: order_month
+        description: Month start date.
+      - name: created_at
+        description: Full timestamp the order was created.
+        tests: [not_null]
+      - name: ingested_at
+        description: Timestamp the row was loaded into the warehouse.
+        tests: [not_null]
+      - name: order_status
+        description: Latest known status of the order.
+      - name: customer_email
+        description: Customer email (available from Shopify only).
+      - name: fulfillment_status
+        description: Fulfillment status (available from Shopify only).
+      - name: order_total_usd
+        description: Order gross total in USD.
+
+  - name: fct_revenue
+    description: >
+      Daily net revenue by source, aggregated from orders and Stripe charges.
+      Grain: (revenue_date, source).
+    columns:
+      - name: revenue_date
+        description: Calendar date for this revenue record.
+        tests: [not_null]
+      - name: source
+        description: Revenue source (printful, printify, etsy, shopify, stripe).
+        tests: [not_null]
+      - name: revenue_week
+        description: ISO week start date.
+      - name: revenue_month
+        description: Month start date.
+      - name: gross_revenue_usd
+        description: Total gross revenue before refunds.
+      - name: refunds_usd
+        description: Total refunds issued.
+      - name: net_revenue_usd
+        description: Net revenue after refunds.

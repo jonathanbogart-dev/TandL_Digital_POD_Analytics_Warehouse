@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "tandl-pod-analytics"
+version = "0.1.0"
+description = "T&L Digital POD Analytics Warehouse — ingestion, transformation, and API layer"
+requires-python = ">=3.11"
+dependencies = [
+    # API
+    "fastapi>=0.111",
+    "uvicorn[standard]>=0.30",
+    "pydantic>=2.7",
+    # Database
+    "psycopg2-binary>=2.9",
+    "sqlalchemy>=2.0",
+    # HTTP / ingestion
+    "httpx>=0.27",
+    "tenacity>=8.3",
+    "python-dotenv>=1.0",
+    # Data
+    "pandas>=2.2",
+    # Logging
+    "structlog>=24.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=5.0",
+    "httpx>=0.27",          # async test client
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "types-psycopg2",
+    "ipykernel>=6.29",
+    "notebook>=7.2",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["ingestion", "api", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]  # line length handled by formatter
+
+[tool.ruff.lint.isort]
+known-first-party = ["ingestion", "api"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "--cov=ingestion --cov=api --cov-report=term-missing -q"

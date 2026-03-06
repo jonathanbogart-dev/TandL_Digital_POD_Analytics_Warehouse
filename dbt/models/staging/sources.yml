@@ -1,0 +1,162 @@
+version: 2
+
+sources:
+  - name: printful
+    description: Raw data ingested from the Printful fulfillment API.
+    schema: raw_printful
+    loaded_at_field: _ingested_at
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
+    tables:
+      - name: orders
+        description: POD orders placed through Printful.
+        columns:
+          - name: id
+            description: Printful order ID (primary key).
+          - name: external_id
+            description: Order ID from the upstream storefront.
+          - name: status
+            description: Order status (draft, pending, inprocess, fulfilled, etc.).
+          - name: created
+            description: Unix timestamp when the order was created.
+          - name: updated
+            description: Unix timestamp of the last update.
+          - name: total_retail_costs_total
+            description: Total retail cost of the order in USD.
+
+      - name: products
+        description: Product catalog from Printful.
+        columns:
+          - name: id
+            description: Printful product ID.
+          - name: external_id
+            description: Product ID from the upstream storefront.
+          - name: name
+            description: Product name.
+
+  - name: printify
+    description: Raw data ingested from the Printify fulfillment API.
+    schema: raw_printify
+    loaded_at_field: _ingested_at
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
+    tables:
+      - name: orders
+        description: POD orders placed through Printify.
+        columns:
+          - name: id
+            description: Printify order ID.
+          - name: shop_id
+            description: Printify shop identifier.
+          - name: status
+            description: Order status.
+          - name: created_at
+            description: ISO 8601 timestamp when the order was created.
+          - name: total_price
+            description: Total price in cents.
+
+  - name: etsy
+    description: Raw data from the Etsy marketplace API.
+    schema: raw_etsy
+    loaded_at_field: _ingested_at
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 24, period: hour}
+    tables:
+      - name: receipts
+        description: Etsy order receipts (completed purchases).
+        columns:
+          - name: receipt_id
+            description: Etsy receipt ID (primary key).
+          - name: buyer_user_id
+            description: Etsy user ID of the buyer.
+          - name: creation_tsz
+            description: Unix timestamp of receipt creation.
+          - name: grandtotal
+            description: Total amount paid in the buyer's currency.
+          - name: currency_code
+            description: Currency code (e.g. USD).
+          - name: status
+            description: Receipt status (open, completed, cancelled).
+
+  - name: shopify
+    description: Raw data from the Shopify storefront API.
+    schema: raw_shopify
+    loaded_at_field: _ingested_at
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 24, period: hour}
+    tables:
+      - name: orders
+        description: Shopify orders.
+        columns:
+          - name: id
+            description: Shopify order ID.
+          - name: name
+            description: Human-readable order name (e.g. #1001).
+          - name: email
+            description: Customer email address.
+          - name: created_at
+            description: ISO 8601 timestamp when the order was created.
+          - name: financial_status
+            description: Payment status (paid, refunded, pending, etc.).
+          - name: fulfillment_status
+            description: Fulfillment status (null, partial, fulfilled).
+          - name: total_price
+            description: Total price of the order including tax and shipping.
+          - name: currency
+            description: Currency code.
+
+      - name: products
+        description: Shopify product catalog.
+        columns:
+          - name: id
+            description: Shopify product ID.
+          - name: title
+            description: Product title.
+          - name: product_type
+            description: Product type / category.
+          - name: created_at
+            description: Timestamp when the product was created.
+          - name: status
+            description: Product status (active, archived, draft).
+
+  - name: stripe
+    description: Raw data from the Stripe payments API.
+    schema: raw_stripe
+    loaded_at_field: _ingested_at
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
+    tables:
+      - name: charges
+        description: Individual Stripe charges.
+        columns:
+          - name: id
+            description: Stripe charge ID.
+          - name: amount
+            description: Charge amount in the smallest currency unit (cents).
+          - name: currency
+            description: Three-letter currency code.
+          - name: status
+            description: Charge status (succeeded, pending, failed).
+          - name: created
+            description: Unix timestamp of charge creation.
+          - name: description
+            description: Charge description.
+
+      - name: refunds
+        description: Stripe refunds.
+        columns:
+          - name: id
+            description: Stripe refund ID.
+          - name: charge_id
+            description: ID of the charge being refunded.
+          - name: amount
+            description: Refund amount in cents.
+          - name: status
+            description: Refund status.
+          - name: created
+            description: Unix timestamp of refund creation.

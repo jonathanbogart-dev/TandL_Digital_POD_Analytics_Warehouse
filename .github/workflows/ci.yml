@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  lint-python:
+    name: Lint Python (ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install ruff
+        run: pip install ruff
+      - name: Run ruff
+        run: ruff check .
+
+  lint-sql:
+    name: Lint SQL (sqlfluff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install sqlfluff
+        run: pip install sqlfluff sqlfluff-templater-dbt
+      - name: Lint dbt models
+        run: sqlfluff lint dbt/models/ --dialect postgres
+
+  unit-tests:
+    name: Unit Tests (pytest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+      - name: Run unit tests
+        run: pytest tests/unit/ -v --no-header
+
+  dbt-compile:
+    name: dbt compile check
+    runs-on: ubuntu-latest
+    env:
+      # Use a dummy connection — compile doesn't need a real DB
+      DBT_PROFILES_DIR: ${{ github.workspace }}/dbt
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dbt
+        run: pip install dbt-postgres
+      - name: Write CI profiles.yml
+        run: |
+          cat > dbt/profiles.yml <<'EOF'
+          pod_analytics:
+            target: ci
+            outputs:
+              ci:
+                type: postgres
+                host: localhost
+                port: 5432
+                user: ci
+                password: ci
+                dbname: ci
+                schema: public
+                threads: 1
+          EOF
+      - name: dbt deps
+        run: cd dbt && dbt deps
+      - name: dbt compile
+        run: cd dbt && dbt compile
