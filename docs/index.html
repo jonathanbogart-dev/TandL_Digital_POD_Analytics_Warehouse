@@ -326,22 +326,22 @@
 
       <div class="kpi-grid">
 
-        <!-- SIR: Net Volume -->
+        <!-- SIR: VPG -->
         <div class="kpi-card" onclick="openDashboard(2)" title="Open SIR Sales Performance">
           <div class="kpi-source"><span class="kpi-source-dot"></span>SIR Sales Performance</div>
-          <div class="kpi-label">Net Qualified Sales Volume</div>
-          <div class="kpi-value">$10.1M</div>
-          <span class="kpi-delta pos">▲ +6.0% vs Prior Period</span>
-          <div class="kpi-context">MTD across all sales centers · Prev period ≈ $9.5M</div>
+          <div class="kpi-label">Value Per Guest (VPG)</div>
+          <div class="kpi-value">$3,200</div>
+          <span class="kpi-delta pos">▲ +$120 vs Prior Period</span>
+          <div class="kpi-context">MTD · Exceeds $3,000 goal &nbsp;·&nbsp; Prev period $3,080</div>
         </div>
 
-        <!-- CW Survey: Responses -->
+        <!-- CW Survey: Avg Satisfaction -->
         <div class="kpi-card" onclick="openDashboard(1)" title="Open CW Survey Feedback">
           <div class="kpi-source"><span class="kpi-source-dot"></span>Club Wyndham Survey</div>
-          <div class="kpi-label">Total Survey Responses</div>
-          <div class="kpi-value">1,435</div>
-          <span class="kpi-delta neu">■ Current Wave</span>
-          <div class="kpi-context">955 Mobile App &nbsp;·&nbsp; 480 Web</div>
+          <div class="kpi-label">Avg Satisfaction Score</div>
+          <div class="kpi-value">2.85<span style="font-size:16px;font-weight:600;color:var(--muted)"> / 5</span></div>
+          <span class="kpi-delta neu">■ Mar 2026 Wave</span>
+          <div class="kpi-context">1,435 responses &nbsp;·&nbsp; 955 Mobile · 480 Web</div>
         </div>
 
         <!-- Voya: YTD Bookings -->
@@ -432,7 +432,7 @@
         desc:   "Survey feedback analysis and NPS insights across Mobile App and Web channels",
         icon:   "📋",
         bucket: "cx",
-        kpi:    "1,435 survey responses"
+        kpi:    "2.85/5 avg satisfaction"
       },
       {
         file:   "SIR Sales Performance Dashboard V0.3.html",
@@ -440,7 +440,7 @@
         desc:   "Sports Illustrated Resorts sales KPIs — tours, VPG, close rate, net volume",
         icon:   "📈",
         bucket: "sales",
-        kpi:    "$10.1M net volume MTD"
+        kpi:    "$3,200 VPG MTD"
       },
       {
         file:   "voya-dashboard-v3.html",
