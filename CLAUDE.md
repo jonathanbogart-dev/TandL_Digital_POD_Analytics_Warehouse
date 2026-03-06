@@ -27,6 +27,26 @@ TandL_Digital_POD_Analytics_Warehouse/
 ├── docker-compose.yml         # Local development stack
 ├── Makefile                   # Common commands (setup, test, lint, run)
 │
+├── .github/
+│   └── workflows/
+│       └── pages.yml          # GitHub Actions: auto-deploy docs/ to GitHub Pages on push to main
+│
+├── docs/                      # Static website (served via GitHub Pages)
+│   ├── .nojekyll              # Prevents GitHub Pages from running Jekyll on the folder
+│   ├── index.html             # Main dashboard page
+│   ├── css/
+│   │   └── styles.css         # Base styles (no external CSS dependencies)
+│   ├── js/
+│   │   ├── config.js          # API base URL, endpoint paths, static file names — edit this first
+│   │   ├── api.js             # REST API fetch helpers (GET with timeout + error handling)
+│   │   ├── data.js            # Static JSON loaders + API→static fallback logic
+│   │   ├── charts.js          # Pure-HTML/CSS bar chart renderer + formatting helpers
+│   │   └── main.js            # Page entry point: wires data fetches to DOM
+│   └── data/
+│       ├── kpis.json          # Sample KPI data (replace with real data or API)
+│       ├── orders.json        # Sample recent orders
+│       └── revenue.json       # Sample revenue by source
+│
 ├── dbt/                       # dbt data transformation project
 │   ├── dbt_project.yml
 │   ├── profiles.yml.example
@@ -70,6 +90,74 @@ TandL_Digital_POD_Analytics_Warehouse/
 ```
 
 > **Note:** The repository is currently in initial setup. Add files following this structure as the project grows.
+
+---
+
+## Static Website (docs/)
+
+The `docs/` folder is a self-contained static website served via GitHub Pages. It displays POD analytics data populated by JavaScript — no backend server or build step required.
+
+### Architecture
+
+```
+index.html  →  config.js  →  api.js  (live REST API)
+                          →  data.js (static JSON fallback)
+                          →  charts.js (rendering helpers)
+                          →  main.js (page wiring)
+```
+
+Data flow for each widget:
+1. `main.js` calls a `get*()` function from `data.js`
+2. `data.js` tries the live API (via `api.js`) if `CONFIG.API_BASE_URL` is set
+3. On failure or if API is unconfigured, falls back to a static `.json` file in `docs/data/`
+4. Result is passed to a render function in `main.js` which writes to the DOM
+
+### How to Connect a Live API
+
+Edit `docs/js/config.js`:
+```js
+const CONFIG = {
+  API_BASE_URL: "https://api.yourdomain.com/v1",  // ← set this
+  API_ENDPOINTS: {
+    kpis:    "/kpis",
+    orders:  "/orders/recent",
+    revenue: "/revenue/by-source",
+  },
+  ...
+};
+```
+
+When `API_BASE_URL` is non-empty, the site fetches live data. Static JSON in `docs/data/` is the automatic fallback.
+
+### Adding a New Page
+
+1. Copy `docs/index.html` to a new file (e.g. `docs/products.html`)
+2. Add new data shape to a JSON file in `docs/data/`
+3. Add the endpoint to `CONFIG.API_ENDPOINTS` and `CONFIG.STATIC_FILES` in `config.js`
+4. Add fetch + render logic to `main.js` (or a new page-specific JS file)
+5. Link the new page from `index.html`
+
+### GitHub Pages Deployment
+
+- **Trigger**: Any push to `main` that touches `docs/**` automatically deploys via `.github/workflows/pages.yml`
+- **Manual trigger**: Go to Actions → "Deploy to GitHub Pages" → Run workflow
+- **First-time setup**: In GitHub repo Settings → Pages → Source → select "GitHub Actions"
+- The site URL will be: `https://<org>.github.io/TandL_Digital_POD_Analytics_Warehouse/`
+
+### Local Development
+
+No build step needed. Open directly in a browser **or** serve with any static file server:
+```bash
+# Python (built-in)
+cd docs && python3 -m http.server 8080
+
+# Node (npx, no install)
+cd docs && npx serve .
+```
+
+Then visit `http://localhost:8080`.
+
+> **Note:** Opening `index.html` directly as a `file://` URL will cause `fetch()` CORS errors for the JSON files. Always use a local server.
 
 ---
 

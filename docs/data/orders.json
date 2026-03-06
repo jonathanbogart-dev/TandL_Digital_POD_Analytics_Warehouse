@@ -1,0 +1,12 @@
+[
+  { "order_id": "ORD-10042", "order_date": "2026-03-05", "source": "Etsy",     "status": "Fulfilled",  "total_usd": 38.50 },
+  { "order_id": "ORD-10041", "order_date": "2026-03-05", "source": "Shopify",  "status": "Processing", "total_usd": 64.00 },
+  { "order_id": "ORD-10040", "order_date": "2026-03-04", "source": "Etsy",     "status": "Fulfilled",  "total_usd": 22.99 },
+  { "order_id": "ORD-10039", "order_date": "2026-03-04", "source": "Shopify",  "status": "Fulfilled",  "total_usd": 115.00 },
+  { "order_id": "ORD-10038", "order_date": "2026-03-03", "source": "Etsy",     "status": "Pending",    "total_usd": 19.99 },
+  { "order_id": "ORD-10037", "order_date": "2026-03-03", "source": "Shopify",  "status": "Fulfilled",  "total_usd": 47.50 },
+  { "order_id": "ORD-10036", "order_date": "2026-03-02", "source": "Etsy",     "status": "Cancelled",  "total_usd": 29.00 },
+  { "order_id": "ORD-10035", "order_date": "2026-03-02", "source": "Shopify",  "status": "Fulfilled",  "total_usd": 88.00 },
+  { "order_id": "ORD-10034", "order_date": "2026-03-01", "source": "Etsy",     "status": "Fulfilled",  "total_usd": 34.50 },
+  { "order_id": "ORD-10033", "order_date": "2026-03-01", "source": "Shopify",  "status": "Fulfilled",  "total_usd": 52.00 }
+]

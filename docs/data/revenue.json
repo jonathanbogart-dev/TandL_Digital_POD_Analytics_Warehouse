@@ -1,0 +1,5 @@
+[
+  { "source": "Etsy",    "revenue_usd": 28540 },
+  { "source": "Shopify", "revenue_usd": 19870 },
+  { "source": "Other",   "revenue_usd": 5910 }
+]
