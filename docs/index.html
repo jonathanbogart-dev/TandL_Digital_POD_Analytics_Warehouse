@@ -20,11 +20,18 @@
       --sb-text:#E2E8F0;
       --sb-text-2:#B0BFCF;
       --sb-label:#8FA6BF;
-      --sb-border:rgba(255,255,255,.10);
+      --ok:     #059669;
+      --ok-bg:  rgba(5,150,105,.08);
+      --ok-border:rgba(5,150,105,.20);
+      --neg:    #DC2626;
+      --neg-bg: rgba(220,38,38,.08);
+      --neg-border:rgba(220,38,38,.20);
+      --neu-bg: rgba(75,94,118,.07);
       --sh: 0 2px 12px rgba(0,0,0,.08);
       --sh-card: 0 4px 20px rgba(0,0,0,.07);
       --r: 10px;
       --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
     [data-theme="dark"] {
@@ -39,6 +46,13 @@
       --text:   #E2E8F0;
       --text-2: #CBD5E1;
       --muted:  #94A3B8;
+      --ok:     #34D399;
+      --ok-bg:  rgba(52,211,153,.10);
+      --ok-border:rgba(52,211,153,.25);
+      --neg:    #FB7185;
+      --neg-bg: rgba(251,113,133,.10);
+      --neg-border:rgba(251,113,133,.25);
+      --neu-bg: rgba(148,163,184,.08);
       --sh: 0 2px 16px rgba(0,0,0,.35);
       --sh-card:0 4px 24px rgba(0,0,0,.30);
     }
@@ -48,55 +62,35 @@
 
     /* ── Top bar ── */
     .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 24px;
-      height: 56px;
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 24px; height: 56px;
       background: var(--navy);
       box-shadow: 0 2px 8px rgba(0,0,0,.20);
     }
     .brand-icon {
-      width: 34px; height: 34px;
-      background: var(--accent);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 15px; font-weight: 900; color: #fff;
-      flex-shrink: 0;
+      width: 34px; height: 34px; background: var(--accent);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 900; color: #fff; flex-shrink: 0;
     }
-    .brand-name {
-      font-size: 15px; font-weight: 800; color: var(--sb-text);
-    }
-    .brand-sep {
-      color: rgba(255,255,255,.25);
-      font-size: 18px;
-      font-weight: 200;
-      padding: 0 2px;
-    }
-    .brand-sub {
-      font-size: 13px; font-weight: 500; color: var(--sb-text-2);
-    }
+    .brand-name { font-size: 15px; font-weight: 800; color: var(--sb-text); }
+    .brand-sep  { color: rgba(255,255,255,.25); font-size: 18px; font-weight: 200; padding: 0 2px; }
+    .brand-sub  { font-size: 13px; font-weight: 500; color: var(--sb-text-2); }
     .topbar-spacer { flex: 1; }
     .theme-toggle {
-      width: 34px; height: 34px;
-      border-radius: 8px;
+      width: 34px; height: 34px; border-radius: 8px;
       border: 1px solid rgba(255,255,255,.15);
       background: rgba(255,255,255,.06);
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; color: var(--sb-text-2);
-      transition: background .2s;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: var(--sb-text-2); transition: background .2s;
     }
     .theme-toggle:hover { background: rgba(255,255,255,.12); }
-    .icon-sun { display: none; }
+    .icon-sun  { display: none; }
     .icon-moon { display: inline; }
     [data-theme="dark"] .icon-sun  { display: inline; }
     [data-theme="dark"] .icon-moon { display: none; }
 
-    /* ── Page content ── */
+    /* ── Page ── */
     .page { max-width: 1100px; margin: 0 auto; padding: 40px 24px 64px; }
 
     .page-hero { margin-bottom: 36px; }
@@ -113,11 +107,9 @@
     }
     .section-header h2 {
       font-size: 11px; font-weight: 800; text-transform: uppercase;
-      letter-spacing: .09em; color: var(--muted);
+      letter-spacing: .09em; color: var(--muted); white-space: nowrap;
     }
-    .section-line {
-      flex: 1; height: 1px; background: var(--border);
-    }
+    .section-line { flex: 1; height: 1px; background: var(--border); }
     .badge-count {
       font-size: 11px; font-weight: 700;
       background: var(--accent-light); color: var(--accent);
@@ -125,11 +117,81 @@
       border-radius: 9999px; padding: 1px 8px;
     }
 
-    /* ── Dashboard card grid ── */
+    /* ════════════════════════════════════════
+       BUSINESS OVERVIEW — KPI CARDS
+    ════════════════════════════════════════ */
+    .overview-section { margin-bottom: 44px; }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 18px 20px 16px;
+      box-shadow: var(--sh-card);
+      position: relative; overflow: hidden;
+      cursor: pointer;
+      transition: box-shadow .18s, transform .18s, border-color .18s;
+    }
+    .kpi-card::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--kc, var(--accent));
+    }
+    .kpi-card:hover {
+      box-shadow: 0 8px 28px rgba(37,99,235,.13);
+      transform: translateY(-2px);
+      border-color: var(--kc, var(--accent));
+    }
+    .kpi-card:nth-child(1) { --kc: #2563EB; }
+    .kpi-card:nth-child(2) { --kc: #7C3AED; }
+    .kpi-card:nth-child(3) { --kc: #0891B2; }
+    .kpi-card:nth-child(4) { --kc: #059669; }
+
+    .kpi-source {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--muted); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .kpi-source-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--kc, var(--accent)); flex-shrink: 0;
+    }
+    .kpi-label {
+      font-size: 11.5px; font-weight: 600; color: var(--muted);
+      margin-bottom: 4px; line-height: 1.3;
+    }
+    .kpi-value {
+      font-family: var(--mono);
+      font-size: 28px; font-weight: 900; color: var(--text);
+      letter-spacing: -.03em; line-height: 1; margin-bottom: 8px;
+    }
+    .kpi-delta {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 700;
+      padding: 2px 7px; border-radius: 4px;
+    }
+    .kpi-delta.pos { background: var(--ok-bg); color: var(--ok); border: 1px solid var(--ok-border); }
+    .kpi-delta.neg { background: var(--neg-bg); color: var(--neg); border: 1px solid var(--neg-border); }
+    .kpi-delta.neu { background: var(--neu-bg); color: var(--muted); border: 1px solid var(--border); }
+    .kpi-context {
+      font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.45;
+    }
+
+    /* ════════════════════════════════════════
+       DASHBOARD BUCKETS
+    ════════════════════════════════════════ */
+    .bucket { margin-bottom: 40px; }
+
     .card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
+      gap: 14px;
     }
 
     .dash-card {
@@ -137,35 +199,25 @@
       border: 1px solid var(--border);
       border-radius: var(--r);
       padding: 20px 22px;
-      cursor: pointer;
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      cursor: pointer; text-decoration: none;
+      display: flex; flex-direction: column; gap: 10px;
       box-shadow: var(--sh-card);
       transition: border-color .18s, box-shadow .18s, transform .18s;
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
     .dash-card::before {
       content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: var(--accent);
-      opacity: 0;
-      transition: opacity .18s;
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent); opacity: 0; transition: opacity .18s;
     }
     .dash-card:hover {
       border-color: var(--accent);
-      box-shadow: 0 8px 28px rgba(37,99,235,.15);
+      box-shadow: 0 8px 28px rgba(37,99,235,.14);
       transform: translateY(-2px);
     }
     .dash-card:hover::before { opacity: 1; }
 
-    .card-top {
-      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
-    }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
     .card-icon {
       width: 38px; height: 38px; border-radius: 9px;
       background: var(--accent-light);
@@ -175,28 +227,24 @@
     }
     .card-arrow {
       color: var(--muted); font-size: 18px; line-height: 1;
-      transition: color .18s, transform .18s;
-      padding-top: 2px;
+      transition: color .18s, transform .18s; padding-top: 2px;
     }
-    .dash-card:hover .card-arrow {
-      color: var(--accent);
-      transform: translateX(3px);
-    }
-
-    .card-title {
-      font-size: 14px; font-weight: 700; color: var(--text);
-      line-height: 1.35;
-    }
-    .card-desc {
-      font-size: 12.5px; color: var(--muted); line-height: 1.5;
+    .dash-card:hover .card-arrow { color: var(--accent); transform: translateX(3px); }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.35; }
+    .card-desc  { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+    .card-kpi-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600;
+      background: var(--accent-light); color: var(--accent);
+      border: 1px solid rgba(37,99,235,.18);
+      border-radius: 9999px; padding: 2px 9px;
+      align-self: flex-start;
     }
 
     /* ── Footer ── */
     .site-footer {
-      text-align: center;
-      padding: 24px;
-      color: var(--muted);
-      font-size: 12px;
+      text-align: center; padding: 24px;
+      color: var(--muted); font-size: 12px;
       border-top: 1px solid var(--border);
     }
 
@@ -204,67 +252,45 @@
     body.viewer-active { overflow: hidden; }
 
     .viewer-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      flex-direction: column;
-      background: var(--bg);
+      display: none; position: fixed; inset: 0; z-index: 200;
+      flex-direction: column; background: var(--bg);
     }
     .viewer-overlay.open { display: flex; }
 
     .viewer-nav {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0 16px;
-      height: 52px;
-      background: var(--navy);
-      flex-shrink: 0;
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 16px; height: 52px;
+      background: var(--navy); flex-shrink: 0;
       box-shadow: 0 2px 8px rgba(0,0,0,.20);
     }
     .nav-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
+      display: inline-flex; align-items: center; gap: 5px;
       padding: 5px 13px;
       border: 1px solid rgba(255,255,255,.15);
       border-radius: 7px;
       background: rgba(255,255,255,.06);
-      color: var(--sb-text-2);
-      font-size: 12.5px;
-      font-family: var(--font);
-      cursor: pointer;
-      transition: background .15s, color .15s;
-      white-space: nowrap;
+      color: var(--sb-text-2); font-size: 12.5px;
+      font-family: var(--font); cursor: pointer;
+      transition: background .15s, color .15s; white-space: nowrap;
     }
-    .nav-btn:hover:not(:disabled) {
-      background: rgba(255,255,255,.14);
-      color: #fff;
-    }
+    .nav-btn:hover:not(:disabled) { background: rgba(255,255,255,.14); color: #fff; }
     .nav-btn:disabled { opacity: .35; cursor: default; }
-
     .viewer-title {
-      flex: 1;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--sb-text);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      flex: 1; text-align: center; font-size: 13px; font-weight: 700;
+      color: var(--sb-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .viewer-counter {
-      font-size: 11.5px;
-      color: var(--sb-text-2);
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 9999px;
-      padding: 2px 10px;
-      white-space: nowrap;
+      font-size: 11.5px; color: var(--sb-text-2);
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+      border-radius: 9999px; padding: 2px 10px; white-space: nowrap;
     }
-
     .viewer-frame { flex: 1; border: none; width: 100%; background: #fff; }
+
+    @media (max-width: 640px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .kpi-value { font-size: 22px; }
+      .card-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -284,20 +310,92 @@
 
   <!-- ── Main page ── -->
   <main class="page">
+
     <div class="page-hero">
       <h1>Dashboard Library</h1>
-      <p>Select a dashboard below to explore. Use arrow keys or the navigation bar to move between dashboards.</p>
+      <p>Business overview across all active dashboards. Select a dashboard below to explore in full.</p>
     </div>
 
-    <div class="section-header">
-      <h2>Dashboards</h2>
-      <div class="section-line"></div>
-      <span class="badge-count" id="dash-count">0</span>
+    <!-- ════ BUSINESS OVERVIEW ════ -->
+    <div class="overview-section">
+      <div class="section-header">
+        <h2>Business Overview</h2>
+        <div class="section-line"></div>
+        <span class="badge-count">MTD / YTD</span>
+      </div>
+
+      <div class="kpi-grid">
+
+        <!-- SIR: Net Volume -->
+        <div class="kpi-card" onclick="openDashboard(2)" title="Open SIR Sales Performance">
+          <div class="kpi-source"><span class="kpi-source-dot"></span>SIR Sales Performance</div>
+          <div class="kpi-label">Net Qualified Sales Volume</div>
+          <div class="kpi-value">$10.1M</div>
+          <span class="kpi-delta pos">▲ +6.0% vs Prior Period</span>
+          <div class="kpi-context">MTD across all sales centers · Prev period ≈ $9.5M</div>
+        </div>
+
+        <!-- CW Survey: Responses -->
+        <div class="kpi-card" onclick="openDashboard(1)" title="Open CW Survey Feedback">
+          <div class="kpi-source"><span class="kpi-source-dot"></span>Club Wyndham Survey</div>
+          <div class="kpi-label">Total Survey Responses</div>
+          <div class="kpi-value">1,435</div>
+          <span class="kpi-delta neu">■ Current Wave</span>
+          <div class="kpi-context">955 Mobile App &nbsp;·&nbsp; 480 Web</div>
+        </div>
+
+        <!-- Voya: YTD Bookings -->
+        <div class="kpi-card" onclick="openDashboard(3)" title="Open Voya Dashboard">
+          <div class="kpi-source"><span class="kpi-source-dot"></span>Voya Dashboard</div>
+          <div class="kpi-label">YTD Bookings Generated</div>
+          <div class="kpi-value">329</div>
+          <span class="kpi-delta pos">▲ 27.4% link conv. rate</span>
+          <div class="kpi-context">From 1,200 booking links sent YTD</div>
+        </div>
+
+        <!-- 2026 Digital: New Owner Visitors -->
+        <div class="kpi-card" onclick="openDashboard(0)" title="Open 2026 Digital Initiatives">
+          <div class="kpi-source"><span class="kpi-source-dot"></span>2026 Digital Initiatives</div>
+          <div class="kpi-label">New Owner Unique Visitors</div>
+          <div class="kpi-value">24,500</div>
+          <span class="kpi-delta pos">▲ +2.2% vs LYTD</span>
+          <div class="kpi-context">Prev year: ~23,970 &nbsp;·&nbsp; Conv. rate 15.0%</div>
+        </div>
+
+      </div>
+    </div>
+    <!-- end Business Overview -->
+
+    <!-- ════ BUCKET: SALES & REVENUE ════ -->
+    <div class="bucket">
+      <div class="section-header">
+        <h2>Sales &amp; Revenue</h2>
+        <div class="section-line"></div>
+        <span class="badge-count">1 dashboard</span>
+      </div>
+      <div class="card-grid" id="grid-sales"></div>
     </div>
 
-    <div class="card-grid" id="card-grid">
-      <!-- Populated by JS -->
+    <!-- ════ BUCKET: CUSTOMER & EXPERIENCE ════ -->
+    <div class="bucket">
+      <div class="section-header">
+        <h2>Customer &amp; Experience</h2>
+        <div class="section-line"></div>
+        <span class="badge-count">2 dashboards</span>
+      </div>
+      <div class="card-grid" id="grid-cx"></div>
     </div>
+
+    <!-- ════ BUCKET: STRATEGIC PORTFOLIO ════ -->
+    <div class="bucket">
+      <div class="section-header">
+        <h2>Strategic Portfolio</h2>
+        <div class="section-line"></div>
+        <span class="badge-count">1 dashboard</span>
+      </div>
+      <div class="card-grid" id="grid-portfolio"></div>
+    </div>
+
   </main>
 
   <footer class="site-footer">
@@ -318,51 +416,62 @@
 
   <script>
     // ── Dashboard registry ──
+    // bucket: "sales" | "cx" | "portfolio"
     const DASHBOARDS = [
       {
-        file:  "2026 Digital Portfolio Initiative Dashboard V0.2.html",
-        title: "2026 Digital Initiatives",
-        desc:  "Executive view of 2026 digital portfolio initiatives",
-        icon:  "📊"
+        file:   "2026 Digital Portfolio Initiative Dashboard V0.2.html",
+        title:  "2026 Digital Initiatives",
+        desc:   "Executive view of 2026 digital portfolio initiatives across all verticals",
+        icon:   "📊",
+        bucket: "portfolio",
+        kpi:    "24,500 new owner visitors"
       },
       {
-        file:  "CW_Survey_Feedback_Dashboard_v2.html",
-        title: "Club Wyndham Survey Feedback",
-        desc:  "Club Wyndham survey feedback analysis and insights",
-        icon:  "📋"
+        file:   "CW_Survey_Feedback_Dashboard_v2.html",
+        title:  "Club Wyndham Survey Feedback",
+        desc:   "Survey feedback analysis and NPS insights across Mobile App and Web channels",
+        icon:   "📋",
+        bucket: "cx",
+        kpi:    "1,435 survey responses"
       },
       {
-        file:  "SIR Sales Performance Dashboard V0.3.html",
-        title: "SIR Sales Performance",
-        desc:  "Sports Illustrated Resorts sales performance metrics",
-        icon:  "📈"
+        file:   "SIR Sales Performance Dashboard V0.3.html",
+        title:  "SIR Sales Performance",
+        desc:   "Sports Illustrated Resorts sales KPIs — tours, VPG, close rate, net volume",
+        icon:   "📈",
+        bucket: "sales",
+        kpi:    "$10.1M net volume MTD"
       },
       {
-        file:  "voya-dashboard-v3.html",
-        title: "Voya Dashboard",
-        desc:  "Sales, fulfillment, and product performance for the Voya storefront",
-        icon:  "🏪"
+        file:   "voya-dashboard-v3.html",
+        title:  "Voya Dashboard",
+        desc:   "Chatbot engagement, booking links, and conversation analytics for Voya",
+        icon:   "🏪",
+        bucket: "cx",
+        kpi:    "329 YTD bookings"
       }
     ];
 
     // ── DOM refs ──
-    const cardGrid     = document.getElementById("card-grid");
-    const dashCount    = document.getElementById("dash-count");
-    const viewer       = document.getElementById("viewer");
-    const viewerFrame  = document.getElementById("viewer-frame");
-    const viewerTitle  = document.getElementById("viewer-title");
-    const viewerCounter= document.getElementById("viewer-counter");
-    const btnBack      = document.getElementById("btn-back");
-    const btnPrev      = document.getElementById("btn-prev");
-    const btnNext      = document.getElementById("btn-next");
+    const viewer        = document.getElementById("viewer");
+    const viewerFrame   = document.getElementById("viewer-frame");
+    const viewerTitle   = document.getElementById("viewer-title");
+    const viewerCounter = document.getElementById("viewer-counter");
+    const btnBack       = document.getElementById("btn-back");
+    const btnPrev       = document.getElementById("btn-prev");
+    const btnNext       = document.getElementById("btn-next");
 
     let currentIndex = -1;
 
-    // ── Build cards ──
-    dashCount.textContent = DASHBOARDS.length;
+    // ── Build bucketed card grids ──
+    const gridMap = { sales: "grid-sales", cx: "grid-cx", portfolio: "grid-portfolio" };
+
     DASHBOARDS.forEach(function(d, i) {
+      var grid = document.getElementById(gridMap[d.bucket]);
+      if (!grid) return;
+
       var card = document.createElement("a");
-      card.href = "#";
+      card.href      = "#";
       card.className = "dash-card";
       card.innerHTML =
         '<div class="card-top">' +
@@ -370,12 +479,13 @@
           '<span class="card-arrow">&#8594;</span>' +
         '</div>' +
         '<div class="card-title">' + d.title + '</div>' +
-        '<div class="card-desc">' + d.desc + '</div>';
+        '<div class="card-desc">' + d.desc + '</div>' +
+        '<span class="card-kpi-pill">' + d.kpi + '</span>';
       card.addEventListener("click", function(e) {
         e.preventDefault();
         openDashboard(i);
       });
-      cardGrid.appendChild(card);
+      grid.appendChild(card);
     });
 
     // ── Open / close / navigate ──
@@ -427,7 +537,7 @@
     // ── Deep-link on load ──
     if (window.location.hash) {
       var file = decodeURIComponent(window.location.hash.slice(1));
-      var idx = DASHBOARDS.findIndex(function(d) { return d.file === file; });
+      var idx  = DASHBOARDS.findIndex(function(d) { return d.file === file; });
       if (idx !== -1) openDashboard(idx);
     }
 
@@ -436,7 +546,7 @@
     if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
     document.getElementById("theme-toggle").addEventListener("click", function() {
       var current = document.documentElement.getAttribute("data-theme");
-      var next = current === "dark" ? "light" : "dark";
+      var next    = current === "dark" ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", next);
       localStorage.setItem("theme", next);
     });
