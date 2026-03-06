@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>2026 Digital Initiatives – Executive Excel View</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* ========================================
+      CSS VARIABLES & THEME CONFIGURATION
+      ========================================
+    */
+    :root {
+      --bg: #F3F4F6;
+      --surface: #F9FAFB;
+      --text: #111827;
+      --muted: #6B7280;
+      --grid: #E5E7EB;
+      --shadow: 0 4px 16px rgba(0, 0, 0, .06);
+      
+      /* Header Background */
+      --header-bg: #F1F5F9; 
+
+      /* Status Colors */
+      --accent: #0A84FF;
+      --ok: #34C759;
+      --warn: #FF9F0A;
+      --danger: #FF3B30;
+      --done: #5AC8FA;
+      
+      /* Delta Colors */
+      --pos: #0654B5;
+      --neg: #B00020;
+      
+      /* Value Prop Colors */
+      --vp-guest-bg: #F3E8FF; --vp-guest-text: #6B21A8; 
+      --vp-ops-bg: #DBEAFE; --vp-ops-text: #1E40AF;   
+      --vp-sales-bg: #FFEDD5; --vp-sales-text: #9A3412; 
+      --vp-growth-bg: #D1FAE5; --vp-growth-text: #065F46;
+
+      /* Fonts */
+      --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      --font-tabular: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      
+      /* Dimensions */
+      --spark-w: clamp(140px, 15vw, 240px);
+      --spark-h: 24px;
+    }
+
+    /* ========================================
+      GLOBAL RESET & LAYOUT
+      ========================================
+    */
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+    }
+
+    body {
+      font-family: var(--font-ui);
+      line-height: 1.35;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 24px 20px 60px; /* Added bottom padding for scroll clearance */
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+
+    /* ========================================
+      HEADER & SIGNALS SECTIONS
+      ========================================
+    */
+    header.page-title {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    header.page-title h1 {
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      font-size: 22px;
+    }
+
+    header.page-title .path {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .signals {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 16px 0 20px;
+    }
+
+    .chip {
+      background: var(--surface);
+      border: 1px solid var(--grid);
+      border-radius: 14px;
+      padding: 10px 14px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .chip.top .dot { background: var(--ok); }
+    .chip.block .dot { background: var(--danger); }
+    .chip.vol .dot { background: var(--warn); }
+    
+    .chip h3 { margin: 0; font-size: 14px; }
+    .chip p { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
+
+    /* ========================================
+      KPI SUMMARY SECTION
+      ========================================
+    */
+    .kpi-container {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .kpi-row-header {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kpi-row-header::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--grid);
+    }
+
+    .cards-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--grid);
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card .label { 
+      font-size: 12px; 
+      color: var(--muted); 
+      margin-bottom: 6px; 
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .card .value { 
+      font-size: 20px; 
+      font-weight: 700; 
+      letter-spacing: -0.02em; 
+      font-variant-numeric: tabular-nums; 
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .card .sub-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-left: 6px;
+    }
+    
+    /* Comparison / Trend Style */
+    .card .comp {
+      font-size: 11px;
+      margin-top: 6px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .comp.pos { color: var(--ok); }
+    .comp.neg { color: var(--neg); }
+
+    /* Tooltips */
+    .has-tooltip {
+      cursor: help;
+      text-decoration: underline dotted var(--muted);
+      position: relative;
+    }
+
+    .has-tooltip:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      transform: translateY(-8px);
+      background: #1F2937;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      width: 220px;
+      z-index: 100;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      font-weight: 400;
+      pointer-events: none;
+    }
+
+    /* Utilities */
+    .text-ok { color: var(--ok); font-weight: 600; }
+    .text-neg { color: var(--neg); font-weight: 600; }
+    .delta.pos { color: var(--pos); font-weight: 600; }
+    .delta.neg { color: var(--neg); font-weight: 600; }
+    
+    /* ========================================
+      SEARCH FEATURE
+      ========================================
+    */
+    .search-container {
+      position: sticky;
+      top: 0;
+      left: 0;
+      z-index: 30;
+      background: #fff;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--grid);
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02); 
+    }
+    
+    .search-wrapper {
+      position: relative;
+      width: 300px;
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+    }
+    
+    #tableSearch {
+      width: 100%;
+      padding: 8px 12px 8px 32px;
+      border: 1px solid var(--grid);
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: var(--font-ui);
+      background: var(--surface);
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+    
+    #tableSearch:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.1);
+    }
+
+    tr.hidden { display: none; }
+
+    /* ========================================
+      MAIN DATA TABLE STYLES
+      ========================================
+    */
+    .table-wrap {
+      background: #fff;
+      border: 1px solid var(--grid);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      
+      /* SCROLL CONFIGURATION: 
+         1. overflow: auto allows both X and Y scrolling within this box.
+         2. max-height: 75vh ensures the box never grows larger than 75% of the screen.
+            This forces the scrollbar to appear at the bottom of the viewport 
+            even if the list is very long. 
+      */
+      overflow: auto;
+      max-height: 75vh;
+      
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 13px;
+      table-layout: fixed;
+      min-width: 1600px; /* Forces horizontal scroll on smaller screens */
+    }
+
+    /* COLUMN WIDTHS */
+    col.col-init { width: 220px; }
+    col.col-desc { width: 240px; }
+    col.col-perf { width: 240px; }
+    col.col-owner { width: 140px; }
+    col.col-value { width: 180px; } 
+    col.col-status { width: 110px; }
+    col.col-start { width: 100px; }
+    col.col-astart { width: 100px; }
+    col.col-expq { width: 120px; }
+    col.col-acomp { width: 120px; }
+    col.col-cost { width: 100px; }
+    col.col-roi { width: 100px; }
+    col.col-actroi { width: 100px; }
+    col.col-kpi { width: 140px; }
+    col.col-actual { width: 90px; }
+    col.col-proj { width: 90px; }
+    col.col-goal { width: 90px; }
+    col.col-delta { width: 100px; }
+    col.col-kpiCharts { width: 200px; }
+
+    /* Table Header Styling */
+    thead th {
+      position: sticky;
+      /* Top offset accounts for the search bar height (approx 53px) */
+      top: 53px; 
+      background: var(--header-bg); 
+      z-index: 20;
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--grid);
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    tbody td {
+      border-bottom: 1px solid var(--grid);
+      padding: 8px 12px;
+      vertical-align: middle;
+    }
+
+    /* ZEBRA STRIPING */
+    tbody tr:nth-child(6n+1), tbody tr:nth-child(6n+2), tbody tr:nth-child(6n+3) { background-color: #F8FAFC; }
+    tbody tr:nth-child(6n+1) .sticky, tbody tr:nth-child(6n+2) .sticky, tbody tr:nth-child(6n+3) .sticky { background-color: #F8FAFC; }
+    tbody tr:nth-child(6n+4) .sticky, tbody tr:nth-child(6n+5) .sticky, tbody tr:nth-child(6n+6) .sticky { background-color: #FFFFFF; }
+
+    /* STICKY COLUMN (LEFT) */
+    th.sticky, td.sticky {
+      position: sticky;
+      left: 0;
+      z-index: 15; /* Higher than normal cells, lower than Thead */
+      background: inherit; 
+      box-shadow: 4px 0 8px -2px rgba(0,0,0,0.05), 1px 0 0 var(--grid);
+      border-right: 1px solid transparent; 
+    }
+    
+    /* Sticky Corner (Top Left) needs highest Z-index */
+    thead th.sticky {
+      z-index: 25;
+      background: var(--header-bg);
+    }
+
+    /* Alignment & Cells */
+    td.center { text-align: center; }
+    td.right { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-tabular); }
+
+    .status { display: inline-block; padding: 4px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .status.on { color: #fff; background: var(--ok); }
+    .status.delay { color: #fff; background: var(--warn); }
+    .status.done { color: #fff; background: var(--done); }
+    .status.block { color: #fff; background: var(--danger); }
+
+    .vp-pill { display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; }
+    .vp-pill.guest { background: var(--vp-guest-bg); color: var(--vp-guest-text); border: 1px solid #E9D5FF; }
+    .vp-pill.ops { background: var(--vp-ops-bg); color: var(--vp-ops-text); border: 1px solid #BFDBFE; }
+    .vp-pill.sales { background: var(--vp-sales-bg); color: var(--vp-sales-text); border: 1px solid #FED7AA; }
+    .vp-pill.growth { background: var(--vp-growth-bg); color: var(--vp-growth-text); border: 1px solid #A7F3D0; }
+
+    .bu-cell { display: flex; flex-direction: column; line-height: 1.25; }
+    .bu-text { font-weight: 700; font-size: 13px; color: var(--text); }
+    .owner-text { font-size: 12px; color: var(--muted); }
+    
+    .cost-shared { background: #FFFBEB; color: #92400E; font-weight: 600; border-left: 3px solid #F59E0B; }
+
+    td.kpi { color: #0F172A; font-weight: 600; }
+    td.rowhead { font-weight: 700; color: #0F172A; }
+    td.desc, td.perf { color: var(--muted); font-size: 12px; }
+
+    /* Sparklines */
+    .spark-cell { display: flex; align-items: center; height: 100%; }
+    .spark { width: 100%; height: var(--spark-h); display: flex; align-items: center; }
+    svg.sparkline { width: 100%; height: var(--spark-h); }
+    .spark .label { margin-left: 8px; font-size: 11px; color: var(--muted); white-space: nowrap; min-width: 40px; }
+
+    @media (max-width: 980px) {
+      .signals { grid-template-columns: 1fr; }
+      .cards-row { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+  <script>
+    function renderSparkline(cell) {
+      const raw = (cell.getAttribute('data-series') || '').split(',').map(n => parseFloat(n.trim())).filter(n => !isNaN(n));
+      if (raw.length < 2) return;
+      const styles = getComputedStyle(cell);
+      const w = 180; const h = 24;
+      const min = Math.min(...raw); const max = Math.max(...raw); const xStep = w / (raw.length - 1);
+      const pts = raw.map((v, i) => {
+        const x = i * xStep;
+        const padding = 2;
+        const availableH = h - (padding * 2);
+        const y = (h - padding) - ((v - min) / (max - min || 1)) * availableH;
+        return `${x.toFixed(2)},${y.toFixed(2)}`;
+      }).join(' ');
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('class', 'sparkline');
+      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      svg.setAttribute('preserveAspectRatio', 'none'); 
+      const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+      poly.setAttribute('fill', 'none');
+      poly.setAttribute('stroke', getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+      poly.setAttribute('stroke-width', '2');
+      poly.setAttribute('points', pts);
+      svg.appendChild(poly);
+      cell.innerHTML = '';
+      cell.appendChild(svg);
+      const last = raw[raw.length - 1]; const first = raw[0]; const dir = last - first;
+      const label = document.createElement('span');
+      label.className = 'label';
+      label.textContent = (dir > 0 ? '▲ ' : dir < 0 ? '▼ ' : '■ ') + last.toString();
+      cell.appendChild(label);
+    }
+    function renderAllSparklines() { document.querySelectorAll('.spark').forEach(renderSparkline); }
+    function initSearch() {
+      const searchInput = document.getElementById('tableSearch');
+      if(!searchInput) return;
+      searchInput.addEventListener('keyup', function(e) {
+        const term = e.target.value.toLowerCase();
+        const tbody = document.querySelector('table tbody');
+        const rows = Array.from(tbody.getElementsByTagName('tr'));
+        for (let i = 0; i < rows.length; i += 3) {
+          const group = rows.slice(i, i + 3);
+          if (group.length === 0) continue;
+          const groupText = group.map(row => row.textContent).join(' ').toLowerCase();
+          const isMatch = groupText.includes(term);
+          group.forEach(row => { if (isMatch) row.classList.remove('hidden'); else row.classList.add('hidden'); });
+        }
+      });
+    }
+    window.addEventListener('DOMContentLoaded', () => { renderAllSparklines(); initSearch(); });
+    window.addEventListener('resize', renderAllSparklines);
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="page-title">
+      <h1>2026 Digital Initiatives – Executive View &nbsp;</h1>
+      <div class="path">Shared Drive › Executive Dashboards › 2026_Strategic_Portfolio_Master</div>
+    </header>
+<div class="kpi-row-header">&nbsp; Top Takeaways&nbsp;</div>
+    <section class="signals" aria-label="Portfolio signals">
+      <div class="chip top">
+        <span class="dot"></span>
+        <div>
+          <h3>↑ Top Performer • #4 AI‑First Customer Servicing</h3>
+          <p>Exceeding projections in owner engagement. VOYA gnerating 1200 booking links leading to 329 YTD bookings</p>
+        </div>
+      </div>
+      <div class="chip block">
+        <span class="dot"></span>
+        <div>
+          <h3>↓ Top Blocker • #7 Frictionless Check‑In</h3>
+          <p>Hardware dependencies delaying rollout</p>
+        </div>
+      </div>
+      <div class="chip vol">
+        <span class="dot"></span>
+        <div>
+          <h3>⟳ Volatility Alert • #1 Digital Product Sales</h3>
+          <p>Increase in YoY session count. Total bookings flat leading to a decrease in conversion rate.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="kpi-container" aria-label="KPI Dashboards">
+      
+      <div class="kpi-row-header">New Owner Acquisition</div>
+      <div class="cards-row">
+        <div class="card">
+          <div class="label">Leads</div>
+          <div class="value">24,500</div>
+          <div class="comp pos">▲ 2.2% vs LYTD</div>
+		  <div class="comp pos">▲ 4.1% vs 2LYTD</div>
+        </div>
+        <div class="card">
+          <div class="label">Tours</div>
+          <div class="value">3,200</div>
+          <div class="comp neg">▼ 1.8% vs LYTD</div>
+		  <div class="comp pos">▲ 1.7% vs 2LYTD</div>
+        </div>
+        <div class="card">
+          <div class="label">Conversions <span class="sub-value">(Conversion Rate)</span></div>
+          <div class="value">480 <span class="sub-value text-ok">15.0%</span></div>
+          <div class="comp neg">▼ -0.5% vs LYTD</div>
+		  <div class="comp pos">▲ 3.5% vs 2LYTD</div>
+        </div>
+        <div class="card">
+          <div class="label">VPG</div>
+          <div class="value">$3,150</div>
+          <div class="comp pos">▲ 4.1% vs LYTD</div>
+		  <div class="comp pos">▲ 6.4 vs 2LYTD </div>
+      </div>
+	  </div>
+
+      <div class="kpi-row-header">Vacation Ownership</div>
+      <div class="cards-row">
+        <div class="card">
+          <div class="label has-tooltip" data-tooltip="Count of Membership Numbers who actively stayed on property in the past rolling 12 months">
+            Active Owners ⓘ
+          </div>
+          <div class="value">142,000</div>
+          <div class="comp pos">▲ 2.4% vs LYTD</div>
+		  <div class="comp pos">▲ 3.6% vs 2LYTD</div>
+        </div>
+        <div class="card">
+           <div class="label">Gross Bookings</div>
+           <div class="value">85,400</div>
+           <div class="comp neg">▼ 2.1% vs LYTD</div>
+		   <div class="comp pos">▲ 0.9% vs 2LYTD</div>
+        </div>
+        <div class="card">
+           <div class="label">Net Arrivals</div>
+           <div class="value">78,200</div>
+           <div class="comp pos">▲ 5.1% vs LYTD</div>
+		   <div class="comp pos">▲ 7.6% vs 2LYTD</div>
+        </div>
+        <div class="card">
+          <div class="label has-tooltip" data-tooltip="Arrivals divided by active owners">
+            Arrivals Per Owner ⓘ
+          </div>
+          <div class="value">2.55</div>
+          <div class="comp neg">▼ 1.2% vs LYTD</div>
+		  <div class="comp neg">▲ 3.1% vs 2LYTD</div>
+        </div>
+      </div>
+	   
+
+    </section>
+<div class="kpi-row-header">Initiative Detail</div>
+    <div class="table-wrap" role="region" aria-label="Initiatives table">
+      <div class="search-container">
+        <div class="search-wrapper">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="tableSearch" placeholder="Filter initiatives, owners, or KPIs..." aria-label="Search Table">
+        </div>
+      </div>
+
+      <table>
+        <colgroup>
+          <col class="col-init">  <col class="col-desc">  <col class="col-perf">  <col class="col-owner"> <col class="col-value"> <col class="col-status"><col class="col-start"><col class="col-astart"><col class="col-expq"><col class="col-acomp"> <col class="col-cost"><col class="col-roi"><col class="col-actroi"> <col class="col-kpi">
+          <col class="col-actual"><col class="col-proj"><col class="col-goal"><col class="col-delta">
+          <col class="col-kpiCharts">
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="sticky">Initiative</th>
+            <th>Description</th><th>Performance Summary</th>
+            <th>BU &amp; Owner</th>
+            <th>Value Proposition</th>
+            <th>Status</th>
+            <th>Expected Start</th><th>Actual Start</th><th>Expected Completion</th><th>Actual Completion</th>
+            <th class="center">Earmark ($M)</th><th class="center">Est. ROI</th><th class="center">Act. ROI</th>
+            <th>Initiative KPIs</th><th class="center">Actual</th><th class="center">Proj</th><th class="center">Goal</th><th class="right">Δ vs Goal</th><th>Trend</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="rowhead sticky" rowspan="3">1. Digital Product Sales</td>
+            
+            <td class="desc" rowspan="3">Discovery and upgrade path optimizations for digital inventory.</td>
+            <td class="perf" rowspan="3">Strong volume in entry‑tier sales; transaction values are lagging.</td>
+
+            <td rowspan="3">
+              <div class="bu-cell">
+                <span class="bu-text">Sales</span>
+                <span class="owner-text">—</span>
+              </div>
+            </td>
+            <td rowspan="3"><span class="vp-pill sales">Sales Efficiency</span></td>
+            <td rowspan="3"><span class="status delay">Delayed</span></td>
+            <td rowspan="3">Jan</td><td rowspan="3">—</td><td rowspan="3">—</td><td rowspan="3">—</td>
+            
+            <td class="center rowhead" rowspan="3">0.25</td>
+            <td class="center" rowspan="3"></td>
+            <td class="center" rowspan="3"></td>
+
+            <td class="kpi">Conv Rate</td>
+            <td class="center text-neg">8.2%</td><td class="center text-neg">8.0%</td><td class="center">8.5%</td>
+            <td class="right delta neg">−0.3%</td>
+            <td><div class="spark" data-series="8.1,8.3,8.2,8.6"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Avg Value</td>
+            <td class="center text-neg">$390</td><td class="center text-neg">$425</td><td class="center">$450</td>
+            <td class="right delta neg">−$60</td>
+            <td><div class="spark" data-series="420,415,410,390"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Velocity</td>
+            <td class="center text-neg">13d</td><td class="center text-neg">14d</td><td class="center">12d</td>
+            <td class="right delta neg">+1d</td>
+            <td><div class="spark" data-series="13,13,14,13"></div></td>
+          </tr>
+
+          <tr>
+            <td class="rowhead sticky" rowspan="3">2. Digital Tour Generation</td>
+            <td class="desc" rowspan="3">Driving tour bookings through digital marketing and friction reduction.</td>
+            <td class="perf" rowspan="3">Efficient tour growth through reduced funnel friction.</td>
+
+            <td rowspan="3">
+              <div class="bu-cell">
+                <span class="bu-text">Marketing</span>
+                <span class="owner-text">Jen V.</span>
+              </div>
+            </td>
+            <td rowspan="3"><span class="vp-pill growth">Arrival &amp; Tour Growth</span></td>
+            <td rowspan="3"><span class="status on">On Track</span></td>
+            <td rowspan="3">Jan</td><td rowspan="3">—</td><td rowspan="3">—</td><td rowspan="3">—</td>
+            
+            <td class="center rowhead" rowspan="3">1.75</td>
+            <td class="center" rowspan="3"></td>
+            <td class="center" rowspan="3"></td>
+
+            <td class="kpi">Pkg Conv</td>
+            <td class="center text-ok">4.1%</td><td class="center text-neg">3.8%</td><td class="center">4.0%</td>
+            <td class="right delta pos">+0.1%</td>
+            <td><div class="spark" data-series="3.7,3.8,4.0,4.1"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Tours</td>
+            <td class="center text-neg">1,150</td><td class="center text-neg">1,000</td><td class="center">1,200</td>
+            <td class="right delta neg">−50</td>
+            <td><div class="spark" data-series="980,1050,1100,1150"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Friction</td>
+            <td class="center text-ok">−22%</td><td class="center text-neg">−15%</td><td class="center">−20%</td>
+            <td class="right delta pos">−2%</td>
+            <td><div class="spark" data-series="-10,-14,-18,-22"></div></td>
+          </tr>
+
+          <tr>
+            <td class="rowhead sticky" rowspan="3">3. Sales Center of the Future</td>
+            <td class="desc" rowspan="3">Next‑gen agent tools and SCOF Miro integration.</td>
+            <td class="perf" rowspan="3">Initial agent sentiment is high; yield beginning to climb.</td>
+
+            <td rowspan="3">
+              <div class="bu-cell">
+                <span class="bu-text">Sales</span>
+                <span class="owner-text">Jess</span>
+              </div>
+            </td>
+            <td rowspan="3"><span class="vp-pill sales">Sales Efficiency</span></td>
+            <td rowspan="3"><span class="status on">On Track</span></td>
+            <td rowspan="3">Jan</td><td rowspan="3">—</td><td rowspan="3">—</td><td rowspan="3">—</td>
+            
+            <td class="center rowhead" rowspan="3">3.65</td>
+            <td class="center" rowspan="3"></td>
+            <td class="center" rowspan="3"></td>
+
+            <td class="kpi">Lead Conv</td>
+            <td class="center text-neg">14%</td><td class="center text-neg">14%</td><td class="center">15%</td>
+            <td class="right delta neg">−1%</td>
+            <td><div class="spark" data-series="13.8,14.0,14.0,14.0"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Agent Yield</td>
+            <td class="center text-neg">+10%</td><td class="center text-neg">+10%</td><td class="center">+12%</td>
+            <td class="right delta neg">−2%</td>
+            <td><div class="spark" data-series="8,9,10,10"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Miro Adopt</td>
+            <td class="center text-neg">92%</td><td class="center text-neg">90%</td><td class="center">95%</td>
+            <td class="right delta neg">−3%</td>
+            <td><div class="spark" data-series="88,90,91,92"></div></td>
+          </tr>
+
+          <tr>
+            <td class="rowhead sticky" rowspan="3">4. AI‑First Customer Servicing</td>
+            <td class="desc" rowspan="3">Voya‑powered live chat and AI deflection strategies.</td>
+            <td class="perf" rowspan="3">Exceeding projections in both cost reduction and deflection.</td>
+
+            <td rowspan="3">
+              <div class="bu-cell">
+                <span class="bu-text">Owner Svc</span>
+                <span class="owner-text">Summer</span>
+              </div>
+            </td>
+            <td rowspan="3"><span class="vp-pill ops">Operating Efficiency</span></td>
+            <td rowspan="3"><span class="status done">Completed</span></td>
+            <td rowspan="3">Jan</td><td rowspan="3">—</td><td rowspan="3">—</td><td rowspan="3">—</td>
+            
+            <td class="center rowhead" rowspan="3">1.90</td>
+            <td class="center" rowspan="3"></td>
+            <td class="center" rowspan="3"></td>
+
+            <td class="kpi">Deflection</td>
+            <td class="center text-ok">42%</td><td class="center text-ok">35%</td><td class="center">30%</td>
+            <td class="right delta pos">+12%</td>
+            <td><div class="spark" data-series="28,32,38,42"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">CSAT</td>
+            <td class="center text-ok">4.6</td><td class="center text-neg">4.2</td><td class="center">4.5</td>
+            <td class="right delta pos">+0.1</td>
+            <td><div class="spark" data-series="4.2,4.3,4.4,4.6"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Cost/Chat</td>
+            <td class="center text-ok">$1.25</td><td class="center text-ok">$1.40</td><td class="center">$1.50</td>
+            <td class="right delta pos">−$0.25</td>
+            <td><div class="spark" data-series="1.45,1.40,1.35,1.25"></div></td>
+          </tr>
+
+          <tr>
+            <td class="rowhead sticky" rowspan="3">5. CXOne Agent Assist</td>
+            <td class="desc" rowspan="3">Automated call summarization and agent assistance tools.</td>
+            <td class="perf" rowspan="3">Accuracy is stable; focused on driving agent adoption.</td>
+
+            <td rowspan="3">
+              <div class="bu-cell">
+                <span class="bu-text">Owner Svc</span>
+                <span class="owner-text">Diane F.</span>
+              </div>
+            </td>
+            <td rowspan="3"><span class="vp-pill ops">Operating Efficiency</span></td>
+            <td rowspan="3"><span class="status on">On Track</span></td>
+            <td rowspan="3">Jan</td><td rowspan="3">—</td><td rowspan="3">—</td><td rowspan="3">—</td>
+            
+            <td class="center rowhead" rowspan="3">0.60</td>
+            <td class="center" rowspan="3"></td>
+            <td class="center" rowspan="3"></td>
+
+            <td class="kpi">Summary Acc</td>
+            <td class="center text-neg">91%</td><td class="center text-neg">92%</td><td class="center">95%</td>
+            <td class="right delta neg">−4%</td>
+            <td><div class="spark" data-series="90,91,91,91"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">ACW Reduction</td>
+            <td class="center text-neg">−28s</td><td class="center text-neg">−30s</td><td class="center">−45s</td>
+            <td class="right delta neg">+17s</td>
+            <td><div class="spark" data-series="-20,-24,-26,-28"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Adoption</td>
+            <td class="center text-neg">88%</td><td class="center text-neg">85%</td><td class="center">90%</td>
+            <td class="right delta neg">−2%</td>
+            <td><div class="spark" data-series="84,86,87,88"></div></td>
+          </tr>
+
+          <tr>
+            <td class="rowhead sticky" rowspan="3">6. Onsite Digital Exp</td>
+            <td class="desc" rowspan="3">On‑resort digital engagement and non‑owner lead generation.</td>
+            <td class="perf" rowspan="3">Effective non‑owner lead capture at top‑tier resorts.</td>
+
+            <td rowspan="3">
+              <div class="bu-cell">
+                <span class="bu-text">Club Mgmt</span>
+                <span class="owner-text">Summer</span>
+              </div>
+            </td>
+            <td rowspan="3"><span class="vp-pill growth">Arrival &amp; Tour Growth</span></td>
+            <td rowspan="3"><span class="status on">On Track</span></td>
+            <td rowspan="3">Jan</td><td rowspan="3">—</td><td rowspan="3">—</td><td rowspan="3">—</td>
+            
+            <td class="center cost-shared" rowspan="9">3.70<br><span style="font-size:10px; opacity:0.7">(Bundle)</span></td>
+            
+            <td class="center" rowspan="3"></td>
+            <td class="center" rowspan="3"></td>
+
+            <td class="kpi">Non‑Owner Ld</td>
+            <td class="center text-ok">12%</td><td class="center text-neg">10%</td><td class="center">12%</td>
+            <td class="right">0%</td>
+            <td><div class="spark" data-series="9,10,11,12"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Activation</td>
+            <td class="center text-ok">65%</td><td class="center text-neg">60%</td><td class="center">65%</td>
+            <td class="right">0%</td>
+            <td><div class="spark" data-series="59,61,63,65"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Engagement</td>
+            <td class="center text-neg">4.2</td><td class="center text-neg">4.0</td><td class="center">4.5</td>
+            <td class="right delta neg">−0.3</td>
+            <td><div class="spark" data-series="4.0,4.1,4.2,4.2"></div></td>
+          </tr>
+
+          <tr>
+            <td class="rowhead sticky" rowspan="3">7. Frictionless Check‑In</td>
+            <td class="desc" rowspan="3">Digital‑first check‑in/out to reduce front‑desk friction.</td>
+            <td class="perf" rowspan="3">Status critical; hardware dependencies delaying rollout.</td>
+
+            <td rowspan="3">
+              <div class="bu-cell">
+                <span class="bu-text">Club Mgmt</span>
+                <span class="owner-text">—</span>
+              </div>
+            </td>
+            <td rowspan="3"><span class="vp-pill guest">Guest Experience</span></td>
+            <td rowspan="3"><span class="status delay">Delayed</span></td>
+            <td rowspan="3">TBD</td><td rowspan="3">TBD</td><td rowspan="3">—</td><td rowspan="3">—</td>
+            
+            <td class="center" rowspan="3"></td>
+            <td class="center" rowspan="3"></td>
+
+            <td class="kpi">Adoption</td>
+            <td class="center text-neg">15%</td><td class="center text-neg">40%</td><td class="center">65%</td>
+            <td class="right delta neg">−50%</td>
+            <td><div class="spark" data-series="12,14,15,15"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Check‑In Time</td>
+            <td class="center text-neg">6.5m</td><td class="center text-neg">4.0m</td><td class="center">2.0m</td>
+            <td class="right delta neg">+4.5m</td>
+            <td><div class="spark" data-series="5.5,6.0,6.2,6.5"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Arrival CSAT</td>
+            <td class="center text-neg">3.8</td><td class="center text-neg">4.2</td><td class="center">4.5</td>
+            <td class="right delta neg">−0.7</td>
+            <td><div class="spark" data-series="4.1,4.0,3.9,3.8"></div></td>
+          </tr>
+
+          <tr>
+            <td class="rowhead sticky" rowspan="3">8. Smarter Personalized Booking</td>
+            <td class="desc" rowspan="3">AI‑driven recommendation engine for personalized stays.</td>
+            <td class="perf" rowspan="3">Recommendations are driving incremental booking conversion.</td>
+
+            <td rowspan="3">
+              <div class="bu-cell">
+                <span class="bu-text">Club Mgmt</span>
+                <span class="owner-text">—</span>
+              </div>
+            </td>
+            <td rowspan="3"><span class="vp-pill guest">Guest Experience</span></td>
+            <td rowspan="3"><span class="status on">On Track</span></td>
+            <td rowspan="3">Jan</td><td rowspan="3">—</td><td rowspan="3">—</td><td rowspan="3">—</td>
+            
+            <td class="center" rowspan="3"></td>
+            <td class="center" rowspan="3"></td>
+
+            <td class="kpi">Booking Conv</td>
+            <td class="center text-neg">7.8%</td><td class="center text-neg">7.5%</td><td class="center">8.0%</td>
+            <td class="right delta neg">−0.2%</td>
+            <td><div class="spark" data-series="7.5,7.6,7.7,7.8"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Rec CTR</td>
+            <td class="center text-ok">18%</td><td class="center text-neg">12%</td><td class="center">15%</td>
+            <td class="right delta pos">+3%</td>
+            <td><div class="spark" data-series="11,14,16,18"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Pers Lift</td>
+            <td class="center text-neg">+19%</td><td class="center text-neg">+15%</td><td class="center">+20%</td>
+            <td class="right delta neg">−1%</td>
+            <td><div class="spark" data-series="14,16,18,19"></div></td>
+          </tr>
+
+          <tr>
+            <td class="rowhead sticky" rowspan="3">9. Multi‑Channel Digital</td>
+            <td class="desc" rowspan="3">Expanding feature parity across web and mobile applications.</td>
+            <td class="perf" rowspan="3">Development on track for April launch; app migration is priority.</td>
+
+            <td rowspan="3">
+              <div class="bu-cell">
+                <span class="bu-text">Club Mgmt</span>
+                <span class="owner-text">—</span>
+              </div>
+            </td>
+            <td rowspan="3"><span class="vp-pill ops">Operating Efficiency</span></td>
+            <td rowspan="3"><span class="status on">On Track</span></td>
+            <td rowspan="3">April</td><td rowspan="3">—</td><td rowspan="3">—</td><td rowspan="3">—</td>
+            
+            <td class="center rowhead" rowspan="3">1.50</td>
+            <td class="center" rowspan="3"></td>
+            <td class="center" rowspan="3"></td>
+
+            <td class="kpi">Mobile Mix</td>
+            <td class="center text-neg">28%</td><td class="center text-neg">30%</td><td class="center">35%</td>
+            <td class="right delta neg">−7%</td>
+            <td><div class="spark" data-series="26,27,27,28"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Retention</td>
+            <td class="center text-neg">42%</td><td class="center text-neg">42%</td><td class="center">45%</td>
+            <td class="right delta neg">−3%</td>
+            <td><div class="spark" data-series="41,41,42,42"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Parity</td>
+            <td class="center text-neg">85%</td><td class="center text-neg">95%</td><td class="center">100%</td>
+            <td class="right delta neg">−15%</td>
+            <td><div class="spark" data-series="80,82,84,85"></div></td>
+          </tr>
+
+          <tr>
+            <td class="rowhead sticky" rowspan="3">10. Platform Modernization</td>
+            <td class="desc" rowspan="3">Infrastructure upgrades and cloud cost optimizations.</td>
+            <td class="perf" rowspan="3">Early efficiency gains are exceeding year‑end targets.</td>
+
+            <td rowspan="3">
+              <div class="bu-cell">
+                <span class="bu-text">Platform</span>
+                <span class="owner-text">—</span>
+              </div>
+            </td>
+            <td rowspan="3"><span class="vp-pill ops">Operating Efficiency</span></td>
+            <td rowspan="3"><span class="status done">Completed</span></td>
+            <td rowspan="3">April</td><td rowspan="3">—</td><td rowspan="3">—</td><td rowspan="3">—</td>
+            
+            <td class="center rowhead" rowspan="3">3.35</td>
+            <td class="center" rowspan="3"></td>
+            <td class="center" rowspan="3"></td>
+
+            <td class="kpi">Uptime</td>
+            <td class="center text-ok">99.9%</td><td class="center text-ok">99.9%</td><td class="center">99.9%</td>
+            <td class="right">0%</td>
+            <td><div class="spark" data-series="99.9,99.9,99.9,99.9"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Latency</td>
+            <td class="center text-ok">195ms</td><td class="center text-neg">215ms</td><td class="center">200ms</td>
+            <td class="right delta pos">−5ms</td>
+            <td><div class="spark" data-series="210,205,200,195"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Efficiency</td>
+            <td class="center text-ok">−16%</td><td class="center text-neg">−12%</td><td class="center">−15%</td>
+            <td class="right delta pos">−1%</td>
+            <td><div class="spark" data-series="-10,-12,-14,-16"></div></td>
+          </tr>
+
+          <tr>
+            <td class="rowhead sticky" rowspan="3">11. Data Marketplace</td>
+            <td class="desc" rowspan="3">Centralized platform for internal data discovery and access.</td>
+            <td class="perf" rowspan="3">Infrastructure build‑out in progress for July go‑live.</td>
+
+            <td rowspan="3">
+              <div class="bu-cell">
+                <span class="bu-text">Data</span>
+                <span class="owner-text">—</span>
+              </div>
+            </td>
+            <td rowspan="3"><span class="vp-pill ops">Operating Efficiency</span></td>
+            <td rowspan="3"><span class="status delay">Delayed</span></td>
+            <td rowspan="3">July</td><td rowspan="3">—</td><td rowspan="3">—</td><td rowspan="3">—</td>
+            
+            <td class="center rowhead" rowspan="3">0.30</td>
+            <td class="center" rowspan="3"></td>
+            <td class="center" rowspan="3"></td>
+
+            <td class="kpi">Speed</td>
+            <td class="center text-neg">−40%</td><td class="center text-neg">−35%</td><td class="center">−50%</td>
+            <td class="right delta neg">+10%</td>
+            <td><div class="spark" data-series="-30,-35,-38,-40"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">MAU</td>
+            <td class="center text-neg">450</td><td class="center text-neg">400</td><td class="center">500</td>
+            <td class="right delta neg">−50</td>
+            <td><div class="spark" data-series="380,410,430,450"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Discovery</td>
+            <td class="center text-neg">−35%</td><td class="center text-neg">−30%</td><td class="center">−45%</td>
+            <td class="right delta neg">+10%</td>
+            <td><div class="spark" data-series="-28,-30,-33,-35"></div></td>
+          </tr>
+
+          <tr>
+            <td class="rowhead sticky" rowspan="3">12. Value Stream Data</td>
+            <td class="desc" rowspan="3">Enterprise‑wide data accuracy and insight velocity.</td>
+            <td class="perf" rowspan="3">Accuracy is meeting high standards; focused on time‑to‑insight.</td>
+
+            <td rowspan="3">
+              <div class="bu-cell">
+                <span class="bu-text">Data</span>
+                <span class="owner-text">—</span>
+              </div>
+            </td>
+            <td rowspan="3"><span class="vp-pill ops">Operating Efficiency</span></td>
+            <td rowspan="3"><span class="status done">Completed</span></td>
+            <td rowspan="3">Jan</td><td rowspan="3">—</td><td rowspan="3">—</td><td rowspan="3">—</td>
+            
+            <td class="center rowhead" rowspan="3">2.00</td>
+            <td class="center" rowspan="3"></td>
+            <td class="center" rowspan="3"></td>
+
+            <td class="kpi">Accuracy</td>
+            <td class="center text-neg">97.5%</td><td class="center text-neg">96%</td><td class="center">98%</td>
+            <td class="right delta neg">−0.5%</td>
+            <td><div class="spark" data-series="96.5,97.0,97.2,97.5"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Insight Vel</td>
+            <td class="center text-neg">2.5d</td><td class="center text-neg">3.0d</td><td class="center">2.0d</td>
+            <td class="right delta neg">+0.5d</td>
+            <td><div class="spark" data-series="3.2,2.9,2.7,2.5"></div></td>
+          </tr>
+          <tr>
+            <td class="kpi">Value Realized</td>
+            <td class="center text-neg">$2.1M</td><td class="center text-neg">$2.0M</td><td class="center">$2.5M</td>
+            <td class="right delta neg">−$0.4M</td>
+            <td><div class="spark" data-series="1.8,1.9,2.0,2.1"></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Sports Illustrated Resorts — Sales Performance Dashboard V3</title>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ========================================
+   CSS VARIABLES & THEME
+   ======================================== */
+:root {
+  --bg: #0B0F16;
+  --canvas: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-2: #F8FAFC;
+  --text: #111827;
+  --muted: #6B7280;
+  --grid: #E5E7EB;
+  --shadow: 0 4px 20px rgba(0,0,0,.08);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,.35);
+  --header-bg: #0B0F16;
+  --accent: #E02020;
+  --accent-2: #0B1B3A;
+  --ok: #16A34A;
+  --warn: #F59E0B;
+  --danger: #DC2626;
+  --done: #0284C7;
+  --pos: #16A34A;
+  --neg: #DC2626;
+  --cat-core-bg: #EEF2FF; --cat-core-text: #1E3A8A;
+  --cat-niche-bg: #FFF1F2; --cat-niche-text: #9F1239;
+  --cat-traffic-bg: #EFF6FF; --cat-traffic-text: #1D4ED8;
+  --cat-legacy-bg: #F3F4F6; --cat-legacy-text: #374151;
+  --driver-book-bg: #FFE4E6; --driver-book-text: #9F1239;
+  --driver-eng-bg: #E0F2FE; --driver-eng-text: #075985;
+  --font-ui: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-tabular: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sidebar-w: 280px;
+  --spark-w: clamp(140px,15vw,240px);
+  --spark-h: 24px;
+  --radius: 14px;
+}
+
+/* ========================================
+   RESET & BASE
+   ======================================== */
+*,*::before,*::after { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--text); margin: 0; }
+body { font-family: var(--font-ui); line-height: 1.5; display: flex; min-height: 100vh; }
+
+/* ========================================
+   LAYOUT: SIDEBAR + MAIN
+   ======================================== */
+.app-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: var(--sidebar-w);
+  background: #FFFFFF;
+  border-right: 1px solid var(--grid);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 60;
+  overflow-y: auto;
+  transition: transform .28s cubic-bezier(.4,0,.2,1);
+  box-shadow: 4px 0 24px rgba(0,0,0,.06);
+}
+.sidebar.collapsed { transform: translateX(calc(-1 * var(--sidebar-w))); }
+
+.sidebar-header {
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--grid);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--header-bg);
+}
+.sidebar-brand {
+  display: flex; flex-direction: column; gap: 1px; line-height: 1;
+}
+.sidebar-brand .si { color: var(--accent); font-weight: 900; font-size: 13px; letter-spacing: .01em; }
+.sidebar-brand .resorts { color: #fff; font-weight: 300; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
+.sidebar-close {
+  background: rgba(255,255,255,.12); border: none; color: #fff; width: 30px; height: 30px;
+  border-radius: 8px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.sidebar-close:hover { background: rgba(255,255,255,.22); }
+
+.sidebar-body { padding: 12px 14px 24px; flex: 1; }
+
+.filter-group { margin-bottom: 16px; }
+.filter-group-label {
+  font-size: 10px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+}
+.filter-group-label .count {
+  background: var(--accent); color: #fff; font-size: 9px; padding: 1px 6px;
+  border-radius: 99px; font-weight: 700; display: none;
+}
+.filter-group-label .count.active { display: inline-block; }
+
+.filter-select {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--grid); border-radius: 8px;
+  font-family: var(--font-ui); font-size: 13px; font-weight: 500; color: var(--text);
+  background: var(--surface-2); cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+  transition: border-color .15s, box-shadow .15s;
+}
+.filter-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(224,32,32,.1); }
+
+/* Multi-check filter (pill style) */
+.filter-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.filter-pill {
+  padding: 5px 10px; border-radius: 99px; font-size: 11px; font-weight: 700;
+  border: 1px solid var(--grid); background: #fff; color: var(--text);
+  cursor: pointer; transition: all .15s; user-select: none;
+}
+.filter-pill:hover { border-color: rgba(224,32,32,.4); }
+.filter-pill.active {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+
+.filter-divider { height: 1px; background: var(--grid); margin: 14px 0; }
+
+.filter-actions { display: flex; gap: 8px; margin-top: 4px; }
+.btn-clear {
+  flex: 1; padding: 8px 12px; border: 1px solid var(--grid); border-radius: 8px;
+  background: #fff; color: var(--text); font-size: 12px; font-weight: 700;
+  font-family: var(--font-ui); cursor: pointer; transition: all .15s;
+}
+.btn-clear:hover { background: #F3F4F6; }
+.btn-apply {
+  flex: 1; padding: 8px 12px; border: 1px solid var(--accent); border-radius: 8px;
+  background: var(--accent); color: #fff; font-size: 12px; font-weight: 700;
+  font-family: var(--font-ui); cursor: pointer; transition: all .15s;
+}
+.btn-apply:hover { background: #c91a1a; }
+
+/* MAIN CONTENT */
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-w);
+  transition: margin-left .28s cubic-bezier(.4,0,.2,1);
+  min-width: 0;
+}
+.sidebar.collapsed ~ .main-content { margin-left: 0; }
+
+.wrap {
+  max-width: 1320px;
+  margin: 0 auto;
+  background: var(--canvas);
+  border-radius: 0 0 18px 18px;
+  padding: 0 20px 56px;
+  min-height: 100vh;
+}
+
+/* ========================================
+   TOP BAR (sticky filter summary + toggle)
+   ======================================== */
+.top-bar {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--header-bg);
+  padding: 10px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  margin: 0 -20px;
+  flex-wrap: wrap;
+}
+.top-bar-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.top-bar-right { display: flex; align-items: center; gap: 8px; }
+
+.sidebar-toggle {
+  background: rgba(255,255,255,.12); border: none; color: #fff; width: 34px; height: 34px;
+  border-radius: 8px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.sidebar-toggle:hover { background: rgba(255,255,255,.22); }
+
+.active-filters {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.active-filter-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700;
+  background: rgba(224,32,32,.15); color: rgba(255,255,255,.92); border: 1px solid rgba(224,32,32,.3);
+}
+.active-filter-chip .x {
+  cursor: pointer; font-size: 13px; opacity: .7; margin-left: 2px;
+}
+.active-filter-chip .x:hover { opacity: 1; }
+.no-filters { color: rgba(255,255,255,.5); font-size: 12px; font-weight: 500; }
+
+.top-bar-brand {
+  display: flex; align-items: center; gap: 8px;
+}
+.top-bar-brand .si { color: var(--accent); font-weight: 900; font-size: 14px; }
+.top-bar-brand .divider { width: 1px; height: 18px; background: rgba(255,255,255,.2); }
+.top-bar-brand .title { color: #fff; font-size: 13px; font-weight: 700; letter-spacing: .04em; }
+
+/* ========================================
+   HERO
+   ======================================== */
+.sir-hero {
+  margin: 16px 0 18px;
+  background: radial-gradient(circle at 15% 30%, rgba(224,32,32,.22), transparent 40%),
+              radial-gradient(circle at 85% 20%, rgba(31,58,138,.18), transparent 45%),
+              linear-gradient(180deg, #0B0F16, #0B0F16);
+  border-radius: var(--radius);
+  padding: 20px 18px;
+  border: 1px solid rgba(255,255,255,.1);
+  box-shadow: var(--shadow);
+  position: relative; overflow: hidden; color: #fff;
+}
+.sir-hero::after {
+  content: ""; position: absolute; inset: -40px;
+  background: radial-gradient(circle, rgba(255,255,255,.18) 1px, transparent 2px) 0 0/18px 18px;
+  opacity: .25; pointer-events: none;
+  mask-image: radial-gradient(circle at 45% 35%, rgba(0,0,0,.8), rgba(0,0,0,.15) 55%, rgba(0,0,0,0) 76%);
+}
+.sir-hero-inner { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.sir-hero-kicker { font-size: 11px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; opacity: .8; }
+.sir-hero-title { margin-top: 4px; font-size: clamp(20px, 2.8vw, 34px); font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.sir-hero-sub { margin-top: 4px; font-size: 13px; opacity: .85; max-width: 500px; }
+
+.sir-goalbar { text-align: right; min-width: 200px; }
+.sir-goalbar-label { color: rgba(255,255,255,.6); font-size: 10px; letter-spacing: .14em; font-weight: 900; }
+.sir-goalbar-track { position: relative; height: 18px; margin-top: 5px; }
+.sir-goalbar-line { position: absolute; left: 0; right: 0; top: 8px; height: 2px; background: rgba(255,255,255,.15); border-radius: 99px; }
+.sir-goalbar-goal { position: absolute; top: 4px; left: 68%; width: 2px; height: 10px; background: rgba(255,255,255,.5); border-radius: 2px; }
+.sir-goalbar-actual { position: absolute; top: 2px; left: 74%; width: 10px; height: 10px; background: var(--accent); border-radius: 2px; box-shadow: 0 6px 14px rgba(224,32,32,.35); }
+.sir-goalbar-meta { margin-top: 4px; color: rgba(255,255,255,.7); font-size: 12px; display: flex; gap: 10px; justify-content: flex-end; }
+.sir-goalbar-meta .sep { opacity: .4; }
+
+/* ========================================
+   SECTION HEADERS
+   ======================================== */
+.section-header {
+  font-size: 12px; font-weight: 900; color: var(--text); text-transform: uppercase;
+  letter-spacing: .10em; margin: 20px 0 10px; display: flex; align-items: center; gap: 10px;
+  padding-bottom: 6px;
+}
+.section-header::before {
+  content: ''; width: 4px; height: 16px; background: var(--accent); border-radius: 2px; flex-shrink: 0;
+}
+.section-header::after {
+  content: ''; flex: 1; height: 1px; background: var(--grid);
+}
+
+/* ========================================
+   SIGNALS
+   ======================================== */
+.signals { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 18px; }
+.chip {
+  background: #fff; border: 1px solid var(--grid); border-radius: var(--radius); padding: 10px 12px;
+  box-shadow: var(--shadow); display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center;
+  transition: transform .15s, box-shadow .15s;
+}
+.chip:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,0,0,.1); }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.chip.top .dot { background: var(--ok); }
+.chip.block .dot { background: var(--danger); }
+.chip.vol .dot { background: #9333EA; }
+.chip h3 { margin: 0; font-size: 13px; font-weight: 700; color: var(--text); }
+.chip p { margin: 2px 0 0; font-size: 11px; color: var(--muted); }
+
+/* ========================================
+   KPI CARDS
+   ======================================== */
+.cards-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 14px; }
+
+.card {
+  background: #fff; border: 1px solid var(--grid); border-radius: 12px;
+  padding: 12px 14px; box-shadow: var(--shadow); display: flex; flex-direction: column;
+  justify-content: space-between; transition: transform .15s, box-shadow .15s; position: relative; overflow: hidden;
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.1); }
+.card .label { font-size: 11px; color: var(--muted); margin-bottom: 4px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+.card .value {
+  font-size: 22px; font-weight: 900; letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums; color: var(--text); line-height: 1.2;
+}
+.card .sub-value { font-size: 13px; font-weight: 600; color: var(--muted); margin-left: 4px; }
+.card .comp { font-size: 11px; margin-top: 6px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+.comp.pos { color: var(--ok); }
+.comp.neg { color: var(--neg); }
+
+/* Accent underline on value */
+.marker-under { position: relative; display: inline-block; padding-bottom: 8px; }
+.marker-under::after {
+  content: ""; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0;
+  width: 36px; height: 3px; background: var(--accent); border-radius: 2px;
+  box-shadow: 0 6px 12px rgba(224,32,32,.18); transition: width .15s; opacity: .85;
+}
+.card:hover .marker-under::after { width: 56px; }
+
+/* ========================================
+   TABLE
+   ======================================== */
+.table-wrap {
+  background: #fff; border: 1px solid var(--grid); border-radius: 12px;
+  box-shadow: var(--shadow); overflow: auto; max-height: 75vh; margin-bottom: 20px; position: relative;
+}
+
+.search-container {
+  position: sticky; top: 0; left: 0; z-index: 30; background: #fff;
+  padding: 10px 12px; border-bottom: 1px solid var(--grid); display: flex; align-items: center; gap: 10px;
+}
+.search-wrapper { position: relative; width: 280px; }
+.search-icon {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); width: 14px; height: 14px; pointer-events: none;
+}
+#tableSearch {
+  width: 100%; padding: 8px 12px 8px 32px; border: 1px solid var(--grid); border-radius: 8px;
+  font-size: 13px; font-family: var(--font-ui); background: var(--surface-2);
+  transition: all .2s; box-sizing: border-box;
+}
+#tableSearch:focus { outline: none; border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(224,32,32,.08); }
+
+.table-filters-inline {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.table-filter-btn {
+  padding: 5px 10px; border-radius: 99px; font-size: 11px; font-weight: 700;
+  border: 1px solid var(--grid); background: #fff; color: var(--text);
+  cursor: pointer; transition: all .15s; font-family: var(--font-ui);
+}
+.table-filter-btn:hover { border-color: rgba(224,32,32,.4); }
+.table-filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  font-size: 13px; table-layout: fixed; min-width: 1500px;
+}
+col.col-prod { width: 200px; }
+col.col-desc { width: 180px; }
+col.col-lob { width: 130px; }
+col.col-strat { width: 130px; }
+col.col-type { width: 110px; }
+col.col-status { width: 100px; }
+col.col-launch { width: 90px; }
+col.col-kpi { width: 130px; }
+col.col-actual { width: 85px; }
+col.col-proj { width: 85px; }
+col.col-goal { width: 85px; }
+col.col-delta { width: 95px; }
+col.col-kpiCharts { width: 180px; }
+
+thead th {
+  position: sticky; top: 53px; background: #F3F4F6; z-index: 20;
+  text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--grid);
+  font-weight: 700; font-size: 11px; letter-spacing: .03em; color: var(--text);
+  cursor: pointer; user-select: none; white-space: nowrap;
+}
+thead th:hover { background: #E9ECEF; }
+thead th .sort-arrow { font-size: 10px; color: var(--muted); margin-left: 3px; }
+thead th .sort-arrow.active { color: var(--accent); }
+
+tbody td {
+  border-bottom: 1px solid var(--grid); padding: 7px 10px; vertical-align: middle;
+}
+tr.hidden { display: none; }
+
+/* Zebra striping */
+tbody tr:nth-child(6n+1), tbody tr:nth-child(6n+2), tbody tr:nth-child(6n+3) { background-color: #F8FAFC; }
+tbody tr:nth-child(6n+1) .sticky, tbody tr:nth-child(6n+2) .sticky, tbody tr:nth-child(6n+3) .sticky { background-color: #F8FAFC; }
+tbody tr:nth-child(6n+4) .sticky, tbody tr:nth-child(6n+5) .sticky, tbody tr:nth-child(6n+6) .sticky { background-color: #FFFFFF; }
+
+th.sticky, td.sticky {
+  position: sticky; left: 0; z-index: 15; background: inherit;
+  box-shadow: 4px 0 8px -2px rgba(0,0,0,.04), 1px 0 0 var(--grid); border-right: 1px solid transparent;
+}
+thead th.sticky { z-index: 25; background: #F3F4F6; }
+
+td.center { text-align: center; }
+td.right { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-tabular); }
+
+.status { display: inline-block; padding: 3px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; }
+.status.on { color: #fff; background: var(--ok); }
+.status.delay { color: #fff; background: var(--warn); }
+.status.done { color: #fff; background: var(--done); }
+.status.block { color: #fff; background: var(--danger); }
+
+.strat-pill {
+  display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px;
+  font-weight: 700; text-transform: uppercase; letter-spacing: .02em;
+  border: 1px solid transparent; width: 90px; text-align: center;
+}
+.strat-pill.core { background: var(--cat-core-bg); color: var(--cat-core-text); border-color: #C7D2FE; }
+.strat-pill.niche { background: var(--cat-niche-bg); color: var(--cat-niche-text); border-color: #FECDD3; }
+.strat-pill.traffic { background: var(--cat-traffic-bg); color: var(--cat-traffic-text); border-color: #BFDBFE; }
+.strat-pill.legacy { background: var(--cat-legacy-bg); color: var(--cat-legacy-text); border-color: #E5E7EB; }
+
+.type-pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+.type-pill.book { background: var(--driver-book-bg); color: var(--driver-book-text); }
+.type-pill.eng { background: var(--driver-eng-bg); color: var(--driver-eng-text); }
+
+td.kpi { color: #0F172A; font-weight: 700; font-size: 12px; }
+td.rowhead { font-weight: 800; color: #0F172A; font-size: 13px; }
+td.desc { color: var(--muted); font-size: 12px; line-height: 1.4; }
+
+.text-ok { color: var(--ok); font-weight: 700; }
+.text-neg { color: var(--neg); font-weight: 700; }
+.delta.pos { color: var(--pos); font-weight: 700; }
+.delta.neg { color: var(--neg); font-weight: 700; }
+
+.spark { width: 100%; height: var(--spark-h); display: flex; align-items: center; }
+svg.sparkline { width: 100%; height: var(--spark-h); }
+.spark .label { margin-left: 8px; font-size: 11px; color: var(--muted); white-space: nowrap; min-width: 40px; }
+
+/* Flash animation for matrix click */
+@keyframes rowFlash { 0%,100% { background: inherit; } 50% { background: rgba(224,32,32,.08); } }
+tr.flash { animation: rowFlash .6s ease 2; }
+
+/* ========================================
+   IMPACT MATRIX
+   ======================================== */
+.ixy-th { width: 130px; }
+.ixy-cell { font-weight: 800; }
+.ixy-wrap { display: flex; flex-direction: column; gap: 5px; align-items: flex-start; justify-content: center; }
+.ixy-tag { display: inline-block; font-size: 9px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; color: rgba(17,24,39,.5); margin-right: 6px; }
+.ixy-val { font-size: 12px; font-weight: 900; color: rgba(17,24,39,.85); }
+
+.matrix-card { background: #fff; border: 1px solid var(--grid); border-radius: 12px; box-shadow: var(--shadow); padding: 12px; margin: 0 0 18px; }
+.matrix-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.matrix-head h2 { margin: 0; font-size: 13px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
+.matrix-head .hint { font-size: 11px; color: var(--muted); }
+.matrix-wrap { position: relative; width: 100%; aspect-ratio: 21/9; min-height: 360px; max-height: 620px; }
+#impactMatrix { width: 100%; height: 100%; display: block; }
+.matrix-tooltip {
+  position: absolute; pointer-events: none; opacity: 0; transform: translate(-50%,-110%);
+  background: rgba(17,24,39,.92); color: #fff; padding: 10px; border-radius: 10px;
+  font-size: 12px; line-height: 1.25; max-width: 360px; box-shadow: 0 10px 30px rgba(0,0,0,.25); transition: opacity .12s;
+}
+.matrix-tooltip .t { font-weight: 900; margin-bottom: 4px; }
+.matrix-tooltip .m { color: rgba(255,255,255,.86); }
+.matrix-legend { display: flex; flex-wrap: wrap; gap: 10px 14px; margin-top: 10px; color: var(--muted); font-size: 11px; }
+.matrix-legend .key { display: inline-flex; align-items: center; gap: 6px; }
+.matrix-legend .sw { width: 10px; height: 10px; border-radius: 99px; }
+
+/* ========================================
+   EXEC SECTION
+   ======================================== */
+.exec-block { background: #fff; border: 1px solid var(--grid); border-radius: 12px; box-shadow: var(--shadow); padding: 14px; margin: 0 0 18px; }
+.exec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.exec-head h2 { margin: 0; font-size: 13px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
+.exec-head .meta { color: var(--muted); font-size: 12px; display: flex; gap: 10px; flex-wrap: wrap; }
+.exec-head .meta b { color: var(--text); }
+
+.pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill-btn {
+  appearance: none; border: 1px solid rgba(17,24,39,.12); background: #F3F4F6;
+  color: var(--text); padding: 6px 10px; border-radius: 99px; font-size: 11px;
+  font-weight: 800; cursor: pointer; font-family: var(--font-ui); transition: all .15s;
+}
+.pill-btn:hover { border-color: rgba(224,32,32,.3); }
+.pill-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.metric-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.metric-card {
+  background: var(--surface-2); border: 1px solid var(--grid); border-radius: 12px;
+  padding: 11px 13px; box-shadow: var(--shadow); cursor: pointer; transition: all .15s;
+}
+.metric-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.1); border-color: rgba(224,32,32,.25); }
+.metric-card .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.metric-card .name { font-size: 11px; color: var(--muted); font-weight: 800; line-height: 1.2; }
+.metric-card .cat { font-size: 9px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; padding: 2px 7px; border-radius: 99px; background: #F3F4F6; border: 1px solid rgba(17,24,39,.06); white-space: nowrap; }
+.metric-card .val { margin-top: 7px; font-size: 20px; font-weight: 900; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.metric-card .sub { margin-top: 5px; font-size: 11px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
+.metric-card .delta { font-weight: 900; }
+.metric-card .delta.pos { color: var(--ok); }
+.metric-card .delta.neg { color: var(--neg); }
+.metric-card .delta.neu { color: rgba(17,24,39,.5); }
+.metric-card .spark-mini { margin-top: 8px; height: 24px; }
+
+.badge { display: inline-block; padding: 2px 7px; border-radius: 99px; font-size: 9px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; border: 1px solid rgba(17,24,39,.08); background: #fff; }
+.badge.new { border-color: rgba(224,32,32,.25); color: var(--accent); }
+.badge.existing { border-color: rgba(2,132,199,.25); color: var(--done); }
+
+/* Exec accordion */
+.exec-sections { display: flex; flex-direction: column; gap: 8px; }
+.exec-section { border: 1px solid var(--grid); border-radius: 12px; background: #fff; box-shadow: var(--shadow); overflow: hidden; }
+.exec-sec-head {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; background: #F8FAFC; border: none; border-bottom: 1px solid rgba(17,24,39,.06);
+  cursor: pointer; font-family: var(--font-ui);
+}
+.exec-sec-head .left { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.exec-sec-title { font-size: 11px; font-weight: 900; letter-spacing: .10em; text-transform: uppercase; color: rgba(17,24,39,.85); }
+.exec-sec-count { font-size: 11px; color: rgba(17,24,39,.5); font-weight: 800; }
+.exec-sec-summary { font-size: 11px; color: rgba(17,24,39,.65); font-weight: 700; }
+.exec-sec-toggle { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 900; color: rgba(17,24,39,.6); }
+.exec-sec-toggle .chev { width: 9px; height: 9px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); transition: transform .15s; }
+.exec-section.open .exec-sec-toggle .chev { transform: rotate(45deg); }
+.exec-sec-body { display: none; padding: 12px; }
+.exec-section.open .exec-sec-body { display: block; }
+
+.exec-sec-readout { margin: 0 0 10px; padding: 10px; border-radius: 12px; border: 1px solid rgba(17,24,39,.08); background: linear-gradient(180deg, rgba(17,24,39,.015), transparent); }
+.exec-sec-readout .h { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.exec-sec-readout .k { font-size: 10px; font-weight: 900; letter-spacing: .10em; text-transform: uppercase; color: rgba(17,24,39,.6); }
+.exec-sec-readout .s { display: flex; gap: 6px; flex-wrap: wrap; }
+.exec-sec-readout p { margin: 5px 0 0; font-size: 12px; color: rgba(17,24,39,.75); font-weight: 650; line-height: 1.35; }
+
+.exec-health { margin: 8px 0 12px; border: 1px solid rgba(17,24,39,.08); border-radius: 14px; padding: 12px; background: linear-gradient(180deg, rgba(224,32,32,.06), transparent); box-shadow: var(--shadow); }
+.exec-health .row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.exec-health .title { font-size: 11px; font-weight: 900; letter-spacing: .10em; text-transform: uppercase; color: rgba(17,24,39,.75); }
+.exec-health .blurb { margin-top: 5px; font-size: 13px; color: rgba(17,24,39,.8); font-weight: 700; line-height: 1.35; }
+.exec-health .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.exec-health .chipx { display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px; border-radius: 99px; font-size: 11px; font-weight: 900; border: 1px solid rgba(17,24,39,.08); background: #fff; }
+.exec-health .chipx .dot { width: 7px; height: 7px; border-radius: 99px; display: inline-block; }
+.exec-health .chipx.above .dot { background: var(--ok); }
+.exec-health .chipx.at .dot { background: var(--warn); }
+.exec-health .chipx.below .dot { background: var(--danger); }
+
+.target-badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 7px; border-radius: 99px; font-size: 9px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; border: 1px solid rgba(17,24,39,.1); background: #fff; }
+.target-badge.above { border-color: rgba(22,163,74,.25); color: var(--ok); }
+.target-badge.at { border-color: rgba(245,158,11,.3); color: #B45309; }
+.target-badge.below { border-color: rgba(220,38,38,.28); color: var(--danger); }
+
+/* Exec Nav + Callouts */
+.exec-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 8px 0; }
+.exec-nav-left, .exec-nav-right { display: flex; gap: 6px; flex-wrap: wrap; }
+.exec-pill { display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px; border-radius: 99px; font-size: 11px; font-weight: 800; background: #F3F4F6; border: 1px solid rgba(17,24,39,.08); color: rgba(17,24,39,.75); }
+
+.exec-callouts { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 8px 0 12px; }
+.exec-callout { background: #fff; border: 1px solid rgba(17,24,39,.08); border-radius: 14px; padding: 11px; box-shadow: var(--shadow); }
+.exec-callout .h { font-size: 11px; font-weight: 900; letter-spacing: .10em; text-transform: uppercase; color: rgba(17,24,39,.7); }
+.exec-callout .l { margin: 6px 0 0; padding-left: 16px; color: rgba(17,24,39,.8); font-size: 12px; font-weight: 700; line-height: 1.35; }
+.exec-callout .l li { margin: 3px 0; cursor: pointer; }
+.exec-callout .l li:hover { text-decoration: underline; color: var(--accent); }
+
+/* Modal */
+.modal { position: fixed; inset: 0; display: none; z-index: 90; }
+.modal.open { display: block; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(11,15,22,.55); }
+.modal-card { position: relative; max-width: 820px; margin: 8vh auto; background: #fff; border-radius: 16px; box-shadow: 0 30px 90px rgba(0,0,0,.35); overflow: hidden; }
+.modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 14px; background: #F8FAFC; border-bottom: 1px solid rgba(17,24,39,.08); }
+.modal-title { font-size: 14px; font-weight: 900; letter-spacing: .04em; }
+.modal-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.modal-close { border: 1px solid rgba(17,24,39,.1); background: #fff; border-radius: 8px; padding: 6px 10px; font-weight: 900; cursor: pointer; }
+.modal-body { padding: 14px 14px 16px; }
+.modal-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+.modal-kv { border: 1px solid rgba(17,24,39,.08); border-radius: 12px; padding: 10px; background: #fff; }
+.modal-kv .k { font-size: 10px; letter-spacing: .10em; text-transform: uppercase; font-weight: 900; color: rgba(17,24,39,.55); }
+.modal-kv .v { margin-top: 5px; font-size: 14px; font-weight: 900; color: rgba(17,24,39,.85); }
+.modal-section { margin-top: 10px; border: 1px solid rgba(17,24,39,.08); border-radius: 12px; padding: 10px; }
+.modal-section .k { font-size: 10px; letter-spacing: .10em; text-transform: uppercase; font-weight: 900; color: rgba(17,24,39,.55); }
+.modal-section .v { margin-top: 5px; font-size: 13px; font-weight: 700; color: rgba(17,24,39,.8); line-height: 1.4; }
+
+.sir-note { color: var(--muted); font-size: 11px; margin-top: 6px; }
+
+/* Count-up animation */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.animate-in { animation: fadeUp .4s ease forwards; }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0 !important; }
+  .cards-row { grid-template-columns: repeat(2,1fr); }
+  .signals { grid-template-columns: 1fr; }
+  .exec-callouts { grid-template-columns: 1fr; }
+  .metric-grid { grid-template-columns: repeat(2,1fr); }
+  .modal-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 640px) {
+  .cards-row { grid-template-columns: 1fr; }
+  .metric-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="app-layout">
+
+<!-- ========== SIDEBAR ========== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-brand"><span class="si">Sports Illustrated</span><span class="resorts">RESORTS</span></div>
+    <button class="sidebar-close" id="sidebarClose" title="Close filters">✕</button>
+  </div>
+  <div class="sidebar-body">
+    <div class="filter-group">
+      <div class="filter-group-label">Time Window</div>
+      <select class="filter-select" id="filterWindow">
+        <option value="all">All Windows</option>
+        <option value="MTD" selected>MTD</option>
+        <option value="QTD">QTD</option>
+        <option value="YTD">YTD</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-label">Sales Center</div>
+      <select class="filter-select" id="filterCenter">
+        <option value="all">All Centers</option>
+        <option value="Nashville Sales Center">Nashville</option>
+        <option value="Chicago Sales Center">Chicago</option>
+        <option value="Tuscaloosa Sales Center">Tuscaloosa</option>
+      </select>
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <div class="filter-group">
+      <div class="filter-group-label">Status <span class="count" id="statusCount"></span></div>
+      <div class="filter-pills" id="filterStatus">
+        <span class="filter-pill active" data-value="all">All</span>
+        <span class="filter-pill" data-value="On Track">On Track</span>
+        <span class="filter-pill" data-value="Watch">Watch</span>
+        <span class="filter-pill" data-value="Blocked">Blocked</span>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-label">Segment <span class="count" id="segmentCount"></span></div>
+      <div class="filter-pills" id="filterSegment">
+        <span class="filter-pill active" data-value="all">All</span>
+        <span class="filter-pill" data-value="New Owner">New Owner</span>
+        <span class="filter-pill" data-value="Owner">Owner</span>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-label">Journey Stage</div>
+      <select class="filter-select" id="filterStage">
+        <option value="all">All Stages</option>
+        <option value="Arrival / Warm Up">Arrival / Warm Up</option>
+        <option value="Group Pres / Rent vs Own">Group Pres / Rent vs Own</option>
+        <option value="Discovery / Close">Discovery / Close</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-label">Metric Type</div>
+      <div class="filter-pills" id="filterType">
+        <span class="filter-pill active" data-value="all">All</span>
+        <span class="filter-pill" data-value="Sales">Sales</span>
+        <span class="filter-pill" data-value="Engagement">Engagement</span>
+      </div>
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <div class="filter-group">
+      <div class="filter-group-label">Exec KPI Category</div>
+      <select class="filter-select" id="filterExecCat">
+        <option value="all">All Categories</option>
+        <option value="Tour Execution">Tour Execution</option>
+        <option value="Engagement">Engagement</option>
+        <option value="Content Usage">Content Usage</option>
+        <option value="Sales Performance">Sales Performance</option>
+        <option value="Compliance">Compliance</option>
+        <option value="Management Oversight">Management Oversight</option>
+      </select>
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <div class="filter-actions">
+      <button class="btn-clear" id="clearFilters">Clear All</button>
+      <button class="btn-apply" id="applyFilters">Apply</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ========== MAIN ========== -->
+<div class="main-content">
+
+<!-- Top bar -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <button class="sidebar-toggle" id="sidebarToggle" title="Toggle filters">☰</button>
+    <div class="top-bar-brand">
+      <span class="si">SI Resorts</span>
+      <span class="divider"></span>
+      <span class="title">Sales Performance</span>
+    </div>
+    <div class="active-filters" id="activeFilters">
+      <span class="no-filters">No filters active</span>
+    </div>
+  </div>
+  <div class="top-bar-right">
+    <span class="pill-btn" id="jumpExec">Exec KPIs</span>
+    <span class="pill-btn" id="jumpMatrix">Matrix</span>
+    <span class="pill-btn" id="jumpDetail">Sales Detail</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- Hero -->
+<div class="sir-hero">
+  <div class="sir-hero-inner">
+    <div>
+      <div class="sir-hero-kicker">ELEVATE EVERY PLAY</div>
+      <div class="sir-hero-title">SALES PERFORMANCE</div>
+      <div class="sir-hero-sub">Tour flow, close rate, and value per tour — executive-ready, sales-center friendly.</div>
+    </div>
+    <div class="sir-goalbar">
+      <div class="sir-goalbar-label">GOAL TRACK</div>
+      <div class="sir-goalbar-track">
+        <span class="sir-goalbar-line"></span>
+        <span class="sir-goalbar-goal" title="Goal"></span>
+        <span class="sir-goalbar-actual" title="Actual"></span>
+      </div>
+      <div class="sir-goalbar-meta"><span><b>Goal</b> 3,000 VPG</span><span class="sep">•</span><span><b>Actual</b> 3,200 VPG</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Sales Signals -->
+<div class="section-header">Sales Signals</div>
+<section class="signals">
+  <div class="chip top"><span class="dot"></span><div><h3>↑ Tour Flow Momentum • Show Rate + Throughput</h3><p>Reduce friction from check-in to warm-up; protect tour starts and pacing.</p></div></div>
+  <div class="chip vol"><span class="dot"></span><div><h3>★ Value Lift Watch • Rent vs. Own + Playsheet Fit</h3><p>Improve value clarity and alignment of packages to guest preferences.</p></div></div>
+  <div class="chip block"><span class="dot"></span><div><h3>↓ Quality Risk • Rescission &amp; Post-Sale Confidence</h3><p>Early signals to tighten expectation setting, disclosures, and trust at close.</p></div></div>
+</section>
+
+<!-- Core KPIs -->
+<div class="section-header">Timeshare Sales: Core KPIs (MTD)</div>
+<div class="cards-row">
+  <div class="card"><div class="label" title="Tours – count of tours with a valid disposition.">Total Tours</div><div class="value"><span class="marker-under" data-count="3160">0</span></div><div class="comp pos">▲ 4% vs Plan</div></div>
+  <div class="card"><div class="label" title="Purchases (Net Sales Transactions).">Purchases</div><div class="value"><span class="marker-under" data-count="412">0</span></div><div class="comp pos">▲ 2% vs Plan</div></div>
+  <div class="card"><div class="label" title="Close % – Purchases / Tours.">Close %</div><div class="value"><span class="marker-under" data-count="13.0" data-suffix="%" data-decimals="1">0</span> <span class="sub-value">(+0.4 pts)</span></div><div class="comp pos">▲ vs Prior Period</div></div>
+  <div class="card"><div class="label" title="VPG – Net Qualified Sales Volume / Tours.">VPG</div><div class="value"><span class="marker-under" data-count="3200" data-prefix="$">0</span> <span class="sub-value">(+$120)</span></div><div class="comp pos">▲ vs Plan</div></div>
+</div>
+
+<div class="section-header">Value &amp; Quality</div>
+<div class="cards-row">
+  <div class="card"><div class="label" title="APT – Net Qualified Sales Volume / Purchases.">APT</div><div class="value"><span class="marker-under">$24.5k</span></div><div class="comp pos">▲ $0.7k vs Plan</div></div>
+  <div class="card"><div class="label" title="Net Qualified Sales Volume.">Net Volume</div><div class="value"><span class="marker-under">$10.1M</span></div><div class="comp pos">▲ 6% vs Prior Period</div></div>
+  <div class="card"><div class="label" title="Net Sales (currency).">Net Sales $</div><div class="value"><span class="marker-under">$9.8M</span></div><div class="comp pos">▲ 5% vs Prior Period</div></div>
+  <div class="card"><div class="label" title="Rescission % – rescinded volume or transactions as a share of gross.">Rescission %</div><div class="value"><span class="marker-under">10.8%</span></div><div class="comp pos">▼ -0.6 pts vs Prior Period</div></div>
+</div>
+
+<div class="section-header">Process &amp; Compliance</div>
+<div class="cards-row">
+  <div class="card"><div class="label">Presenter Pen %</div><div class="value"><span class="marker-under">62%</span></div><div class="comp">Stable</div></div>
+  <div class="card"><div class="label">Credit Pull %</div><div class="value"><span class="marker-under">78%</span></div><div class="comp">Target 80%</div></div>
+  <div class="card"><div class="label">Discovery Pen %</div><div class="value"><span class="marker-under">21%</span></div><div class="comp">Target 20%</div></div>
+  <div class="card"><div class="label">Tour Flow</div><div class="value"><span class="marker-under">3,160</span></div><div class="comp">MTD tours</div></div>
+</div>
+<div class="sir-note">Dummy numbers for layout/testing. Swap with live Sales/Finance data when ready. Prior Period comparisons use the previous equal-length window.</div>
+
+<!-- Exec Section -->
+<section class="exec-block" id="execBlock">
+<div class="exec-head">
+  <div>
+    <h2>Digital Tour Execution &amp; Engagement (Executive)</h2>
+    <div class="meta">
+      <span><b>Window</b> <span id="execWindow">MTD</span></span>
+      <span style="opacity:.4">•</span>
+      <span><b>Comparison</b> vs <span id="execPriorLabel">Prior Period (equal-length)</span></span>
+      <span style="opacity:.4">•</span>
+      <span><b>Last Refresh</b> <span id="execRefresh">—</span></span>
+    </div>
+  </div>
+  <div class="pills"><button class="pill-btn" id="execExpandAll" type="button">Expand all</button><button class="pill-btn" id="execCollapseAll" type="button">Collapse all</button></div>
+</div>
+
+<div class="exec-nav" id="execNav">
+  <div class="exec-nav-left">
+    <span class="exec-pill"><b>View</b> Executive</span>
+    <span class="exec-pill"><b>Prior</b> Equal-length window</span>
+    <span class="exec-pill"><b>Tip</b> Click any KPI for detail</span>
+  </div>
+</div>
+
+<div class="exec-health" id="execOverallReadout"></div>
+
+<div class="exec-callouts" id="execCallouts">
+  <div class="exec-callout" id="calloutWins"><div class="h">What's going well</div><ul class="l"></ul></div>
+  <div class="exec-callout" id="calloutWatch"><div class="h">Needs attention</div><ul class="l"></ul></div>
+  <div class="exec-callout" id="calloutNext"><div class="h">Next focus</div><ul class="l"></ul></div>
+</div>
+<div class="exec-sections" id="execSections"></div>
+</section>
+
+<!-- Matrix -->
+<section class="matrix-card">
+  <div class="matrix-head"><h2>Close % × VPG Matrix</h2><div class="hint">Upper-right is strongest (high Close % and high VPG). Click a bubble to jump to that sales center in the detail table.</div></div>
+  <div class="matrix-wrap">
+    <svg id="impactMatrix" role="img" viewBox="0 0 1600 600"></svg>
+    <div class="matrix-tooltip" id="matrixTip"></div>
+  </div>
+  <div class="matrix-legend">
+    <span class="key"><span class="sw" style="background:#14532D"></span>Core Growth</span>
+    <span class="key"><span class="sw" style="background:#6B21A8"></span>Niche Converters</span>
+    <span class="key"><span class="sw" style="background:#1E40AF"></span>Traffic Drivers</span>
+    <span class="key"><span class="sw" style="background:#4B5563"></span>Legacy/Idle</span>
+  </div>
+</section>
+
+<!-- Sales Detail Table -->
+<div class="section-header" id="salesDetailHeader">Sales Performance Detail</div>
+<div class="table-wrap">
+  <div class="search-container">
+    <div class="search-wrapper">
+      <svg class="search-icon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>
+      <input id="tableSearch" placeholder="Filter sales centers, stages, or metrics..." type="text"/>
+    </div>
+    <div class="table-filters-inline" id="tableQuickFilters">
+      <button class="table-filter-btn active" data-filter="all">All</button>
+      <button class="table-filter-btn" data-filter="On Track">On Track</button>
+      <button class="table-filter-btn" data-filter="Watch">Watch</button>
+    </div>
+    <div class="sir-note" style="margin-left:10px;">Click matrix bubbles to jump to the matching row.</div>
+  </div>
+  <table id="digitalProductsTable">
+    <colgroup>
+      <col class="col-prod"/><col class="col-desc"/><col class="col-lob"/><col class="col-strat"/>
+      <col class="col-type"/><col class="col-status"/><col class="col-launch"/>
+      <col class="col-kpi"/><col class="col-actual"/><col class="col-proj"/><col class="col-goal"/><col class="col-delta"/>
+      <col class="col-kpiCharts"/>
+    </colgroup>
+    <thead><tr>
+      <th class="sticky">Sales Center</th><th class="center ixy-th">Close % / VPG</th>
+      <th>Notes</th><th>Journey Stage</th><th class="center">Segment</th>
+      <th class="center">Metric Type</th><th>Status</th><th>Window</th>
+      <th>Metric</th><th class="center">Actual</th><th class="center">Proj</th>
+      <th class="center">Goal</th><th class="right">Δ vs Goal</th><th>Trend</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td class="rowhead sticky" data-impact="13.0" data-influence="3200" rowspan="3">Nashville Sales Center</td>
+        <td class="center ixy-cell" data-impact="13.0" data-influence="3200" rowspan="3"><div class="ixy-wrap"><div><span class="ixy-tag">Close</span><span class="ixy-val">13.0%</span></div><div><span class="ixy-tag">VPG</span><span class="ixy-val">$3,200</span></div></div></td>
+        <td class="desc" rowspan="3">Prototype row: show-rate focus + warm-up experience driving confidence into discovery.</td>
+        <td rowspan="3">Arrival / Warm Up</td>
+        <td class="center" rowspan="3"><span class="strat-pill core">New Owner</span></td>
+        <td class="center" rowspan="3"><span class="type-pill book">Sales</span></td>
+        <td rowspan="3"><span class="status on">On Track</span></td>
+        <td rowspan="3">MTD</td>
+        <td class="kpi">Total Tours</td><td class="center text-ok">1,200</td><td class="center text-ok">1,150</td><td class="center">1,100</td><td class="right delta pos">+100</td>
+        <td><div class="spark" data-series="980,1050,1120,1200"></div></td>
+      </tr>
+      <tr><td class="kpi">Purchases</td><td class="center text-ok">156</td><td class="center text-ok">145</td><td class="center">140</td><td class="right delta pos">+16</td><td><div class="spark" data-series="120,130,142,156"></div></td></tr>
+      <tr><td class="kpi">Rescission %</td><td class="center text-neg">11%</td><td class="center text-ok">10%</td><td class="center">9%</td><td class="right delta neg">+2%</td><td><div class="spark" data-series="9,10,10,11"></div></td></tr>
+
+      <tr>
+        <td class="rowhead sticky" data-impact="11.5" data-influence="2950" rowspan="3">Chicago Sales Center</td>
+        <td class="center ixy-cell" data-impact="11.5" data-influence="2950" rowspan="3"><div class="ixy-wrap"><div><span class="ixy-tag">Close</span><span class="ixy-val">11.5%</span></div><div><span class="ixy-tag">VPG</span><span class="ixy-val">$2,950</span></div></div></td>
+        <td class="desc" rowspan="3">Prototype row: presentation + rent-vs-own clarity to lift value and reduce reversals.</td>
+        <td rowspan="3">Group Pres / Rent vs Own</td>
+        <td class="center" rowspan="3"><span class="strat-pill traffic">Owner</span></td>
+        <td class="center" rowspan="3"><span class="type-pill book">Sales</span></td>
+        <td rowspan="3"><span class="status delay">Watch</span></td>
+        <td rowspan="3">MTD</td>
+        <td class="kpi">Total Tours</td><td class="center text-ok">980</td><td class="center text-ok">1,000</td><td class="center">1,020</td><td class="right delta neg">-40</td>
+        <td><div class="spark" data-series="1040,1010,995,980"></div></td>
+      </tr>
+      <tr><td class="kpi">Purchases</td><td class="center text-ok">113</td><td class="center text-ok">120</td><td class="center">122</td><td class="right delta neg">-9</td><td><div class="spark" data-series="125,122,118,113"></div></td></tr>
+      <tr><td class="kpi">Credit Pull %</td><td class="center text-ok">78%</td><td class="center text-ok">80%</td><td class="center">82%</td><td class="right delta neg">-4%</td><td><div class="spark" data-series="82,81,79,78"></div></td></tr>
+
+      <tr>
+        <td class="rowhead sticky" data-impact="9.8" data-influence="3400" rowspan="3">Tuscaloosa Sales Center</td>
+        <td class="center ixy-cell" data-impact="9.8" data-influence="3400" rowspan="3"><div class="ixy-wrap"><div><span class="ixy-tag">Close</span><span class="ixy-val">9.8%</span></div><div><span class="ixy-tag">VPG</span><span class="ixy-val">$3,400</span></div></div></td>
+        <td class="desc" rowspan="3">Prototype row: discovery effectiveness + close confidence; watch rescission trend.</td>
+        <td rowspan="3">Discovery / Close</td>
+        <td class="center" rowspan="3"><span class="strat-pill niche">New Owner</span></td>
+        <td class="center" rowspan="3"><span class="type-pill book">Sales</span></td>
+        <td rowspan="3"><span class="status on">On Track</span></td>
+        <td rowspan="3">MTD</td>
+        <td class="kpi">VPG</td><td class="center text-ok">$3,400</td><td class="center text-ok">$3,200</td><td class="center">$3,100</td><td class="right delta pos">+300</td>
+        <td><div class="spark" data-series="2900,3050,3250,3400"></div></td>
+      </tr>
+      <tr><td class="kpi">Close %</td><td class="center text-ok">9.8%</td><td class="center text-ok">9.5%</td><td class="center">9.0%</td><td class="right delta pos">+0.8%</td><td><div class="spark" data-series="8.6,9.0,9.4,9.8"></div></td></tr>
+      <tr><td class="kpi">Discovery Pen %</td><td class="center text-ok">22%</td><td class="center text-ok">20%</td><td class="center">18%</td><td class="right delta pos">+4%</td><td><div class="spark" data-series="16,18,20,22"></div></td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div><!-- .wrap -->
+</div><!-- .main-content -->
+</div><!-- .app-layout -->
+
+<!-- Modal -->
+<div class="modal" id="metricModal" role="dialog" aria-hidden="true">
+  <div class="modal-backdrop" data-close="1"></div>
+  <div class="modal-card">
+    <div class="modal-head">
+      <div><div class="modal-title" id="modalTitle">—</div><div class="modal-sub" id="modalSub">—</div></div>
+      <button class="modal-close" data-close="1">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid">
+        <div class="modal-kv"><div class="k">Current</div><div class="v" id="modalCur">—</div></div>
+        <div class="modal-kv"><div class="k">Prior</div><div class="v" id="modalPrior">—</div></div>
+        <div class="modal-kv"><div class="k">Δ vs Prior</div><div class="v" id="modalDelta">—</div></div>
+        <div class="modal-kv"><div class="k">Target status</div><div class="v" id="modalTarget">—</div></div>
+      </div>
+      <div class="modal-section"><div class="k">What it measures</div><div class="v" id="modalMeasures">—</div></div>
+      <div class="modal-section"><div class="k">Why it matters</div><div class="v" id="modalWhy">—</div></div>
+      <div class="modal-section"><div class="k">Data + improvements</div><div class="v" id="modalData">—</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// EXEC METRICS DATA
+// =====================================================
+const EXEC_METRICS = [
+  { category:'Tour Execution', metric:'Profile Builder Completion % (Pre Check-In)', level:'Tour / Agent', unit:'pct', higherIsBetter:true, target:85.0, tol:1.0, current:86.2, prior:82.7, trend:[78.0,80.5,82.7,84.1,86.2], source:'GA / Web App', gaps:'Add WWID; standardize timestamp logic', isNew:true, measures:'% of profile completed before guest check-in', why:'Ensures readiness and a smoother guest experience' },
+  { category:'Tour Execution', metric:'Discovery Form Completion %', level:'Tour / Agent', unit:'pct', higherIsBetter:true, target:90.0, tol:1.0, current:91.4, prior:89.1, trend:[86.5,87.8,89.1,90.0,91.4], source:'GA / Rep App', gaps:'Drill-down by agent & manager', isNew:true, measures:'Completion of required discovery questions', why:'Supports compliance and improves sales outcomes' },
+  { category:'Tour Execution', metric:'Tour Completion Time', level:'Tour', unit:'min', higherIsBetter:false, target:75.0, tol:2.0, current:74.0, prior:78.5, trend:[82,80,78.5,76.2,74.0], source:'GA / Rep App & Journey', gaps:'Normalize per station', isNew:true, measures:'Total duration of a tour', why:'Highlights efficiency and bottlenecks in tour flow' },
+  { category:'Tour Execution', metric:'Station-Level Time (avg per station)', level:'Tour', unit:'min', higherIsBetter:false, target:13.0, tol:0.5, current:12.6, prior:13.4, trend:[14.1,13.8,13.4,13.0,12.6], source:'GA / Rep App', gaps:'Visualize trends by agent', isNew:true, measures:'Average time spent at each station', why:'Pinpoints friction in the tour flow' },
+  { category:'Engagement', metric:'Average Session Time', level:'Agent / Tour', unit:'min', higherIsBetter:true, target:18.0, tol:0.7, current:18.4, prior:17.1, trend:[15.5,16.2,17.1,17.8,18.4], source:'GA / Rep App', gaps:'Consider stronger engagement signals', isNew:false, measures:'Time spent in app/content', why:'Proxy for engagement and adoption' },
+  { category:'Engagement', metric:'Content Time Spent', level:'Agent', unit:'min', higherIsBetter:true, target:10.0, tol:0.6, current:9.8, prior:9.1, trend:[8.2,8.7,9.1,9.5,9.8], source:'GA / Rep App', gaps:'Tie directly to performance', isNew:false, measures:'Time spent viewing documents/slides', why:'Indicates depth of usage and content effectiveness' },
+  { category:'Engagement', metric:'Page Access (Profile / Guest Summary) %', level:'Agent / Manager', unit:'pct', higherIsBetter:true, target:70.0, tol:2.0, current:72.0, prior:68.5, trend:[61,64,68.5,70.3,72.0], source:'GA / Rep App', gaps:'Track % usage, not just raw views', isNew:true, measures:'Access rate for key pages (Profile/Guest Summary)', why:'Signals tool adoption and compliance' },
+  { category:'Content Usage', metric:'Unique Content Views', level:'Agent', unit:'count', higherIsBetter:true, target:20000, tol:800, current:20450, prior:19600, trend:[17200,18400,19600,20100,20450], source:'GA / Rep App', gaps:'Switch from email → WWID', isNew:false, measures:'Unique users viewing content', why:'Measures reach of collateral' },
+  { category:'Content Usage', metric:'Content Views per Agent', level:'Agent', unit:'count', higherIsBetter:true, target:30.0, tol:1.0, current:31.6, prior:30.1, trend:[26.0,28.3,30.1,30.9,31.6], source:'GA / Rep App', gaps:'Rank by performance impact', isNew:true, measures:'Content views per agent', why:'Identifies best practices and coaching opportunities' },
+  { category:'Content Usage', metric:'Slide / Document Performance (Top content share)', level:'Agent / Content', unit:'pct', higherIsBetter:true, target:42.0, tol:2.0, current:44.0, prior:41.0, trend:[36,39,41,42.5,44], source:'GA / Rep App', gaps:'Define "efficiency" metric', isNew:true, measures:'Share of usage captured by highest-performing content', why:'Helps validate content effectiveness' },
+  { category:'Sales Performance', metric:'Sales Conversion Rate', level:'Agent / Tour', unit:'pct', higherIsBetter:true, target:13.0, tol:0.4, current:13.0, prior:12.6, trend:[11.8,12.2,12.6,12.8,13.0], source:'GA / Rep App', gaps:'Join with engagement data', isNew:true, measures:'% of tours converting to sales', why:'Core revenue driver' },
+  { category:'Sales Performance', metric:'VPG vs Content Used (correlation index)', level:'Agent', unit:'idx', higherIsBetter:true, target:0.60, tol:0.03, current:0.62, prior:0.58, trend:[0.50,0.54,0.58,0.60,0.62], source:'GA / Rep App', gaps:'Build cross-system joins', isNew:true, measures:'Relationship between content use and VPG', why:'Optimizes sales playbooks and content strategy' },
+  { category:'Sales Performance', metric:'Engagement → Conversion Impact (lift vs baseline)', level:'Agent / Site', unit:'pct', higherIsBetter:true, target:6.0, tol:0.6, current:6.4, prior:5.1, trend:[3.2,4.1,5.1,5.9,6.4], source:'GA / Rep App', gaps:'Requires unified IDs', isNew:true, measures:'Lift in conversion correlated with engagement', why:'Justifies product investment with outcome linkage' },
+  { category:'Compliance', metric:'Required Steps Completion %', level:'Agent / Manager', unit:'pct', higherIsBetter:true, target:94.0, tol:1.0, current:94.0, prior:92.3, trend:[90.2,91.0,92.3,93.1,94.0], source:'GA / Rep App', gaps:'Add alerts for non-compliance', isNew:true, measures:'Completion rate for mandatory steps', why:'Reduces risk and improves consistency' },
+  { category:'Management Oversight', metric:'Manager Access to Guest Summary %', level:'Manager', unit:'pct', higherIsBetter:true, target:55.0, tol:2.0, current:57.0, prior:52.0, trend:[45,49,52,55,57], source:'GA / Rep App', gaps:'Trend over time', isNew:true, measures:'Manager review rate of guest summaries', why:'Supports coaching and accountability' }
+];
+
+// =====================================================
+// UTILITY FUNCTIONS
+// =====================================================
+function fmtMetricValue(v, unit){
+  if (v === null || v === undefined || Number.isNaN(v)) return '—';
+  if (unit === 'pct') return v.toFixed(1) + '%';
+  if (unit === 'min') return v.toFixed(1) + 'm';
+  if (unit === 'idx') return v.toFixed(2);
+  if (unit === 'count') return v >= 1000 ? v.toLocaleString(undefined,{maximumFractionDigits:0}) : (v.toFixed(1)+'').replace(/\.0$/,'');
+  return String(v);
+}
+function deltaText(m){
+  const d = m.current - m.prior;
+  const good = m.higherIsBetter ? (d>=0) : (d<=0);
+  const isZero = Math.abs(d) < 1e-9;
+  const cls = isZero ? 'neu' : (good ? 'pos' : 'neg');
+  let txt;
+  if (m.unit==='pct') txt = (d>=0?'+':'') + d.toFixed(1) + ' pts';
+  else if (m.unit==='min') txt = (d>=0?'+':'') + d.toFixed(1) + 'm';
+  else if (m.unit==='idx') txt = (d>=0?'+':'') + d.toFixed(2);
+  else txt = (d>=0?'+':'') + Math.round(d).toLocaleString();
+  const arrow = isZero ? '■' : (good ? '▲' : '▼');
+  return { cls, text: arrow + ' ' + txt + ' vs Prior' };
+}
+function evalTarget(m){
+  if (m.target===undefined||m.target===null||!Number.isFinite(Number(m.target))) return {status:'—',cls:'at'};
+  const tol=Number.isFinite(Number(m.tol))?Number(m.tol):0;
+  const cur=Number(m.current), tgt=Number(m.target);
+  if (!Number.isFinite(cur)||!Number.isFinite(tgt)) return {status:'—',cls:'at'};
+  if (m.higherIsBetter){
+    if (cur>=tgt+tol) return {status:'Above target',cls:'above'};
+    if (cur>=tgt-tol) return {status:'At target',cls:'at'};
+    return {status:'Below target',cls:'below'};
+  } else {
+    if (cur<=tgt-tol) return {status:'Above target',cls:'above'};
+    if (cur<=tgt+tol) return {status:'At target',cls:'at'};
+    return {status:'Below target',cls:'below'};
+  }
+}
+function renderMiniSpark(series){
+  const raw=(series||[]).map(Number).filter(v=>Number.isFinite(v));
+  if (raw.length<2) return '';
+  const w=180,h=24;
+  const min=Math.min(...raw),max=Math.max(...raw);
+  const xStep=w/(raw.length-1);
+  const pts=raw.map((v,i)=>{
+    const x=i*xStep; const pad=2; const avail=h-(pad*2);
+    const y=(h-pad)-((v-min)/((max-min)||1))*avail;
+    return x.toFixed(2)+','+y.toFixed(2);
+  }).join(' ');
+  return '<svg class="sparkline" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><polyline fill="none" stroke="var(--accent)" stroke-width="2" points="'+pts+'"/></svg>';
+}
+function countTargetStates(metrics){
+  let above=0,at=0,below=0;
+  metrics.forEach(m=>{const s=evalTarget(m).cls; if(s==='above')above++;else if(s==='below')below++;else at++;});
+  return {above,at,below,total:metrics.length};
+}
+function pickHighlights(metrics){
+  return metrics.map(m=>{
+    const t=evalTarget(m); const d=Number(m.current)-Number(m.prior);
+    return {m,t,d,mag:Math.abs(d),pri:t.cls==='below'?0:t.cls==='at'?1:2};
+  }).sort((a,b)=>(a.pri-b.pri)||(b.mag-a.mag)).slice(0,2);
+}
+function buildExecReadoutData(metrics){
+  const c=countTargetStates(metrics); const hi=pickHighlights(metrics);
+  let headline;
+  if(c.below===0&&c.at<=Math.ceil(c.total/3)) headline='Strong: KPIs are largely above target.';
+  else if(c.below===0) headline='Stable: KPIs are at/above target with a few watch items.';
+  else if(c.below<=Math.max(1,Math.floor(c.total/4))) headline='Mixed: a small set of KPIs are below target.';
+  else headline='At risk: multiple KPIs are below target.';
+  const bullets=[];
+  hi.forEach(({m,t})=>{
+    const delta=deltaText(m).text;
+    const tgtTxt=(m.target!==undefined&&m.target!==null)?'Target '+fmtMetricValue(m.target,m.unit):'';
+    bullets.push(m.metric+': '+t.status+(tgtTxt?' ('+tgtTxt+')':'')+' • '+delta+'.');
+  });
+  return {headline,bullets,counts:c};
+}
+function renderTargetChipCounts(counts){
+  return '<span class="chipx above"><span class="dot"></span>Above: '+counts.above+'</span><span class="chipx at"><span class="dot"></span>At: '+counts.at+'</span><span class="chipx below"><span class="dot"></span>Below: '+counts.below+'</span>';
+}
+
+// =====================================================
+// SPARKLINES (Table)
+// =====================================================
+function renderSparkline(cell){
+  const raw=(cell.getAttribute('data-series')||'').split(',').map(n=>parseFloat(n.trim())).filter(n=>!isNaN(n));
+  if(raw.length<2)return;
+  const w=180,h=24;
+  const min=Math.min(...raw),max=Math.max(...raw),xStep=w/(raw.length-1);
+  const pts=raw.map((v,i)=>{const x=i*xStep;const p=2;const a=h-(p*2);const y=(h-p)-((v-min)/((max-min)||1))*a;return x.toFixed(2)+','+y.toFixed(2);}).join(' ');
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('class','sparkline');svg.setAttribute('viewBox','0 0 '+w+' '+h);svg.setAttribute('preserveAspectRatio','none');
+  const poly=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+  poly.setAttribute('fill','none');poly.setAttribute('stroke','var(--accent)');poly.setAttribute('stroke-width','2');poly.setAttribute('points',pts);
+  svg.appendChild(poly);cell.innerHTML='';cell.appendChild(svg);
+  const last=raw[raw.length-1],first=raw[0],dir=last-first;
+  const label=document.createElement('span');label.className='label';
+  label.textContent=(dir>0?'▲ ':dir<0?'▼ ':'■ ')+last.toString();cell.appendChild(label);
+}
+
+// =====================================================
+// COUNT-UP ANIMATION
+// =====================================================
+function animateCountUp(){
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const end=parseFloat(el.dataset.count);
+    const prefix=el.dataset.prefix||'';
+    const suffix=el.dataset.suffix||'';
+    const decimals=parseInt(el.dataset.decimals||'0');
+    const duration=800;
+    const start=performance.now();
+    function step(ts){
+      const progress=Math.min((ts-start)/duration,1);
+      const eased=1-Math.pow(1-progress,3);
+      const current=eased*end;
+      if(decimals>0) el.textContent=prefix+current.toFixed(decimals)+suffix;
+      else el.textContent=prefix+Math.round(current).toLocaleString()+suffix;
+      if(progress<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+// =====================================================
+// SIDEBAR & FILTER LOGIC
+// =====================================================
+function initSidebar(){
+  const sidebar=document.getElementById('sidebar');
+  const toggle=document.getElementById('sidebarToggle');
+  const close=document.getElementById('sidebarClose');
+
+  toggle.addEventListener('click',()=>{
+    if(window.innerWidth<=1100){
+      sidebar.classList.toggle('open');
+    } else {
+      sidebar.classList.toggle('collapsed');
+    }
+  });
+  close.addEventListener('click',()=>{
+    if(window.innerWidth<=1100) sidebar.classList.remove('open');
+    else sidebar.classList.add('collapsed');
+  });
+}
+
+function initFilterPills(){
+  document.querySelectorAll('.filter-pills').forEach(group=>{
+    group.querySelectorAll('.filter-pill').forEach(pill=>{
+      pill.addEventListener('click',()=>{
+        const isAll=pill.dataset.value==='all';
+        if(isAll){
+          group.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
+          pill.classList.add('active');
+        } else {
+          group.querySelector('[data-value="all"]').classList.remove('active');
+          pill.classList.toggle('active');
+          if(!group.querySelector('.filter-pill.active')) group.querySelector('[data-value="all"]').classList.add('active');
+        }
+      });
+    });
+  });
+}
+
+function getActiveFilters(){
+  const filters={};
+  filters.window=document.getElementById('filterWindow').value;
+  filters.center=document.getElementById('filterCenter').value;
+  filters.stage=document.getElementById('filterStage').value;
+  filters.execCat=document.getElementById('filterExecCat').value;
+
+  filters.status=[];
+  document.querySelectorAll('#filterStatus .filter-pill.active').forEach(p=>{filters.status.push(p.dataset.value);});
+  if(filters.status.includes('all')) filters.status=['all'];
+
+  filters.segment=[];
+  document.querySelectorAll('#filterSegment .filter-pill.active').forEach(p=>{filters.segment.push(p.dataset.value);});
+  if(filters.segment.includes('all')) filters.segment=['all'];
+
+  filters.type=[];
+  document.querySelectorAll('#filterType .filter-pill.active').forEach(p=>{filters.type.push(p.dataset.value);});
+  if(filters.type.includes('all')) filters.type=['all'];
+
+  return filters;
+}
+
+function applyFilters(){
+  const f=getActiveFilters();
+  const tbody=document.querySelector('#digitalProductsTable tbody');
+  const rows=Array.from(tbody.getElementsByTagName('tr'));
+
+  for(let i=0;i<rows.length;i+=3){
+    const group=rows.slice(i,i+3);
+    if(!group.length)continue;
+    const first=group[0];
+    const text=group.map(r=>r.textContent).join(' ').toLowerCase();
+    let show=true;
+
+    if(f.center!=='all'){
+      const head=first.querySelector('.rowhead');
+      if(head&&!head.textContent.trim().includes(f.center)) show=false;
+    }
+    if(show&&!f.status.includes('all')){
+      const st=first.querySelector('.status');
+      if(st&&!f.status.includes(st.textContent.trim())) show=false;
+    }
+    if(show&&!f.segment.includes('all')){
+      const seg=first.querySelector('.strat-pill');
+      if(seg&&!f.segment.includes(seg.textContent.trim())) show=false;
+    }
+    if(show&&!f.type.includes('all')){
+      const tp=first.querySelector('.type-pill');
+      if(tp&&!f.type.includes(tp.textContent.trim())) show=false;
+    }
+    if(show&&f.stage!=='all'){
+      if(!text.toLowerCase().includes(f.stage.toLowerCase())) show=false;
+    }
+    group.forEach(r=>{if(show)r.classList.remove('hidden');else r.classList.add('hidden');});
+  }
+
+  // Filter exec sections
+  if(f.execCat!=='all'){
+    document.querySelectorAll('.exec-section').forEach(sec=>{
+      if(sec.dataset.cat===f.execCat){sec.style.display='';sec.classList.add('open');sec.querySelector('.exec-sec-head').setAttribute('aria-expanded','true');}
+      else sec.style.display='none';
+    });
+  } else {
+    document.querySelectorAll('.exec-section').forEach(sec=>sec.style.display='');
+  }
+
+  updateActiveFilterChips(f);
+}
+
+function updateActiveFilterChips(f){
+  const container=document.getElementById('activeFilters');
+  const chips=[];
+  if(f.window!=='all'&&f.window!=='MTD') chips.push(f.window);
+  if(f.center!=='all') chips.push(f.center.replace(' Sales Center',''));
+  if(!f.status.includes('all')) f.status.forEach(s=>chips.push(s));
+  if(!f.segment.includes('all')) f.segment.forEach(s=>chips.push(s));
+  if(!f.type.includes('all')) f.type.forEach(s=>chips.push(s));
+  if(f.stage!=='all') chips.push(f.stage);
+  if(f.execCat!=='all') chips.push(f.execCat);
+
+  if(chips.length===0){
+    container.innerHTML='<span class="no-filters">No filters active</span>';
+  } else {
+    container.innerHTML=chips.map(c=>'<span class="active-filter-chip">'+c+'<span class="x" data-remove="'+c+'">✕</span></span>').join('');
+  }
+}
+
+function clearAllFilters(){
+  document.getElementById('filterWindow').value='all';
+  document.getElementById('filterCenter').value='all';
+  document.getElementById('filterStage').value='all';
+  document.getElementById('filterExecCat').value='all';
+  document.querySelectorAll('.filter-pills').forEach(group=>{
+    group.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
+    group.querySelector('[data-value="all"]').classList.add('active');
+  });
+  applyFilters();
+}
+
+// =====================================================
+// TABLE SEARCH
+// =====================================================
+function initSearch(){
+  const input=document.getElementById('tableSearch');
+  if(!input)return;
+  input.addEventListener('keyup',function(e){
+    const term=e.target.value.toLowerCase();
+    const tbody=document.querySelector('#digitalProductsTable tbody');
+    const rows=Array.from(tbody.getElementsByTagName('tr'));
+    for(let i=0;i<rows.length;i+=3){
+      const group=rows.slice(i,i+3);
+      if(!group.length)continue;
+      const text=group.map(r=>r.textContent).join(' ').toLowerCase();
+      const isMatch=text.includes(term);
+      group.forEach(r=>{if(isMatch)r.classList.remove('hidden');else r.classList.add('hidden');});
+    }
+  });
+}
+
+function initQuickTableFilters(){
+  document.querySelectorAll('.table-filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.table-filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter=btn.dataset.filter;
+      const tbody=document.querySelector('#digitalProductsTable tbody');
+      const rows=Array.from(tbody.getElementsByTagName('tr'));
+      for(let i=0;i<rows.length;i+=3){
+        const group=rows.slice(i,i+3);
+        if(!group.length)continue;
+        if(filter==='all'){group.forEach(r=>r.classList.remove('hidden'));continue;}
+        const st=group[0].querySelector('.status');
+        const match=st&&st.textContent.trim()===filter;
+        group.forEach(r=>{if(match)r.classList.remove('hidden');else r.classList.add('hidden');});
+      }
+    });
+  });
+}
+
+// =====================================================
+// EXEC RENDERING
+// =====================================================
+function groupByCategory(metrics){
+  const order=['Tour Execution','Engagement','Content Usage','Sales Performance','Compliance','Management Oversight'];
+  const map=new Map();
+  metrics.forEach(m=>{if(!map.has(m.category))map.set(m.category,[]);map.get(m.category).push(m);});
+  const ordered=[];
+  order.forEach(c=>{if(map.has(c))ordered.push(c);});
+  Array.from(map.keys()).filter(c=>!order.includes(c)).sort().forEach(c=>ordered.push(c));
+  return {map,ordered};
+}
+function sectionSummary(metrics){
+  let pos=0,neg=0,neu=0;
+  metrics.forEach(m=>{const d=m.current-m.prior;const good=m.higherIsBetter?(d>=0):(d<=0);Math.abs(d)<1e-9?neu++:good?pos++:neg++;});
+  return pos+' improving • '+neg+' declining • '+neu+' flat';
+}
+
+function renderExecSections(){
+  const host=document.getElementById('execSections');if(!host)return;
+  const {map,ordered}=groupByCategory(EXEC_METRICS);
+  const defaultOpen=new Set(['Tour Execution','Sales Performance']);
+  host.innerHTML=ordered.map(cat=>{
+    const ms=map.get(cat)||[];
+    const sum=sectionSummary(ms);
+    const cards=ms.map(m=>{
+      const d=deltaText(m);
+      const badge=m.isNew?'<span class="badge new">New</span>':'<span class="badge existing">Existing</span>';
+      return '<div class="metric-card" data-cat="'+m.category+'" data-metric="'+m.metric+'"><div class="top"><div><div class="name" title="'+m.level+' • '+m.source+'">'+m.metric+'</div><div class="sub" style="margin-top:3px;">'+badge+' <span class="muted">'+m.level+'</span></div></div><div class="cat">'+m.category+'</div></div><div class="val"><span class="marker-under">'+fmtMetricValue(m.current,m.unit)+'</span> <span class="target-badge '+evalTarget(m).cls+'"><span class="mini">'+evalTarget(m).status+'</span></span></div><div class="sub"><span class="muted">Prior:</span> '+fmtMetricValue(m.prior,m.unit)+' <span class="delta '+d.cls+'">'+d.text+'</span></div><div class="spark-mini">'+renderMiniSpark(m.trend)+'</div></div>';
+    }).join('');
+    const open=defaultOpen.has(cat);
+    const safeId='sec_'+cat.toLowerCase().replace(/[^a-z0-9]+/g,'_');
+    const r=buildExecReadoutData(ms);
+    return '<section class="exec-section'+(open?' open':'')+'" data-cat="'+cat+'"><button class="exec-sec-head" type="button" aria-expanded="'+open+'" aria-controls="'+safeId+'"><span class="left"><span class="exec-sec-title">'+cat+'</span><span class="exec-sec-count">('+ms.length+' KPIs)</span><span class="exec-sec-summary">'+sum+'</span></span><span class="exec-sec-toggle"><span class="chev"></span><span class="txt">Toggle</span></span></button><div class="exec-sec-body" id="'+safeId+'"><div class="exec-sec-readout"><div class="h"><div class="k">Executive summary (auto)</div><div class="s">'+renderTargetChipCounts(countTargetStates(ms))+'</div></div><p>'+r.headline+'</p><ul class="sir-note" style="margin:6px 0 0 16px;color:rgba(17,24,39,.8);font-size:12px;font-weight:700;">'+r.bullets.map(b=>'<li>'+b+'</li>').join('')+'</ul></div><div class="metric-grid">'+cards+'</div></div></section>';
+  }).join('');
+
+  // Overall health
+  const overall=document.getElementById('execOverallReadout');
+  if(overall){
+    const counts=countTargetStates(EXEC_METRICS);
+    const r=buildExecReadoutData(EXEC_METRICS);
+    overall.innerHTML='<div class="row"><div><div class="title">Executive health readout (auto)</div><div class="blurb">'+r.headline+'</div><ul class="sir-note" style="margin:6px 0 0 16px;color:rgba(17,24,39,.8);font-size:12px;font-weight:700;">'+r.bullets.map(b=>'<li>'+b+'</li>').join('')+'</ul></div><div class="chips">'+renderTargetChipCounts(counts)+'</div></div>';
+  }
+  initExecAccordions();
+}
+
+function initExecAccordions(){
+  document.querySelectorAll('.exec-sec-head').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const sec=btn.closest('.exec-section');if(!sec)return;
+      const isOpen=sec.classList.toggle('open');
+      btn.setAttribute('aria-expanded',isOpen?'true':'false');
+    });
+  });
+  const ea=document.getElementById('execExpandAll');
+  const ca=document.getElementById('execCollapseAll');
+  if(ea) ea.addEventListener('click',()=>document.querySelectorAll('.exec-section').forEach(s=>{s.classList.add('open');s.querySelector('.exec-sec-head').setAttribute('aria-expanded','true');}));
+  if(ca) ca.addEventListener('click',()=>document.querySelectorAll('.exec-section').forEach(s=>{s.classList.remove('open');s.querySelector('.exec-sec-head').setAttribute('aria-expanded','false');}));
+}
+
+function renderExecCallouts(){
+  const wE=document.querySelector('#calloutWins .l'),waE=document.querySelector('#calloutWatch .l'),nE=document.querySelector('#calloutNext .l');
+  if(!wE||!waE||!nE)return;
+  const byStatus=EXEC_METRICS.map(m=>({m,t:evalTarget(m)}));
+  const wins=byStatus.filter(x=>x.t.cls==='above').slice(0,2);
+  const watch=byStatus.filter(x=>x.t.cls==='below').slice(0,2);
+  let next=watch.length?watch:pickHighlights(EXEC_METRICS);
+  next=next.map(x=>x.m?x:{m:x.m});
+  const li=x=>'<li data-metric="'+x.m.metric+'">'+x.m.metric+' — '+evalTarget(x.m).status+'</li>';
+  wE.innerHTML=wins.length?wins.map(li).join(''):'<li>No KPIs above target yet (demo).</li>';
+  waE.innerHTML=watch.length?watch.map(li).join(''):'<li>No immediate below-target risks.</li>';
+  nE.innerHTML=next.length?next.map(li).join(''):'<li>—</li>';
+}
+
+function openMetricModal(metricName){
+  const m=EXEC_METRICS.find(x=>x.metric===metricName);if(!m)return;
+  const modal=document.getElementById('metricModal');if(!modal)return;
+  const t=evalTarget(m);
+  document.getElementById('modalTitle').textContent=m.metric;
+  document.getElementById('modalSub').textContent=m.category+' • '+m.level+' • '+m.source;
+  document.getElementById('modalCur').textContent=fmtMetricValue(m.current,m.unit);
+  document.getElementById('modalPrior').textContent=fmtMetricValue(m.prior,m.unit);
+  document.getElementById('modalDelta').textContent=deltaText(m).text;
+  const tgtTxt=(m.target!==undefined&&m.target!==null)?' '+fmtMetricValue(m.target,m.unit):'';
+  document.getElementById('modalTarget').innerHTML='<span class="target-badge '+t.cls+'"><span class="mini">'+t.status+(tgtTxt?' • Target'+tgtTxt:'')+'</span></span>';
+  document.getElementById('modalMeasures').textContent=m.measures||'—';
+  document.getElementById('modalWhy').textContent=m.why||'—';
+  document.getElementById('modalData').textContent=m.gaps||'';
+  modal.classList.add('open');modal.setAttribute('aria-hidden','false');
+}
+function closeMetricModal(){const modal=document.getElementById('metricModal');if(!modal)return;modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}
+function initMetricModal(){
+  const modal=document.getElementById('metricModal');if(!modal)return;
+  modal.addEventListener('click',e=>{if(e.target.getAttribute&&e.target.getAttribute('data-close')==='1')closeMetricModal();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMetricModal();});
+  const host=document.getElementById('execSections');
+  if(host) host.addEventListener('click',e=>{const card=e.target.closest('.metric-card');if(card&&card.dataset.metric)openMetricModal(card.dataset.metric);});
+  const callouts=document.getElementById('execCallouts');
+  if(callouts) callouts.addEventListener('click',e=>{
+    const li=e.target.closest('li[data-metric]');if(!li)return;
+    const name=li.getAttribute('data-metric');if(!name)return;
+    const m=EXEC_METRICS.find(x=>x.metric===name);
+    if(m){const sec=document.querySelector('.exec-section[data-cat="'+m.category+'"]');if(sec){sec.classList.add('open');sec.querySelector('.exec-sec-head').setAttribute('aria-expanded','true');sec.scrollIntoView({behavior:'smooth',block:'start'});}}
+    openMetricModal(name);
+  });
+}
+
+// =====================================================
+// MATRIX
+// =====================================================
+function buildImpactInfluenceMatrix(){
+  const svg=document.getElementById('impactMatrix');if(!svg)return;
+  const tip=document.getElementById('matrixTip');
+  const table=document.getElementById('digitalProductsTable');if(!table)return;
+  const X_BOOKINGS=100000;
+  const rowheads=Array.from(table.querySelectorAll('tbody td.rowhead'));
+  const products=rowheads.map(td=>{
+    const product=td.textContent.trim();const tr=td.closest('tr');
+    const ixy=tr?tr.querySelector('td.ixy-cell'):null;
+    const impact=ixy&&ixy.dataset.impact?parseFloat(ixy.dataset.impact):NaN;
+    const influence=ixy&&ixy.dataset.influence?parseFloat(ixy.dataset.influence):NaN;
+    const stratPill=tr?tr.querySelector('.strat-pill'):null;
+    const stratText=stratPill?stratPill.textContent.trim():'—';
+    const statusEl=tr?tr.querySelector('.status'):null;
+    const statusText=statusEl?statusEl.textContent.trim():'';
+    return {product,impact,influence,stratText,statusText};
+  }).filter(p=>!isNaN(p.impact)&&!isNaN(p.influence));
+
+  while(svg.firstChild)svg.removeChild(svg.firstChild);
+  const NS='http://www.w3.org/2000/svg';
+  if(!products.length){const t=document.createElementNS(NS,'text');t.textContent='No values found.';t.setAttribute('x','20');t.setAttribute('y','40');t.setAttribute('font-size','14');t.setAttribute('font-weight','700');t.setAttribute('fill','rgba(17,24,39,0.75)');svg.appendChild(t);return;}
+
+  const xMaxRaw=Math.max(...products.map(p=>p.impact));
+  const yMaxRaw=Math.max(...products.map(p=>p.influence));
+  const xMax=Math.ceil(xMaxRaw*1.2/5)*5||10;
+  const yMax=Math.ceil(yMaxRaw*1.15/500)*500||5000;
+  const xSplit=xMax*0.5;const ySplit=yMax*0.5;
+
+  const defs=document.createElementNS(NS,'defs');
+  defs.innerHTML='<linearGradient id="gNiche" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFF1F2"/><stop offset="100%" stop-color="#FFE4E6"/></linearGradient><linearGradient id="gCore" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F8FAFC"/><stop offset="100%" stop-color="#F1F5F9"/></linearGradient><linearGradient id="gTraffic" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EFF6FF"/><stop offset="100%" stop-color="#DBEAFE"/></linearGradient><linearGradient id="gLegacy" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F8FAFC"/><stop offset="100%" stop-color="#F1F5F9"/></linearGradient><filter id="bubbleShadow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="rgba(0,0,0,0.16)"/></filter>';
+  svg.appendChild(defs);
+
+  const W=1600,H=600,padL=76,padR=24,padT=18,padB=72;
+  const plotW=W-padL-padR,plotH=H-padT-padB;
+  const xScale=v=>padL+(v/xMax)*plotW;
+  const yScale=v=>padT+(1-(v/yMax))*plotH;
+  const midX=xScale(xSplit),midY=yScale(ySplit);
+
+  [{x:padL,y:padT,w:midX-padL,h:midY-padT,fill:'url(#gNiche)'},{x:midX,y:padT,w:padL+plotW-midX,h:midY-padT,fill:'url(#gCore)'},{x:padL,y:midY,w:midX-padL,h:padT+plotH-midY,fill:'url(#gLegacy)'},{x:midX,y:midY,w:padL+plotW-midX,h:padT+plotH-midY,fill:'url(#gTraffic)'}].forEach(r=>{const el=document.createElementNS(NS,'rect');el.setAttribute('x',r.x);el.setAttribute('y',r.y);el.setAttribute('width',r.w);el.setAttribute('height',r.h);el.setAttribute('rx','14');el.setAttribute('fill',r.fill);svg.appendChild(el);});
+
+  function addText(txt,x,y,opts={}){
+    const {size=13,weight=900,fill='rgba(17,24,39,0.85)',anchor='middle',rotate=null}=opts;
+    const t=document.createElementNS(NS,'text');t.textContent=txt;t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('font-size',String(size));t.setAttribute('font-weight',String(weight));t.setAttribute('fill',fill);t.setAttribute('text-anchor',anchor);t.setAttribute('font-family',getComputedStyle(document.body).fontFamily);if(rotate)t.setAttribute('transform','rotate('+rotate+' '+x+' '+y+')');svg.appendChild(t);
+  }
+
+  const tickFill='rgba(17,24,39,0.55)';
+  [0,.25,.5,.75,1].forEach(s=>{
+    const xv=s*xMax,yv=s*yMax;
+    const xl=document.createElementNS(NS,'line');xl.setAttribute('x1',xScale(xv));xl.setAttribute('x2',xScale(xv));xl.setAttribute('y1',padT);xl.setAttribute('y2',padT+plotH);xl.setAttribute('stroke','rgba(17,24,39,0.06)');xl.setAttribute('stroke-width','1');svg.appendChild(xl);
+    const yl=document.createElementNS(NS,'line');yl.setAttribute('x1',padL);yl.setAttribute('x2',padL+plotW);yl.setAttribute('y1',yScale(yv));yl.setAttribute('y2',yScale(yv));yl.setAttribute('stroke','rgba(17,24,39,0.06)');yl.setAttribute('stroke-width','1');svg.appendChild(yl);
+    addText(String(Math.round(xv*10)/10),xScale(xv),padT+plotH+22,{size:11,weight:800,fill:tickFill});
+    addText(String(Math.round(yv*10)/10),padL-10,yScale(yv)+4,{size:11,weight:800,fill:tickFill,anchor:'end'});
+  });
+
+  // Mid lines
+  const vl=document.createElementNS(NS,'line');vl.setAttribute('x1',midX);vl.setAttribute('x2',midX);vl.setAttribute('y1',padT);vl.setAttribute('y2',padT+plotH);vl.setAttribute('stroke','rgba(17,24,39,0.15)');vl.setAttribute('stroke-width','2');svg.appendChild(vl);
+  const hl=document.createElementNS(NS,'line');hl.setAttribute('x1',padL);hl.setAttribute('x2',padL+plotW);hl.setAttribute('y1',midY);hl.setAttribute('y2',midY);hl.setAttribute('stroke','rgba(17,24,39,0.15)');hl.setAttribute('stroke-width','2');svg.appendChild(hl);
+
+  addText('CLOSE %',padL+plotW/2,H-18,{size:13,weight:900});
+  addText('VPG ($)',18,padT+plotH/2,{size:13,weight:900,rotate:-90});
+  addText('Niche Converters',padL+(midX-padL)/2,padT+46,{size:18,weight:900,fill:'rgba(88,28,135,0.85)'});
+  addText('Core Growth',midX+(padL+plotW-midX)/2,padT+46,{size:18,weight:900,fill:'rgba(20,83,45,0.85)'});
+  addText('Legacy/Idle',padL+(midX-padL)/2,midY+(padT+plotH-midY)*0.75,{size:18,weight:900,fill:'rgba(75,85,99,0.85)'});
+  addText('Traffic Drivers',midX+(padL+plotW-midX)/2,midY+(padT+plotH-midY)*0.75,{size:18,weight:900,fill:'rgba(30,64,175,0.85)'});
+
+  const QCOL={niche:'#E02020',core:'#111827',legacy:'#6B7280',traffic:'#1F3A8A'};
+  function quadrantFor(p){const hiI=p.impact>=xSplit,hiF=p.influence>=ySplit;if(!hiI&&hiF)return'niche';if(hiI&&hiF)return'core';if(!hiI&&!hiF)return'legacy';return'traffic';}
+  function rad(p){const gm=Math.sqrt(Math.max(0,p.impact)*Math.max(0,p.influence));const gmMax=Math.sqrt(xMax*yMax);return 18+(gmMax>0?(gm/gmMax):0.25)*16;}
+
+  const pts=products.map(p=>({...p,q:quadrantFor(p),r:rad(p),x:xScale(p.impact),y:yScale(p.influence)}));
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  for(let iter=0;iter<80;iter++){for(let i=0;i<pts.length;i++){for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j],dx=b.x-a.x,dy=b.y-a.y,dist=Math.sqrt(dx*dx+dy*dy)||.0001,minDist=a.r+b.r+6;if(dist<minDist){const push=(minDist-dist)/2,ux=dx/dist,uy=dy/dist;a.x-=ux*push;a.y-=uy*push;b.x+=ux*push;b.y+=uy*push;a.x=clamp(a.x,padL+a.r+4,padL+plotW-a.r-4);a.y=clamp(a.y,padT+a.r+4,padT+plotH-a.r-4);b.x=clamp(b.x,padL+b.r+4,padL+plotW-b.r-4);b.y=clamp(b.y,padT+b.r+4,padT+plotH-b.r-4);}}}}
+
+  pts.forEach(p=>{
+    const g=document.createElementNS(NS,'g');g.setAttribute('cursor','pointer');
+    const c=document.createElementNS(NS,'circle');c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r',p.r);c.setAttribute('fill',QCOL[p.q]);c.setAttribute('opacity','0.88');c.setAttribute('filter','url(#bubbleShadow)');c.setAttribute('stroke','rgba(255,255,255,0.85)');c.setAttribute('stroke-width','2');
+    const inner=document.createElementNS(NS,'text');inner.textContent=p.product.length>16?p.product.slice(0,15)+'…':p.product;inner.setAttribute('x',p.x);inner.setAttribute('y',p.y);inner.setAttribute('font-size','11');inner.setAttribute('font-weight','800');inner.setAttribute('fill','#fff');inner.setAttribute('text-anchor','middle');inner.setAttribute('dominant-baseline','middle');inner.setAttribute('font-family',getComputedStyle(document.body).fontFamily);
+    g.appendChild(c);g.appendChild(inner);svg.appendChild(g);
+
+    g.addEventListener('mousemove',evt=>{
+      if(!tip)return;tip.style.opacity=1;
+      const est=Math.round((p.impact/100)*(p.influence/100)*X_BOOKINGS);
+      tip.innerHTML='<div class="t">'+p.product+'</div><div class="m"><b>Close %:</b> '+p.impact+'%</div><div class="m"><b>VPG:</b> $'+p.influence.toLocaleString()+'</div><div class="m"><b>Quadrant:</b> '+p.q+'</div>';
+      const rect=svg.getBoundingClientRect();tip.style.left=(evt.clientX-rect.left)+'px';tip.style.top=(evt.clientY-rect.top)+'px';
+    });
+    g.addEventListener('mouseleave',()=>{if(tip)tip.style.opacity=0;});
+    g.addEventListener('click',()=>{
+      const target=Array.from(table.querySelectorAll('tbody td.rowhead')).find(td=>td.textContent.trim()===p.product);
+      if(target){const tr=target.closest('tr');tr.scrollIntoView({behavior:'smooth',block:'center'});tr.classList.add('flash');setTimeout(()=>tr.classList.remove('flash'),1200);}
+    });
+  });
+}
+
+// =====================================================
+// JUMP BUTTONS
+// =====================================================
+function initJumps(){
+  const to=id=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});};
+  document.getElementById('jumpExec').addEventListener('click',()=>to('execBlock'));
+  document.getElementById('jumpMatrix').addEventListener('click',()=>to('impactMatrix'));
+  document.getElementById('jumpDetail').addEventListener('click',()=>to('salesDetailHeader'));
+}
+
+// =====================================================
+// INIT
+// =====================================================
+window.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.spark').forEach(renderSparkline);
+  initSearch();
+  initQuickTableFilters();
+  renderExecSections();
+  renderExecCallouts();
+  initMetricModal();
+  buildImpactInfluenceMatrix();
+  initSidebar();
+  initFilterPills();
+  initJumps();
+  animateCountUp();
+
+  // Exec meta
+  const refresh=document.getElementById('execRefresh');
+  if(refresh) refresh.textContent=new Date().toLocaleString(undefined,{year:'numeric',month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+
+  // Wire up filter buttons
+  document.getElementById('applyFilters').addEventListener('click',applyFilters);
+  document.getElementById('clearFilters').addEventListener('click',clearAllFilters);
+
+  // Set default window
+  document.getElementById('filterWindow').value='MTD';
+});
+window.addEventListener('resize',()=>{
+  document.querySelectorAll('.spark').forEach(renderSparkline);
+  buildImpactInfluenceMatrix();
+});
+</script>
+</body>
+</html>
