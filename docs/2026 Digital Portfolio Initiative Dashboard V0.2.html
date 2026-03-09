@@ -153,6 +153,16 @@
     .theme-toggle:hover { background: rgba(255,255,255,.12); }
     .icon-sun  { display: none; }
     .icon-moon { display: inline; }
+    .sign-out {
+      padding: 5px 13px;
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 7px;
+      background: rgba(255,255,255,.06);
+      color: var(--sb-text-2); font-size: 12.5px;
+      font-family: var(--font-ui, sans-serif); font-weight: 600;
+      cursor: pointer; transition: background .15s, color .15s; white-space: nowrap;
+    }
+    .sign-out:hover { background: rgba(220,38,38,.25); color: #FCA5A5; border-color: rgba(220,38,38,.35); }
     [data-theme="dark"] .icon-sun  { display: inline; }
     [data-theme="dark"] .icon-moon { display: none; }
 
@@ -539,11 +549,20 @@
         localStorage.setItem('theme', next);
         renderAllSparklines(); // re-render with updated accent color
       });
+
+      // Sign out
+      document.getElementById('sign-out').addEventListener('click', function() {
+        sessionStorage.removeItem('tl_auth');
+        window.location.replace('gate.html');
+      });
     });
     window.addEventListener('resize', renderAllSparklines);
   </script>
 </head>
 <body>
+
+  <!-- ── Auth guard ── -->
+  <script>if (sessionStorage.getItem('tl_auth') !== '1') { window.location.replace('gate.html'); }</script>
 
   <!-- ── Topbar ── -->
   <div class="topbar">
@@ -557,6 +576,7 @@
       <span class="icon-moon">🌙</span>
       <span class="icon-sun">☀️</span>
     </button>
+    <button class="sign-out" id="sign-out" title="Sign out">Sign out</button>
   </div>
 
   <div class="wrap">

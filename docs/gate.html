@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>T&L Digital — Sign In</title>
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none';
+                 script-src 'self' 'unsafe-inline';
+                 style-src  'self' 'unsafe-inline' https://fonts.googleapis.com;
+                 font-src   https://fonts.gstatic.com;
+                 img-src    'self' data:;
+                 frame-ancestors 'none';
+                 base-uri   'self';
+                 form-action 'none';" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:   #17294D;
+      --navy-d: #0F1E38;
+      --accent: #2563EB;
+      --accent-h: #1D4ED8;
+      --surface:#FFFFFF;
+      --border: #DDE3ED;
+      --text:   #0F172A;
+      --muted:  #4B5E76;
+      --neg:    #DC2626;
+      --neg-bg: rgba(220,38,38,.07);
+      --neg-border: rgba(220,38,38,.25);
+      --font:   'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100%;
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.5;
+      /* Navy gradient background, matching the topbar palette */
+      background: linear-gradient(145deg, var(--navy-d) 0%, var(--navy) 60%, #1E3A6A 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border-radius: 16px;
+      box-shadow: 0 24px 64px rgba(0,0,0,.35), 0 4px 16px rgba(0,0,0,.25);
+      padding: 48px 44px 40px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    /* ── Brand ── */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+    .brand-icon {
+      width: 44px; height: 44px;
+      background: var(--accent);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 900; color: #fff;
+      flex-shrink: 0;
+    }
+    .brand-name { font-size: 17px; font-weight: 800; color: var(--text); display: block; letter-spacing: -.01em; }
+    .brand-sub  { font-size: 12px; color: var(--muted); display: block; margin-top: 1px; }
+
+    /* ── Form ── */
+    .form-title { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; letter-spacing: -.02em; }
+    .form-sub   { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+    label {
+      display: block;
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text);
+      background: #F8FAFC;
+      transition: border-color .18s, box-shadow .18s, background .18s;
+      letter-spacing: .12em;
+    }
+    input[type="password"]::placeholder { letter-spacing: 0; font-family: var(--font); color: #9CA3AF; font-size: 14px; }
+    input[type="password"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(37,99,235,.13);
+    }
+    input[type="password"].shake {
+      animation: shake .35s cubic-bezier(.36,.07,.19,.97) both;
+      border-color: var(--neg);
+    }
+    @keyframes shake {
+      10%, 90%  { transform: translateX(-2px); }
+      20%, 80%  { transform: translateX(4px); }
+      30%, 50%, 70% { transform: translateX(-6px); }
+      40%, 60%  { transform: translateX(6px); }
+    }
+
+    .error-msg {
+      display: flex; align-items: center; gap: 7px;
+      margin-top: 10px;
+      padding: 9px 12px;
+      background: var(--neg-bg);
+      border: 1px solid var(--neg-border);
+      border-radius: 7px;
+      font-size: 13px; font-weight: 600; color: var(--neg);
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s;
+    }
+    .error-msg.visible { opacity: 1; pointer-events: auto; }
+
+    button[type="submit"] {
+      width: 100%; margin-top: 20px;
+      padding: 13px;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--font);
+      font-size: 14px; font-weight: 700;
+      letter-spacing: .01em;
+      border: none; border-radius: 8px;
+      cursor: pointer;
+      transition: background .15s, box-shadow .15s, transform .12s;
+    }
+    button[type="submit"]:hover  { background: var(--accent-h); box-shadow: 0 4px 14px rgba(37,99,235,.35); }
+    button[type="submit"]:active { transform: scale(.98); }
+    button[type="submit"]:disabled { opacity: .6; cursor: not-allowed; }
+
+    .footer-note {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 11.5px; color: rgba(255,255,255,.35);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="card">
+      <div class="brand">
+        <div class="brand-icon">T</div>
+        <div>
+          <span class="brand-name">T&amp;L Digital</span>
+          <span class="brand-sub">Analytics Hub</span>
+        </div>
+      </div>
+
+      <p class="form-title">Sign in</p>
+      <p class="form-sub">Enter your team password to access the dashboards.</p>
+
+      <form id="login-form" autocomplete="off" novalidate>
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter password"
+          autocomplete="current-password"
+          autofocus
+          required
+        />
+        <div class="error-msg" id="error-msg" aria-live="polite">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Incorrect password. Please try again.
+        </div>
+        <button type="submit" id="submit-btn">Sign in &rarr;</button>
+      </form>
+    </div>
+
+    <p class="footer-note">T&amp;L Digital &copy; 2026 &nbsp;&middot;&nbsp; Restricted access</p>
+  </div>
+
+  <script>
+    /**
+     * gate.html — Client-side password gate using SHA-256 (Web Crypto API).
+     *
+     * ⚠️  SECURITY NOTICE:
+     * The hash below is stored in client-side source code and is therefore
+     * visible to anyone who can view the page source. This gate deters casual
+     * access but is NOT a substitute for server-side authentication.
+     * Do not use this to protect highly sensitive data.
+     *
+     * HOW TO SET YOUR PASSWORD:
+     * 1. Open any page on this site in your browser.
+     * 2. Open the browser console (F12 → Console).
+     * 3. Run this command (replace 'your-password' with your chosen password):
+     *
+     *    crypto.subtle.digest('SHA-256', new TextEncoder().encode('your-password'))
+     *      .then(b => console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
+     *
+     * 4. Copy the 64-character hex string it logs.
+     * 5. Replace the value of STORED_HASH below with that string.
+     * 6. Commit and push.
+     *
+     * DEFAULT PASSWORD: TandL2026!
+     * Change this before sharing the link with anyone.
+     */
+    const STORED_HASH = '4a5b463ab1ae4d5591f36569b68f40c9a438427a840eb15c16df8aad7c596813';
+
+    /* If already authenticated this session, skip straight to the hub. */
+    if (sessionStorage.getItem('tl_auth') === '1') {
+      window.location.replace('index.html');
+    }
+
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+
+    const form     = document.getElementById('login-form');
+    const input    = document.getElementById('password');
+    const errorMsg = document.getElementById('error-msg');
+    const btn      = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = 'Checking…';
+      errorMsg.classList.remove('visible');
+
+      const hash = await sha256(input.value);
+
+      if (hash === STORED_HASH) {
+        sessionStorage.setItem('tl_auth', '1');
+        window.location.replace('index.html');
+      } else {
+        /* Brief artificial delay makes brute-force timing harder */
+        await new Promise(r => setTimeout(r, 400));
+        errorMsg.classList.add('visible');
+        input.classList.add('shake');
+        input.addEventListener('animationend', () => input.classList.remove('shake'), { once: true });
+        input.value = '';
+        input.focus();
+        btn.disabled = false;
+        btn.textContent = 'Sign in →';
+      }
+    });
+
+    /* Clear error as soon as user starts typing again */
+    input.addEventListener('input', () => errorMsg.classList.remove('visible'));
+  </script>
+</body>
+</html>
