@@ -3,6 +3,11 @@
  *
  * Edit this file to point to your actual API endpoints and toggle features.
  * This is loaded first so all other scripts can reference CONFIG.
+ *
+ * ⚠️  SECURITY: This file is public — it is served as-is to every browser.
+ *     NEVER put API keys, tokens, passwords, or any secret here.
+ *     If the API requires authentication, implement it server-side and have
+ *     your backend proxy requests; the front end should only hold the base URL.
  */
 
 const CONFIG = {

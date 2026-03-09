@@ -4,6 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>T&L Digital — Analytics Hub</title>
+  <!--
+    Content Security Policy — restricts what the browser will load/execute.
+    'unsafe-inline' for scripts/styles is required because the dashboards use
+    inline <script> and <style> blocks. To tighten further, move all JS/CSS to
+    external files and replace 'unsafe-inline' with a per-request nonce.
+    frame-ancestors 'none' blocks clickjacking (embedding in foreign iframes).
+    connect-src 'self' https: prevents data exfiltration over plain HTTP.
+  -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none';
+                 script-src 'self' 'unsafe-inline';
+                 style-src  'self' 'unsafe-inline' https://fonts.googleapis.com;
+                 font-src   https://fonts.gstatic.com;
+                 img-src    'self' data:;
+                 connect-src 'self' https:;
+                 frame-ancestors 'none';
+                 base-uri   'self';
+                 form-action 'none';" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
   <style>
     :root {
       --navy:   #17294D;

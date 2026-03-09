@@ -38,7 +38,16 @@ async function apiGet(path, params = {}) {
     return { ok: false, data: null, error: "API_BASE_URL not configured" };
   }
 
-  const url = new URL(CONFIG.API_BASE_URL + path);
+  // Reject plain-HTTP origins in production to prevent credential interception.
+  // Allow localhost HTTP for local development only.
+  const base = CONFIG.API_BASE_URL;
+  const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?/.test(base);
+  if (base.startsWith("http://") && !isLocalhost) {
+    console.error("Security: API_BASE_URL must use HTTPS in production.");
+    return { ok: false, data: null, error: "API_BASE_URL must use HTTPS" };
+  }
+
+  const url = new URL(base + path);
   Object.entries(params).forEach(([key, val]) => {
     if (val !== undefined && val !== null) {
       url.searchParams.set(key, val);
