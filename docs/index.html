@@ -442,24 +442,14 @@
       <div class="card-grid" id="grid-sales"></div>
     </div>
 
-    <!-- ════ BUCKET: REFERENCE ════ -->
+    <!-- ════ BUCKET: REFERENCE & TOOLS ════ -->
     <div class="bucket">
       <div class="section-header">
-        <h2>Reference</h2>
+        <h2>Reference &amp; Tools</h2>
         <div class="section-line"></div>
-        <span class="badge-count">1 document</span>
+        <span class="badge-count">2 items</span>
       </div>
       <div class="card-grid" id="grid-reference"></div>
-    </div>
-
-    <!-- ════ BUCKET: TOOLS ════ -->
-    <div class="bucket">
-      <div class="section-header">
-        <h2>Tools</h2>
-        <div class="section-line"></div>
-        <span class="badge-count">1 tool</span>
-      </div>
-      <div class="card-grid" id="grid-tools"></div>
     </div>
 
   </main>
@@ -546,7 +536,7 @@
     let currentIndex = -1;
 
     // ── Build bucketed card grids ──
-    const gridMap = { sales: "grid-sales", cx: "grid-cx", portfolio: "grid-portfolio", reference: "grid-reference", tools: "grid-tools" };
+    const gridMap = { sales: "grid-sales", cx: "grid-cx", portfolio: "grid-portfolio", reference: "grid-reference", tools: "grid-reference" };
 
     DASHBOARDS.forEach(function(d, i) {
       var grid = document.getElementById(gridMap[d.bucket]);
