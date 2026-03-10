@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — T&L Digital Analytics</title>
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none';
+                 script-src 'self' 'unsafe-inline';
+                 style-src  'self' 'unsafe-inline' https://fonts.googleapis.com;
+                 font-src   https://fonts.gstatic.com;
+                 img-src    'self' data:;
+                 connect-src 'self' https:;
+                 frame-ancestors 'none';
+                 base-uri   'self';
+                 form-action 'none';" />
+
+  <!-- Apply saved theme before any paint (prevents FOUC) -->
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="css/design-system.css" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ── */
+    .page        { max-width: 720px; margin: 0 auto; padding: 0 24px 80px; }
+
+    /* ── Top bar ── */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 24px;
+      background: var(--navy);
+      box-shadow: 0 1px 0 rgba(255,255,255,.06);
+    }
+    .topbar-back {
+      display: flex; align-items: center; gap: 6px;
+      color: rgba(255,255,255,.7); font-size: 13px; font-weight: 500;
+      text-decoration: none; border: none; background: none; cursor: pointer;
+      padding: 6px 10px; border-radius: 6px; transition: .15s;
+    }
+    .topbar-back:hover { background: rgba(255,255,255,.10); color: #fff; }
+    .topbar-title {
+      flex: 1; text-align: center;
+      font-size: 14px; font-weight: 700; color: #fff; letter-spacing: .01em;
+    }
+    .topbar-spacer { width: 88px; }   /* balance the back button */
+
+    /* ── Page hero ── */
+    .hero {
+      padding: 40px 0 28px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+    .hero h1   { font-size: 26px; font-weight: 800; color: var(--text); }
+    .hero p    { margin-top: 6px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+    /* ── Section ── */
+    .section        { margin-bottom: 36px; }
+    .section-title  {
+      font-size: 10px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--sh);
+      overflow: hidden;
+    }
+
+    /* ── Control rows ── */
+    .row {
+      display: flex; align-items: center;
+      padding: 16px 20px;
+      gap: 16px;
+    }
+    .row + .row { border-top: 1px solid var(--border); }
+    .row-label  {
+      flex: 0 0 160px;
+      font-size: 13px; font-weight: 600; color: var(--text);
+    }
+    .row-desc   {
+      font-size: 11px; color: var(--muted);
+      margin-top: 2px; font-weight: 400;
+    }
+    .row-control { flex: 1; display: flex; align-items: center; gap: 10px; }
+
+    /* Theme toggle */
+    .theme-group { display: flex; gap: 8px; }
+    .theme-btn {
+      flex: 1; padding: 8px 0; border-radius: 8px; border: 1.5px solid var(--border);
+      background: var(--surface-alt); cursor: pointer; font-size: 12px; font-weight: 600;
+      color: var(--text-2); display: flex; align-items: center; justify-content: center;
+      gap: 6px; transition: .15s; font-family: var(--font-ui);
+    }
+    .theme-btn:hover                 { border-color: var(--accent); color: var(--accent); }
+    .theme-btn.active                { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* Color picker */
+    .color-row { display: flex; align-items: center; gap: 10px; }
+    .color-swatch {
+      width: 36px; height: 36px; border-radius: 8px; border: 1.5px solid var(--border);
+      cursor: pointer; overflow: hidden; flex-shrink: 0; position: relative;
+    }
+    .color-swatch input[type="color"] {
+      position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px);
+      border: none; cursor: pointer; opacity: 0;
+    }
+    .color-hex {
+      font-family: var(--font-tabular); font-size: 12px; color: var(--text-2);
+      padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px;
+      background: var(--surface-alt); width: 90px; text-transform: uppercase;
+    }
+    .color-hex:focus { outline: none; border-color: var(--accent); }
+
+    /* Font select */
+    select.ds-select {
+      padding: 8px 32px 8px 12px; border-radius: 8px; border: 1.5px solid var(--border);
+      background: var(--surface-alt); color: var(--text); font-family: var(--font-ui);
+      font-size: 13px; cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='7' viewBox='0 0 12 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+      transition: border-color .15s;
+    }
+    select.ds-select:focus { outline: none; border-color: var(--accent); }
+
+    /* Range slider */
+    .range-wrap { display: flex; align-items: center; gap: 12px; flex: 1; }
+    input[type="range"] {
+      flex: 1; height: 4px; border-radius: 4px; appearance: none;
+      background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--pct, 50%), var(--border) var(--pct, 50%));
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none; width: 18px; height: 18px; border-radius: 50%;
+      background: #fff; border: 2.5px solid var(--accent); cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,.15);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #fff; border: 2.5px solid var(--accent); cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,.15);
+    }
+    .range-val {
+      min-width: 44px; text-align: right;
+      font-family: var(--font-tabular); font-size: 12px; color: var(--muted);
+    }
+
+    /* ── Preview card ── */
+    #preview {
+      padding: 24px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .preview-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+    }
+    .preview-inner {
+      display: grid; grid-template-columns: auto 1fr; gap: 0;
+      border-radius: var(--radius); overflow: hidden;
+      border: 1px solid var(--border); box-shadow: var(--sh);
+    }
+    .preview-sidebar {
+      width: 130px; background: var(--navy); padding: 14px 12px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .preview-sb-brand {
+      font-size: 10px; font-weight: 800; color: var(--sb-text);
+      letter-spacing: .02em; margin-bottom: 4px;
+    }
+    .preview-sb-item {
+      font-size: 10px; color: var(--sb-text-2); padding: 5px 8px; border-radius: 5px;
+    }
+    .preview-sb-item.active {
+      background: rgba(255,255,255,.10); color: #fff;
+    }
+    .preview-main { background: var(--bg); padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+    .preview-kpi {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 10px 12px; box-shadow: var(--sh-sm);
+    }
+    .preview-kpi-label { font-size: 9px; font-weight: 600; color: var(--muted); text-transform: uppercase; }
+    .preview-kpi-value { font-size: 18px; font-weight: 800; color: var(--text); margin-top: 2px; }
+    .preview-kpi-delta { font-size: 9px; color: var(--ok); margin-top: 1px; }
+    .preview-actions   { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .preview-btn {
+      padding: 7px 14px; border-radius: var(--radius-sm);
+      border: none; background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 700; cursor: default;
+      font-family: var(--font-ui);
+    }
+    .preview-badge {
+      padding: 3px 8px; border-radius: 20px; font-size: 9.5px; font-weight: 600;
+      background: var(--ok-bg); color: var(--ok); border: 1px solid var(--ok-border);
+    }
+    .preview-text {
+      font-size: 12px; line-height: 1.6; color: var(--text-2);
+    }
+
+    /* ── Footer actions ── */
+    .actions {
+      position: sticky; bottom: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 24px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      margin: 0 -24px;
+    }
+    .btn {
+      padding: 9px 20px; border-radius: 8px; font-size: 13px;
+      font-weight: 600; cursor: pointer; transition: .15s;
+      font-family: var(--font-ui); border: none;
+    }
+    .btn-ghost {
+      background: none; border: 1.5px solid var(--border); color: var(--muted);
+    }
+    .btn-ghost:hover { border-color: var(--neg); color: var(--neg); }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+      box-shadow: 0 2px 8px var(--accent-glow);
+    }
+    .btn-primary:hover { opacity: .9; }
+    .save-status {
+      font-size: 12px; color: var(--ok); font-weight: 600; opacity: 0;
+      transition: opacity .3s;
+    }
+    .save-status.visible { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Auth guard -->
+  <script>if (sessionStorage.getItem('tl_auth') !== '1') { window.location.replace('gate.html'); }</script>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <a class="topbar-back" href="index.html">&#8592; Analytics Hub</a>
+    <span class="topbar-title">Display Settings</span>
+    <div class="topbar-spacer"></div>
+  </div>
+
+  <!-- Main content -->
+  <div class="page">
+    <div class="hero">
+      <h1>Display Settings</h1>
+      <p>Customize how all dashboards look on this device. Changes are saved to your browser and applied every time a dashboard loads.</p>
+    </div>
+
+    <!-- ── APPEARANCE ── -->
+    <div class="section">
+      <div class="section-title">Appearance</div>
+      <div class="card">
+
+        <!-- Theme -->
+        <div class="row">
+          <div class="row-label">
+            Color Theme
+            <div class="row-desc">Light or dark background</div>
+          </div>
+          <div class="row-control">
+            <div class="theme-group" style="flex:1">
+              <button class="theme-btn" id="theme-light" onclick="setTheme('light')">☀️ Light</button>
+              <button class="theme-btn" id="theme-dark"  onclick="setTheme('dark')">🌙 Dark</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accent color -->
+        <div class="row">
+          <div class="row-label">
+            Accent Color
+            <div class="row-desc">Buttons, links, highlights</div>
+          </div>
+          <div class="row-control">
+            <div class="color-row">
+              <div class="color-swatch" id="accent-swatch">
+                <input type="color" id="accent-color" oninput="onAccentChange(this.value)" />
+              </div>
+              <input class="color-hex" id="accent-hex" type="text" maxlength="7"
+                     oninput="onAccentHex(this.value)" placeholder="#2563EB" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Navy color -->
+        <div class="row">
+          <div class="row-label">
+            Sidebar Color
+            <div class="row-desc">Navigation and header background</div>
+          </div>
+          <div class="row-control">
+            <div class="color-row">
+              <div class="color-swatch" id="navy-swatch">
+                <input type="color" id="navy-color" oninput="onNavyChange(this.value)" />
+              </div>
+              <input class="color-hex" id="navy-hex" type="text" maxlength="7"
+                     oninput="onNavyHex(this.value)" placeholder="#17294D" />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── TYPOGRAPHY ── -->
+    <div class="section">
+      <div class="section-title">Typography</div>
+      <div class="card">
+
+        <!-- Font family -->
+        <div class="row">
+          <div class="row-label">
+            Font Family
+            <div class="row-desc">Applied to all UI text</div>
+          </div>
+          <div class="row-control">
+            <select class="ds-select" id="font-select" onchange="onFontChange(this.value)">
+              <option value="dm-sans">DM Sans (Default)</option>
+              <option value="inter">Inter</option>
+              <option value="system">System UI</option>
+              <option value="georgia">Georgia (Serif)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Font size -->
+        <div class="row">
+          <div class="row-label">
+            Base Font Size
+            <div class="row-desc">Scales all text proportionally</div>
+          </div>
+          <div class="row-control">
+            <div class="range-wrap">
+              <input type="range" id="font-size" min="12" max="18" step="1" value="14"
+                     oninput="onFontSizeChange(this.value)" />
+              <span class="range-val" id="font-size-val">14 px</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── LAYOUT ── -->
+    <div class="section">
+      <div class="section-title">Layout</div>
+      <div class="card">
+
+        <!-- Border radius -->
+        <div class="row">
+          <div class="row-label">
+            Corner Radius
+            <div class="row-desc">Cards, buttons, badges</div>
+          </div>
+          <div class="row-control">
+            <div class="range-wrap">
+              <input type="range" id="radius" min="0" max="20" step="1" value="10"
+                     oninput="onRadiusChange(this.value)" />
+              <span class="range-val" id="radius-val">10 px</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── PREVIEW ── -->
+    <div class="section">
+      <div class="section-title">Live Preview</div>
+      <div class="card" id="preview">
+        <div class="preview-inner">
+          <div class="preview-sidebar">
+            <div class="preview-sb-brand">T&amp;L Digital</div>
+            <div class="preview-sb-item active">Overview</div>
+            <div class="preview-sb-item">Sales</div>
+            <div class="preview-sb-item">Guests</div>
+          </div>
+          <div class="preview-main">
+            <div class="preview-kpi">
+              <div class="preview-kpi-label">Value Per Guest</div>
+              <div class="preview-kpi-value">$3,200</div>
+              <div class="preview-kpi-delta">▲ +$120 vs prior period</div>
+            </div>
+            <div class="preview-actions">
+              <button class="preview-btn">Export</button>
+              <span class="preview-badge">On Track</span>
+            </div>
+            <div class="preview-text">Dashboard preview reflects your current settings. Changes apply instantly across all dashboards when saved.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page -->
+
+  <!-- Sticky footer actions -->
+  <div class="actions">
+    <button class="btn btn-ghost" onclick="resetDefaults()">Reset to Defaults</button>
+    <div style="display:flex;align-items:center;gap:14px">
+      <span class="save-status" id="save-status">✓ Saved</span>
+      <button class="btn btn-primary" onclick="saveSettings()">Save &amp; Apply</button>
+    </div>
+  </div>
+
+  <script>
+    /* ─── Font map ─── */
+    var FONTS = {
+      'dm-sans':  "'DM Sans', -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+      'inter':    "'Inter', -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      'system':   "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+      'georgia':  "Georgia, \"Times New Roman\", Times, serif"
+    };
+
+    /* ─── Defaults ─── */
+    var DEFAULTS = {
+      theme:         'light',
+      accent:        '#2563EB',
+      navy:          '#17294D',
+      fontFamilyKey: 'dm-sans',
+      fontFamily:    FONTS['dm-sans'],
+      fontSize:      '14',
+      radius:        '10'
+    };
+
+    /* ─── Working copy of preferences ─── */
+    var prefs = {};
+    try { prefs = JSON.parse(localStorage.getItem('tl_theme') || '{}'); } catch(e) {}
+    prefs = Object.assign({}, DEFAULTS, prefs);
+
+    /* ─── Apply a CSS variable on <html> immediately ─── */
+    var root = document.documentElement;
+    function set(prop, val) { root.style.setProperty(prop, val); }
+
+    /* ─── Sync range slider gradient fill ─── */
+    function syncRange(el) {
+      var min = parseFloat(el.min), max = parseFloat(el.max), val = parseFloat(el.value);
+      el.style.setProperty('--pct', ((val - min) / (max - min) * 100) + '%');
+    }
+
+    /* ─── Theme ─── */
+    function setTheme(t) {
+      prefs.theme = t;
+      root.setAttribute('data-theme', t);
+      document.getElementById('theme-light').classList.toggle('active', t === 'light');
+      document.getElementById('theme-dark').classList.toggle('active',  t === 'dark');
+    }
+
+    /* ─── Accent ─── */
+    function applyAccent(hex) {
+      set('--accent',       hex);
+      set('--accent-hover', hex);
+      set('--c-mobile',     hex);
+      set('--accent-2',     hex);
+      document.getElementById('accent-swatch').style.background = hex;
+    }
+    function onAccentChange(hex) {
+      prefs.accent = hex;
+      document.getElementById('accent-hex').value = hex.toUpperCase();
+      applyAccent(hex);
+    }
+    function onAccentHex(val) {
+      if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+        prefs.accent = val;
+        document.getElementById('accent-color').value = val;
+        applyAccent(val);
+      }
+    }
+
+    /* ─── Navy ─── */
+    function applyNavy(hex) {
+      set('--navy',       hex);
+      set('--navy-light', hex);
+      set('--header-bg',  hex);
+      document.getElementById('navy-swatch').style.background = hex;
+    }
+    function onNavyChange(hex) {
+      prefs.navy = hex;
+      document.getElementById('navy-hex').value = hex.toUpperCase();
+      applyNavy(hex);
+    }
+    function onNavyHex(val) {
+      if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+        prefs.navy = val;
+        document.getElementById('navy-color').value = val;
+        applyNavy(val);
+      }
+    }
+
+    /* ─── Font family ─── */
+    function onFontChange(key) {
+      prefs.fontFamilyKey = key;
+      prefs.fontFamily    = FONTS[key] || FONTS['dm-sans'];
+      set('--font-ui', prefs.fontFamily);
+      set('--font',    prefs.fontFamily);
+    }
+
+    /* ─── Font size ─── */
+    function onFontSizeChange(val) {
+      prefs.fontSize = val;
+      document.getElementById('font-size-val').textContent = val + ' px';
+      root.style.fontSize = val + 'px';
+      syncRange(document.getElementById('font-size'));
+    }
+
+    /* ─── Border radius ─── */
+    function onRadiusChange(val) {
+      prefs.radius = val;
+      document.getElementById('radius-val').textContent = val + ' px';
+      var rsPx = Math.max(2, Math.round(parseInt(val, 10) * 0.6)) + 'px';
+      set('--radius',    val + 'px');
+      set('--r',         val + 'px');
+      set('--radius-sm', rsPx);
+      set('--r-sm',      rsPx);
+      syncRange(document.getElementById('radius'));
+    }
+
+    /* ─── Save ─── */
+    function saveSettings() {
+      try { localStorage.setItem('tl_theme', JSON.stringify(prefs)); } catch(e) {}
+      var status = document.getElementById('save-status');
+      status.classList.add('visible');
+      setTimeout(function() { status.classList.remove('visible'); }, 2200);
+    }
+
+    /* ─── Reset ─── */
+    function resetDefaults() {
+      localStorage.removeItem('tl_theme');
+      prefs = Object.assign({}, DEFAULTS);
+      populateControls();
+      applyAll();
+    }
+
+    /* ─── Apply everything to DOM ─── */
+    function applyAll() {
+      setTheme(prefs.theme);
+      applyAccent(prefs.accent);
+      applyNavy(prefs.navy);
+      onFontChange(prefs.fontFamilyKey || 'dm-sans');
+      root.style.fontSize = prefs.fontSize + 'px';
+      var fsEl = document.getElementById('font-size');
+      fsEl.value = prefs.fontSize;
+      syncRange(fsEl);
+      document.getElementById('font-size-val').textContent = prefs.fontSize + ' px';
+      var rEl = document.getElementById('radius');
+      rEl.value = prefs.radius;
+      syncRange(rEl);
+      var rsPx = Math.max(2, Math.round(parseInt(prefs.radius, 10) * 0.6)) + 'px';
+      set('--radius',    prefs.radius + 'px');
+      set('--r',         prefs.radius + 'px');
+      set('--radius-sm', rsPx);
+      set('--r-sm',      rsPx);
+      document.getElementById('radius-val').textContent = prefs.radius + ' px';
+    }
+
+    /* ─── Populate form controls from prefs object ─── */
+    function populateControls() {
+      document.getElementById('accent-color').value = prefs.accent;
+      document.getElementById('accent-hex').value   = prefs.accent.toUpperCase();
+      document.getElementById('accent-swatch').style.background = prefs.accent;
+
+      document.getElementById('navy-color').value = prefs.navy;
+      document.getElementById('navy-hex').value   = prefs.navy.toUpperCase();
+      document.getElementById('navy-swatch').style.background = prefs.navy;
+
+      document.getElementById('font-select').value = prefs.fontFamilyKey || 'dm-sans';
+      document.getElementById('font-size').value   = prefs.fontSize;
+      document.getElementById('radius').value       = prefs.radius;
+    }
+
+    /* ─── Init ─── */
+    populateControls();
+    applyAll();
+  </script>
+</body>
+</html>

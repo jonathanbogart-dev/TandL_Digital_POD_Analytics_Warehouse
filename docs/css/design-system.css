@@ -1,0 +1,171 @@
+/*
+ * T&L Digital — Design System
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Canonical source of all CSS design tokens shared across every dashboard.
+ *
+ * USAGE
+ *   Add before any page-specific <style> block:
+ *   <link rel="stylesheet" href="<rel-path>/css/design-system.css">
+ *   <script src="<rel-path>/js/theme.js"></script>
+ *
+ * HOW OVERRIDES WORK (cascade order, highest wins)
+ *   1. design-system.css  — default token values          (this file)
+ *   2. page <style> block — dashboard-specific overrides  (per-page)
+ *   3. theme.js           — user preferences via inline   (always wins)
+ *      element.style.setProperty on <html>
+ *
+ * ADDING A TOKEN
+ *   Define it here first, then use var(--token) in dashboard CSS.
+ *   Add both a light-mode value in :root and a dark-mode value in
+ *   [data-theme="dark"].
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+
+/* ── Google Fonts ────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..700&family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ── Light mode (default) ────────────────────────────────────────────────── */
+:root {
+
+  /* ── Brand ── */
+  --navy:             #17294D;
+  --navy-light:       #1E3E6A;
+  --navy-dark:        #0F1F38;
+  --accent:           #2563EB;
+  --accent-hover:     #1D4ED8;
+  --accent-light:     #EFF6FF;
+  --accent-glow:      rgba(37,99,235,.12);
+
+  /* ── Surfaces ── */
+  --bg:               #EEF2F7;
+  --surface:          #FFFFFF;
+  --surface-alt:      #F4F7FA;
+  --surface-2:        #F8FAFC;   /* alias used by some dashboards */
+  --canvas:           #FFFFFF;   /* alias used by SIR */
+  --header-bg:        #17294D;   /* sidebar / header bg = navy */
+
+  /* ── Borders ── */
+  --border:           #DDE3ED;
+  --border-strong:    #B8C4D8;
+  --grid:             #E5E7EB;   /* alias used by SIR */
+
+  /* ── Text ── */
+  --text:             #0F172A;
+  --text-2:           #334155;
+  --muted:            #4B5E76;
+  --subtle:           #607080;
+
+  /* ── Semantic: positive / ok ── */
+  --ok:               #059669;
+  --ok-bg:            rgba(5,150,105,.08);
+  --ok-border:        rgba(5,150,105,.20);
+  --ok-text:          #059669;
+  --pos:              #059669;   /* alias used by SIR */
+
+  /* ── Semantic: warning ── */
+  --warn:             #D97706;
+  --warn-bg:          rgba(217,119,6,.08);
+  --warn-border:      rgba(217,119,6,.20);
+  --warn-text:        #D97706;
+
+  /* ── Semantic: negative / error ── */
+  --neg:              #DC2626;
+  --neg-bg:           rgba(220,38,38,.08);
+  --neg-border:       rgba(220,38,38,.20);
+  --neg-text:         #DC2626;
+  --danger:           #DC2626;   /* alias used by SIR */
+
+  /* ── Semantic: informational / done ── */
+  --done:             #0284C7;
+  --done-bg:          rgba(2,132,199,.08);
+  --done-border:      rgba(2,132,199,.20);
+
+  /* ── Shadows ── */
+  --sh:               0 2px 12px rgba(0,0,0,.08);
+  --sh-sm:            0 1px 4px  rgba(0,0,0,.06);
+  --sh-card:          0 4px 20px rgba(0,0,0,.07);
+  --shadow:           0 4px 20px rgba(0,0,0,.08);   /* alias used by SIR */
+  --shadow-lg:        0 20px 60px rgba(0,0,0,.20);  /* alias used by SIR */
+
+  /* ── Shape ── */
+  --radius:           10px;
+  --radius-sm:        6px;
+  --r:                var(--radius);     /* alias used by Voya, portfolio */
+  --r-sm:             var(--radius-sm);  /* alias used by Voya */
+
+  /* ── Typography ── */
+  --font-ui:          'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI",
+                      Roboto, Helvetica, Arial, sans-serif;
+  --font-tabular:     'JetBrains Mono', ui-monospace, SFMono-Regular,
+                      Menlo, Monaco, Consolas, monospace;
+  --font:             var(--font-ui);       /* alias used by Voya, CW survey */
+  --mono:             var(--font-tabular);  /* alias used by Voya, CW survey */
+
+  /* ── Sidebar chrome ── */
+  --sb-text:          #E2E8F0;
+  --sb-text-2:        #B0BFCF;
+  --sb-label:         #8FA6BF;
+  --sb-dim:           #6A7F96;
+  --sb-border:        rgba(255,255,255,.10);
+}
+
+/* ── Dark mode ───────────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+
+  /* ── Brand ── */
+  --navy:             #0F172A;
+  --navy-light:       #1E293B;
+  --navy-dark:        #020617;
+  --accent:           #3B82F6;
+  --accent-hover:     #60A5FA;
+  --accent-light:     rgba(59,130,246,.12);
+  --accent-glow:      rgba(59,130,246,.12);
+
+  /* ── Surfaces ── */
+  --bg:               #0B1120;
+  --surface:          #151D2E;
+  --surface-alt:      #1A2438;
+  --surface-2:        #1A2438;
+  --canvas:           #151D2E;
+  --header-bg:        #0B1120;
+
+  /* ── Borders ── */
+  --border:           rgba(148,163,184,.15);
+  --border-strong:    rgba(148,163,184,.25);
+  --grid:             rgba(148,163,184,.15);
+
+  /* ── Text ── */
+  --text:             #E2E8F0;
+  --text-2:           #CBD5E1;
+  --muted:            #94A3B8;
+  --subtle:           #64748B;
+
+  /* ── Semantic ── */
+  --ok:               #34D399;
+  --ok-bg:            rgba(52,211,153,.10);
+  --ok-border:        rgba(52,211,153,.25);
+  --ok-text:          #34D399;
+  --pos:              #34D399;
+
+  --warn:             #FBBF24;
+  --warn-bg:          rgba(251,191,36,.10);
+  --warn-border:      rgba(251,191,36,.25);
+  --warn-text:        #FBBF24;
+
+  --neg:              #FB7185;
+  --neg-bg:           rgba(251,113,133,.10);
+  --neg-border:       rgba(251,113,133,.20);
+  --neg-text:         #FB7185;
+  --danger:           #FB7185;
+
+  --done:             #38BDF8;
+  --done-bg:          rgba(56,189,248,.10);
+  --done-border:      rgba(56,189,248,.20);
+
+  /* ── Shadows ── */
+  --sh:               0 2px 16px rgba(0,0,0,.35);
+  --sh-sm:            0 1px 6px  rgba(0,0,0,.25);
+  --sh-card:          0 4px 24px rgba(0,0,0,.30);
+  --shadow:           0 4px 20px rgba(0,0,0,.30);
+  --shadow-lg:        0 20px 60px rgba(0,0,0,.50);
+}
