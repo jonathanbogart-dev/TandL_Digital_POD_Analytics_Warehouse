@@ -2,6 +2,7 @@
  * T&L Digital — Design System
  * ─────────────────────────────────────────────────────────────────────────────
  * Canonical source of all CSS design tokens shared across every dashboard.
+ * Palette: Travel + Leisure Co. warm tans / greys.
  *
  * USAGE
  *   Add before any page-specific <style> block:
@@ -24,36 +25,36 @@
 /* ── Google Fonts ────────────────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..700&family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* ── Light mode (default) ────────────────────────────────────────────────── */
+/* ── Light mode (default) — T&L Co. warm tans / greys ───────────────────── */
 :root {
 
   /* ── Brand ── */
-  --navy:             #17294D;
-  --navy-light:       #1E3E6A;
-  --navy-dark:        #0F1F38;
-  --accent:           #2563EB;
-  --accent-hover:     #1D4ED8;
-  --accent-light:     #EFF6FF;
-  --accent-glow:      rgba(37,99,235,.12);
+  --navy:             #1C2340;   /* corporate dark navy */
+  --navy-light:       #25305A;
+  --navy-dark:        #131826;
+  --accent:           #B07E4A;   /* warm bronze / sand gold — T&L signature */
+  --accent-hover:     #956838;
+  --accent-light:     #FAF3E8;   /* pale gold cream */
+  --accent-glow:      rgba(176,126,74,.12);
 
   /* ── Surfaces ── */
-  --bg:               #EEF2F7;
-  --surface:          #FFFFFF;
-  --surface-alt:      #F4F7FA;
-  --surface-2:        #F8FAFC;   /* alias used by some dashboards */
-  --canvas:           #FFFFFF;   /* alias used by SIR */
-  --header-bg:        #17294D;   /* sidebar / header bg = navy */
+  --bg:               #EDE8DF;   /* warm sandy tan page background */
+  --surface:          #FAFAF7;   /* warm near-white */
+  --surface-alt:      #F5EEE5;   /* warm tinted surface */
+  --surface-2:        #F7F2EB;   /* alias used by some dashboards */
+  --canvas:           #FAFAF7;   /* alias used by SIR */
+  --header-bg:        #1C2340;   /* sidebar / header bg = dark navy */
 
   /* ── Borders ── */
-  --border:           #DDE3ED;
-  --border-strong:    #B8C4D8;
-  --grid:             #E5E7EB;   /* alias used by SIR */
+  --border:           #D8CDBE;   /* warm tan border */
+  --border-strong:    #BFB09A;
+  --grid:             #DED4C5;   /* alias used by SIR */
 
   /* ── Text ── */
-  --text:             #0F172A;
-  --text-2:           #334155;
-  --muted:            #4B5E76;
-  --subtle:           #607080;
+  --text:             #1E1A16;   /* warm dark charcoal-brown */
+  --text-2:           #4A3E35;
+  --muted:            #7A6E63;
+  --subtle:           #9A8E83;
 
   /* ── Semantic: positive / ok ── */
   --ok:               #059669;
@@ -81,11 +82,11 @@
   --done-border:      rgba(2,132,199,.20);
 
   /* ── Shadows ── */
-  --sh:               0 2px 12px rgba(0,0,0,.08);
-  --sh-sm:            0 1px 4px  rgba(0,0,0,.06);
-  --sh-card:          0 4px 20px rgba(0,0,0,.07);
-  --shadow:           0 4px 20px rgba(0,0,0,.08);   /* alias used by SIR */
-  --shadow-lg:        0 20px 60px rgba(0,0,0,.20);  /* alias used by SIR */
+  --sh:               0 2px 12px rgba(0,0,0,.07);
+  --sh-sm:            0 1px 4px  rgba(0,0,0,.05);
+  --sh-card:          0 4px 20px rgba(0,0,0,.06);
+  --shadow:           0 4px 20px rgba(0,0,0,.07);   /* alias used by SIR */
+  --shadow-lg:        0 20px 60px rgba(0,0,0,.18);  /* alias used by SIR */
 
   /* ── Shape ── */
   --radius:           10px;
@@ -101,44 +102,44 @@
   --font:             var(--font-ui);       /* alias used by Voya, CW survey */
   --mono:             var(--font-tabular);  /* alias used by Voya, CW survey */
 
-  /* ── Sidebar chrome ── */
-  --sb-text:          #E2E8F0;
-  --sb-text-2:        #B0BFCF;
-  --sb-label:         #8FA6BF;
-  --sb-dim:           #6A7F96;
+  /* ── Sidebar chrome (on dark navy background) ── */
+  --sb-text:          #EAE3DA;
+  --sb-text-2:        #C0B5A8;
+  --sb-label:         #9A8E83;
+  --sb-dim:           #7A6E63;
   --sb-border:        rgba(255,255,255,.10);
 }
 
-/* ── Dark mode ───────────────────────────────────────────────────────────── */
+/* ── Dark mode — warm darks ──────────────────────────────────────────────── */
 [data-theme="dark"] {
 
   /* ── Brand ── */
-  --navy:             #0F172A;
-  --navy-light:       #1E293B;
-  --navy-dark:        #020617;
-  --accent:           #3B82F6;
-  --accent-hover:     #60A5FA;
-  --accent-light:     rgba(59,130,246,.12);
-  --accent-glow:      rgba(59,130,246,.12);
+  --navy:             #1A1610;   /* warm very dark */
+  --navy-light:       #251F18;
+  --navy-dark:        #0F0C09;
+  --accent:           #C4975A;   /* brighter warm gold for dark backgrounds */
+  --accent-hover:     #D4A870;
+  --accent-light:     rgba(196,151,90,.12);
+  --accent-glow:      rgba(196,151,90,.12);
 
   /* ── Surfaces ── */
-  --bg:               #0B1120;
-  --surface:          #151D2E;
-  --surface-alt:      #1A2438;
-  --surface-2:        #1A2438;
-  --canvas:           #151D2E;
-  --header-bg:        #0B1120;
+  --bg:               #1A1610;
+  --surface:          #241F18;   /* warm dark card */
+  --surface-alt:      #2D2620;
+  --surface-2:        #2D2620;
+  --canvas:           #241F18;
+  --header-bg:        #0F0C09;
 
   /* ── Borders ── */
-  --border:           rgba(148,163,184,.15);
-  --border-strong:    rgba(148,163,184,.25);
-  --grid:             rgba(148,163,184,.15);
+  --border:           rgba(180,158,130,.15);
+  --border-strong:    rgba(180,158,130,.25);
+  --grid:             rgba(180,158,130,.12);
 
   /* ── Text ── */
-  --text:             #E2E8F0;
-  --text-2:           #CBD5E1;
-  --muted:            #94A3B8;
-  --subtle:           #64748B;
+  --text:             #EAE3DA;
+  --text-2:           #C8BFB5;
+  --muted:            #9A8E83;
+  --subtle:           #6A5E55;
 
   /* ── Semantic ── */
   --ok:               #34D399;
@@ -163,9 +164,9 @@
   --done-border:      rgba(56,189,248,.20);
 
   /* ── Shadows ── */
-  --sh:               0 2px 16px rgba(0,0,0,.35);
-  --sh-sm:            0 1px 6px  rgba(0,0,0,.25);
-  --sh-card:          0 4px 24px rgba(0,0,0,.30);
-  --shadow:           0 4px 20px rgba(0,0,0,.30);
-  --shadow-lg:        0 20px 60px rgba(0,0,0,.50);
+  --sh:               0 2px 16px rgba(0,0,0,.40);
+  --sh-sm:            0 1px 6px  rgba(0,0,0,.28);
+  --sh-card:          0 4px 24px rgba(0,0,0,.35);
+  --shadow:           0 4px 20px rgba(0,0,0,.35);
+  --shadow-lg:        0 20px 60px rgba(0,0,0,.55);
 }

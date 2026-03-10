@@ -10,17 +10,17 @@
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 <style>
 :root{
-  --navy:#17294D;--accent:#2563EB;
-  --bg:#EEF2F7;--surface:#FFFFFF;--surface-alt:#F4F7FA;
-  --border:#DDE3ED;--border-strong:#B8C4D8;
-  --text:#0F172A;--text-2:#334155;--muted:#4B5E76;--subtle:#607080;
-  --sb-text:#E2E8F0;--sb-text-2:#B0BFCF;--sb-label:#8FA6BF;--sb-dim:#6A7F96;
+  --navy:#1C2340;--accent:#B07E4A;
+  --bg:#EDE8DF;--surface:#FAFAF7;--surface-alt:#F5EEE5;
+  --border:#D8CDBE;--border-strong:#BFB09A;
+  --text:#1E1A16;--text-2:#4A3E35;--muted:#7A6E63;--subtle:#9A8E83;
+  --sb-text:#EAE3DA;--sb-text-2:#C0B5A8;--sb-label:#9A8E83;--sb-dim:#7A6E63;
   --sb-border:rgba(255,255,255,.10);
   --ok:#166534;--ok-bg:rgba(22,101,52,.10);--ok-border:rgba(22,101,52,.22);
   --warn-text:#78350F;--warn-bg:rgba(120,53,15,.10);--warn-border:rgba(120,53,15,.22);
   --neg-text:#7F1D1D;
-  --c1:#2563EB;--c2:#7C3AED;--c3:#0891B2;--c4:#059669;--c5:#D97706;
-  --eng:#2563EB;--sqa:#7C3AED;--neut:#94A3B8;
+  --c1:#B07E4A;--c2:#7C3AED;--c3:#0891B2;--c4:#059669;--c5:#D97706;
+  --eng:#B07E4A;--sqa:#7C3AED;--neut:#9A8E83;
   --sh:0 2px 12px rgba(0,0,0,.08);--sh-sm:0 1px 4px rgba(0,0,0,.06);
   --r:10px;--r-sm:7px;
   --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
@@ -29,21 +29,21 @@
 }
 /* ── Dark Mode ── */
 [data-theme="dark"]{
-  --navy:#0F172A;--accent:#3B82F6;
-  --bg:#0B1120;--surface:#151D2E;--surface-alt:#1A2438;
-  --border:rgba(148,163,184,.15);--border-strong:rgba(148,163,184,.25);
-  --text:#E2E8F0;--text-2:#CBD5E1;--muted:#94A3B8;--subtle:#64748B;
-  --sh:0 2px 16px rgba(0,0,0,.35);--sh-sm:0 1px 6px rgba(0,0,0,.25);
+  --navy:#1A1610;--accent:#C4975A;
+  --bg:#1A1610;--surface:#241F18;--surface-alt:#2D2620;
+  --border:rgba(180,158,130,.15);--border-strong:rgba(180,158,130,.25);
+  --text:#EAE3DA;--text-2:#C8BFB5;--muted:#9A8E83;--subtle:#6A5E55;
+  --sh:0 2px 16px rgba(0,0,0,.40);--sh-sm:0 1px 6px rgba(0,0,0,.28);
   --ok:#4ADE80;--ok-bg:rgba(74,222,128,.12);--ok-border:rgba(74,222,128,.25);
   --warn-text:#FCD34D;--warn-bg:rgba(252,211,77,.12);--warn-border:rgba(252,211,77,.25);
   --neg-text:#FB7185;
-  --c1:#60A5FA;--c2:#A78BFA;--c3:#22D3EE;--c4:#34D399;--c5:#FBBF24;
-  --eng:#60A5FA;--sqa:#A78BFA;--neut:#64748B;
+  --c1:#C4975A;--c2:#A78BFA;--c3:#22D3EE;--c4:#34D399;--c5:#FBBF24;
+  --eng:#C4975A;--sqa:#A78BFA;--neut:#6A5E55;
 }
 [data-theme="dark"] .toggle-btn{background:var(--surface);border-color:var(--border);color:var(--muted)}
 [data-theme="dark"] .toggle-btn:hover{background:var(--surface-alt)}
 [data-theme="dark"] .tbl-search{background:var(--surface-alt);border-color:var(--border);color:var(--text)}
-[data-theme="dark"] .tbl-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.2)}
+[data-theme="dark"] .tbl-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(176,126,74,.2)}
 [data-theme="dark"] .pg-btn{background:var(--surface);border-color:var(--border);color:var(--text-2)}
 [data-theme="dark"] .pg-btn:hover:not(:disabled){background:var(--surface-alt)}
 [data-theme="dark"] .pg-size{background:var(--surface);border-color:var(--border);color:var(--text-2)}
@@ -252,8 +252,8 @@ td.right{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mo
   <!-- ── Sidebar ── -->
   <aside class="sidebar" id="sidebar">
     <div class="sb-brand">
-      <div class="sb-brand-icon">V</div>
-      <div>
+      <img src="../../assets/logo-on-dark.svg" alt="T&amp;L Digital Analytics" height="34" style="display:block;flex-shrink:0" />
+      <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--sb-border)">
         <div class="sb-brand-name">VOYA Analytics</div>
         <div class="sb-brand-sub">Insights Dashboard · 2026</div>
       </div>

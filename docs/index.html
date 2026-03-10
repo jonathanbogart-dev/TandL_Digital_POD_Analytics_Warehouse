@@ -29,55 +29,55 @@
   <link rel="stylesheet" href="css/design-system.css" />
   <style>
     :root {
-      --navy:   #17294D;
-      --accent: #2563EB;
-      --accent-light: #EFF6FF;
-      --bg:     #EEF2F7;
-      --surface:#FFFFFF;
-      --surface-alt:#F4F7FA;
-      --border: #DDE3ED;
-      --border-strong:#B8C4D8;
-      --text:   #0F172A;
-      --text-2: #334155;
-      --muted:  #4B5E76;
-      --sb-text:#E2E8F0;
-      --sb-text-2:#B0BFCF;
-      --sb-label:#8FA6BF;
-      --ok:     #059669;
-      --ok-bg:  rgba(5,150,105,.08);
-      --ok-border:rgba(5,150,105,.20);
-      --neg:    #DC2626;
-      --neg-bg: rgba(220,38,38,.08);
-      --neg-border:rgba(220,38,38,.20);
-      --neu-bg: rgba(75,94,118,.07);
-      --sh: 0 2px 12px rgba(0,0,0,.08);
-      --sh-card: 0 4px 20px rgba(0,0,0,.07);
-      --r: 10px;
-      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --navy:         #1C2340;
+      --accent:       #B07E4A;
+      --accent-light: #FAF3E8;
+      --bg:           #EDE8DF;
+      --surface:      #FAFAF7;
+      --surface-alt:  #F5EEE5;
+      --border:       #D8CDBE;
+      --border-strong:#BFB09A;
+      --text:         #1E1A16;
+      --text-2:       #4A3E35;
+      --muted:        #7A6E63;
+      --sb-text:      #EAE3DA;
+      --sb-text-2:    #C0B5A8;
+      --sb-label:     #9A8E83;
+      --ok:           #059669;
+      --ok-bg:        rgba(5,150,105,.08);
+      --ok-border:    rgba(5,150,105,.20);
+      --neg:          #DC2626;
+      --neg-bg:       rgba(220,38,38,.08);
+      --neg-border:   rgba(220,38,38,.20);
+      --neu-bg:       rgba(176,126,74,.07);
+      --sh:           0 2px 12px rgba(0,0,0,.07);
+      --sh-card:      0 4px 20px rgba(0,0,0,.06);
+      --r:            10px;
+      --font: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
     [data-theme="dark"] {
-      --navy:   #0F172A;
-      --accent: #3B82F6;
-      --accent-light: rgba(59,130,246,.12);
-      --bg:     #0B1120;
-      --surface:#151D2E;
-      --surface-alt:#1A2438;
-      --border: rgba(148,163,184,.15);
-      --border-strong:rgba(148,163,184,.25);
-      --text:   #E2E8F0;
-      --text-2: #CBD5E1;
-      --muted:  #94A3B8;
-      --ok:     #34D399;
-      --ok-bg:  rgba(52,211,153,.10);
-      --ok-border:rgba(52,211,153,.25);
-      --neg:    #FB7185;
-      --neg-bg: rgba(251,113,133,.10);
-      --neg-border:rgba(251,113,133,.25);
-      --neu-bg: rgba(148,163,184,.08);
-      --sh: 0 2px 16px rgba(0,0,0,.35);
-      --sh-card:0 4px 24px rgba(0,0,0,.30);
+      --navy:         #1A1610;
+      --accent:       #C4975A;
+      --accent-light: rgba(196,151,90,.12);
+      --bg:           #1A1610;
+      --surface:      #241F18;
+      --surface-alt:  #2D2620;
+      --border:       rgba(180,158,130,.15);
+      --border-strong:rgba(180,158,130,.25);
+      --text:         #EAE3DA;
+      --text-2:       #C8BFB5;
+      --muted:        #9A8E83;
+      --ok:           #34D399;
+      --ok-bg:        rgba(52,211,153,.10);
+      --ok-border:    rgba(52,211,153,.25);
+      --neg:          #FB7185;
+      --neg-bg:       rgba(251,113,133,.10);
+      --neg-border:   rgba(251,113,133,.25);
+      --neu-bg:       rgba(180,158,130,.08);
+      --sh:           0 2px 16px rgba(0,0,0,.40);
+      --sh-card:      0 4px 24px rgba(0,0,0,.35);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -341,10 +341,7 @@
 
   <!-- ── Top bar ── -->
   <div class="topbar">
-    <div class="brand-icon">T</div>
-    <span class="brand-name">T&amp;L Digital</span>
-    <span class="brand-sep">|</span>
-    <span class="brand-sub">Analytics Hub</span>
+    <img src="assets/logo-on-dark.svg" alt="T&amp;L Digital Analytics" height="34" style="display:block;flex-shrink:0" />
     <div class="topbar-spacer"></div>
     <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
       <span class="icon-moon">🌙</span>

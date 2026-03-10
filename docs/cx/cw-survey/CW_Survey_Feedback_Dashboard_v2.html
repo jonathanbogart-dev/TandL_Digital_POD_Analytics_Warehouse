@@ -11,31 +11,31 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#0B1F3F;--navy-light:#163160;--navy-dark:#071428;
-  --accent:#2563EB;--accent-hover:#3B82F6;--accent-glow:rgba(37,99,235,.12);
-  --bg:#F1F4F8;--surface:#FFFFFF;--surface-alt:#F7F8FB;
-  --border:rgba(11,31,63,.07);--border-strong:rgba(11,31,63,.13);
-  --text:#111827;--text-2:#374151;--muted:#6B7280;--subtle:#9CA3AF;
+  --navy:#1C2340;--navy-light:#25305A;--navy-dark:#131826;
+  --accent:#B07E4A;--accent-hover:#956838;--accent-glow:rgba(176,126,74,.12);
+  --bg:#EDE8DF;--surface:#FAFAF7;--surface-alt:#F5EEE5;
+  --border:rgba(120,100,75,.10);--border-strong:rgba(120,100,75,.20);
+  --text:#1E1A16;--text-2:#4A3E35;--muted:#7A6E63;--subtle:#9A8E83;
   --sh:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);--sh-sm:0 1px 2px rgba(0,0,0,.04);
   --ok:#059669;--ok-bg:rgba(5,150,105,.07);--ok-border:rgba(5,150,105,.18);--ok-text:#059669;
   --warn:#D97706;--warn-bg:rgba(217,119,6,.07);--warn-border:rgba(217,119,6,.18);--warn-text:#D97706;
   --neg:#DC2626;--neg-bg:rgba(220,38,38,.07);--neg-border:rgba(220,38,38,.18);--neg-text:#DC2626;
-  --c-mobile:#2563EB;--c-web:#7C3AED;
+  --c-mobile:#B07E4A;--c-web:#7C3AED;
   --radius:10px;--radius-sm:6px;
   --font:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
   --sidebar-w:256px;--topbar-h:54px;
 }
 [data-theme="dark"]{
-  --navy:#0F172A;--navy-light:#1E293B;--navy-dark:#020617;
-  --accent:#60A5FA;--accent-hover:#93C5FD;--accent-glow:rgba(96,165,250,.1);
-  --bg:#0B1120;--surface:#151D2E;--surface-alt:#1A2438;
-  --border:rgba(148,163,184,.1);--border-strong:rgba(148,163,184,.18);
-  --text:#F1F5F9;--text-2:#CBD5E1;--muted:#94A3B8;--subtle:#64748B;
+  --navy:#1A1610;--navy-light:#251F18;--navy-dark:#0F0C09;
+  --accent:#C4975A;--accent-hover:#D4A870;--accent-glow:rgba(196,151,90,.10);
+  --bg:#1A1610;--surface:#241F18;--surface-alt:#2D2620;
+  --border:rgba(180,158,130,.12);--border-strong:rgba(180,158,130,.22);
+  --text:#EAE3DA;--text-2:#C8BFB5;--muted:#9A8E83;--subtle:#6A5E55;
   --sh:0 2px 16px rgba(0,0,0,.4);--sh-sm:0 1px 4px rgba(0,0,0,.3);
   --ok:#34D399;--ok-bg:rgba(52,211,153,.08);--ok-border:rgba(52,211,153,.2);--ok-text:#34D399;
   --warn:#FBBF24;--warn-bg:rgba(251,191,36,.08);--warn-border:rgba(251,191,36,.2);--warn-text:#FBBF24;
   --neg:#FB7185;--neg-bg:rgba(251,113,133,.08);--neg-border:rgba(251,113,133,.2);--neg-text:#FB7185;
-  --c-mobile:#60A5FA;--c-web:#A78BFA;
+  --c-mobile:#C4975A;--c-web:#A78BFA;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:13.5px;scroll-behavior:smooth}
@@ -44,7 +44,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--navy);display:flex;flex-direction:column;z-index:100;transition:transform .25s ease;overflow:hidden}
 .sidebar.collapsed{transform:translateX(calc(-1 * var(--sidebar-w) + 46px))}
 .sb-head{padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.06)}
-.sb-logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#7C3AED);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:11px;flex-shrink:0}
+.sb-logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#B07E4A,#956838);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:11px;flex-shrink:0}
 .sb-brand{color:#fff;font-size:12.5px;font-weight:600;line-height:1.2;white-space:nowrap}
 .sb-sub{color:rgba(255,255,255,.4);font-size:9.5px;font-weight:500;text-transform:uppercase;letter-spacing:.8px}
 .sb-toggle{position:absolute;right:-13px;top:17px;width:26px;height:26px;border-radius:50%;background:var(--navy);border:2px solid var(--border-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7);font-size:11px;z-index:101;transition:.2s}
@@ -140,7 +140,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .pill.neg{background:var(--neg-bg);color:var(--neg-text);border:1px solid var(--neg-border)}
 .pill.neu{background:rgba(107,125,147,.07);color:var(--muted);border:1px solid rgba(107,125,147,.12)}
 .pill.mix{background:var(--warn-bg);color:var(--warn-text);border:1px solid var(--warn-border)}
-.pill.mobile{background:rgba(37,99,235,.07);color:var(--c-mobile);border:1px solid rgba(37,99,235,.18)}
+.pill.mobile{background:rgba(176,126,74,.07);color:var(--c-mobile);border:1px solid rgba(176,126,74,.18)}
 .pill.web{background:rgba(124,58,237,.07);color:var(--c-web);border:1px solid rgba(124,58,237,.18)}
 .th-tag{display:inline-block;padding:1px 5px;border-radius:3px;font-size:8.5px;font-weight:500;background:var(--surface-alt);color:var(--muted);border:1px solid var(--border);margin:1px}
 
@@ -180,9 +180,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 </head>
 <body>
 <nav class="sidebar" id="sidebar">
-  <div class="sb-head">
-    <div class="sb-logo">CW</div>
-    <div><div class="sb-brand">Club Wyndham</div><div class="sb-sub">Survey Feedback Analytics</div></div>
+  <div class="sb-head" style="flex-direction:column;align-items:flex-start;gap:8px">
+    <img src="../../assets/logo-on-dark.svg" alt="T&amp;L Digital Analytics" height="32" style="display:block" />
+    <div style="display:flex;align-items:center;gap:10px;padding-top:8px;border-top:1px solid var(--sb-border);width:100%">
+      <div class="sb-logo">CW</div>
+      <div><div class="sb-brand">Club Wyndham</div><div class="sb-sub">Survey Feedback Analytics</div></div>
+    </div>
   </div>
   <button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()">&#9664;</button>
   <div class="sb-nav">
@@ -325,7 +328,7 @@ let dateStart='2025-10-05', dateEnd='2026-03-05';
 let F=null;
 
 function isDark(){return document.documentElement.getAttribute('data-theme')==='dark'}
-function bc(b){const d=isDark();return b==='CW Mobile App'?(d?'#60A5FA':'#2563EB'):(d?'#A78BFA':'#7C3AED')}
+function bc(b){const d=isDark();return b==='CW Mobile App'?(d?'#C4975A':'#B07E4A'):(d?'#A78BFA':'#7C3AED')}
 function pL(x={}){const d=isDark();return Object.assign({paper_bgcolor:'transparent',plot_bgcolor:'transparent',font:{family:'DM Sans',color:d?'#CBD5E1':'#374151',size:10.5},margin:{t:8,r:14,b:36,l:44},xaxis:{gridcolor:d?'rgba(148,163,184,.08)':'rgba(11,31,63,.05)',zerolinecolor:'transparent'},yaxis:{gridcolor:d?'rgba(148,163,184,.08)':'rgba(11,31,63,.05)',zerolinecolor:'transparent'},hoverlabel:{font:{family:'DM Sans',size:11}},bargap:.25},x)}
 const pC={displayModeBar:false,responsive:true};
 function stars(n){return '<span class="stars">'+'\u2605'.repeat(Math.max(0,n))+'\u2606'.repeat(Math.max(0,5-n))+'</span>'}
@@ -506,7 +509,7 @@ function renderKeywords(){
   if(!F)return;const d=isDark();const kw=F.keywords;const sorted=Object.entries(kw).sort((a,b)=>b[1]-a[1]);const mx=sorted[0]?.[1]||1;
   document.getElementById('cloudContainer').innerHTML=sorted.slice(0,40).map(([w,f])=>{const sz=10+Math.round((f/mx)*14);return `<span class="cloud-word" style="font-size:${sz}px;opacity:${(.5+(f/mx)*.5).toFixed(2)}">${w} <span style="font-family:var(--mono);font-size:9px;opacity:.6">${f}</span></span>`}).join('');
   const t20=sorted.slice(0,20);
-  Plotly.newPlot('chKeyBar',[{y:t20.map(e=>e[0]),x:t20.map(e=>e[1]),type:'bar',orientation:'h',marker:{color:d?'#60A5FA':'#2563EB',cornerradius:3},text:t20.map(e=>e[1]),textposition:'outside',textfont:{size:9,family:'JetBrains Mono'}}],pL({margin:{l:100},yaxis:{autorange:'reversed'}}),pC);
+  Plotly.newPlot('chKeyBar',[{y:t20.map(e=>e[0]),x:t20.map(e=>e[1]),type:'bar',orientation:'h',marker:{color:d?'#C4975A':'#B07E4A',cornerradius:3},text:t20.map(e=>e[1]),textposition:'outside',textfont:{size:9,family:'JetBrains Mono'}}],pL({margin:{l:100},yaxis:{autorange:'reversed'}}),pC);
   const ab=BRANDS.filter(b=>activeBrands.has(b));const allP=new Set();ab.forEach(b=>Object.keys(F.purpose_dist[b]||{}).forEach(p=>allP.add(p)));
   const pa=[...allP].sort((a,b)=>{const tA=BRANDS.reduce((s,br)=>(F.purpose_dist[br]?.[a]||0)+s,0);const tB=BRANDS.reduce((s,br)=>(F.purpose_dist[br]?.[b]||0)+s,0);return tB-tA}).slice(0,8);
   Plotly.newPlot('chPurpose',ab.map(b=>({y:pa.map(p=>p.length>30?p.slice(0,30)+'...':p),x:pa.map(p=>F.purpose_dist[b]?.[p]||0),name:BRAND_SHORT[b],type:'bar',orientation:'h',marker:{color:bc(b),cornerradius:3}})),pL({barmode:'stack',margin:{l:200},yaxis:{autorange:'reversed'},legend:{orientation:'h',y:1.12,font:{size:10}}}),pC);
