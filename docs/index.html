@@ -452,6 +452,16 @@
       <div class="card-grid" id="grid-reference"></div>
     </div>
 
+    <!-- ════ BUCKET: TOOLS ════ -->
+    <div class="bucket">
+      <div class="section-header">
+        <h2>Tools</h2>
+        <div class="section-line"></div>
+        <span class="badge-count">1 tool</span>
+      </div>
+      <div class="card-grid" id="grid-tools"></div>
+    </div>
+
   </main>
 
   <footer class="site-footer">
@@ -513,6 +523,14 @@
         icon:   "📖",
         bucket: "reference",
         kpi:    "Single source of truth"
+      },
+      {
+        folder: "explore",
+        title:  "Explore",
+        desc:   "Build custom tables & aggregations from any POD dataset — group, filter, and export to CSV",
+        icon:   "🔍",
+        bucket: "tools",
+        kpi:    "Ad-hoc analysis"
       }
     ];
 
@@ -528,7 +546,7 @@
     let currentIndex = -1;
 
     // ── Build bucketed card grids ──
-    const gridMap = { sales: "grid-sales", cx: "grid-cx", portfolio: "grid-portfolio", reference: "grid-reference" };
+    const gridMap = { sales: "grid-sales", cx: "grid-cx", portfolio: "grid-portfolio", reference: "grid-reference", tools: "grid-tools" };
 
     DASHBOARDS.forEach(function(d, i) {
       var grid = document.getElementById(gridMap[d.bucket]);
