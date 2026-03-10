@@ -553,7 +553,7 @@
       // Sign out
       document.getElementById('sign-out').addEventListener('click', function() {
         sessionStorage.removeItem('tl_auth');
-        window.location.replace('gate.html');
+        window.location.replace('../../gate.html');
       });
     });
     window.addEventListener('resize', renderAllSparklines);
@@ -562,7 +562,7 @@
 <body>
 
   <!-- ── Auth guard ── -->
-  <script>if (sessionStorage.getItem('tl_auth') !== '1') { window.location.replace('gate.html'); }</script>
+  <script>if (sessionStorage.getItem('tl_auth') !== '1') { window.location.replace('../../gate.html'); }</script>
 
   <!-- ── Topbar ── -->
   <div class="topbar">

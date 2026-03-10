@@ -453,7 +453,7 @@
     // bucket: "sales" | "cx" | "portfolio"
     const DASHBOARDS = [
       {
-        file:   "2026 Digital Portfolio Initiative Dashboard V0.2.html",
+        folder: "portfolio/initiatives",
         title:  "2026 Digital Initiatives",
         desc:   "Executive view of 2026 digital portfolio initiatives across all verticals",
         icon:   "📊",
@@ -461,7 +461,7 @@
         kpi:    "24,500 new owner visitors"
       },
       {
-        file:   "CW_Survey_Feedback_Dashboard_v2.html",
+        folder: "cx/cw-survey",
         title:  "Club Wyndham Survey Feedback",
         desc:   "Survey feedback analysis and NPS insights across Mobile App and Web channels",
         icon:   "📋",
@@ -469,7 +469,7 @@
         kpi:    "2.85/5 avg satisfaction"
       },
       {
-        file:   "SIR Sales Performance Dashboard V0.3.html",
+        folder: "sales/sir-sales",
         title:  "SIR Sales Performance",
         desc:   "Sports Illustrated Resorts sales KPIs — tours, VPG, close rate, net volume",
         icon:   "📈",
@@ -477,7 +477,7 @@
         kpi:    "$3,200 VPG MTD"
       },
       {
-        file:   "voya-dashboard-v3.html",
+        folder: "cx/voya",
         title:  "Voya Dashboard",
         desc:   "Chatbot engagement, booking links, and conversation analytics for Voya",
         icon:   "🏪",
@@ -526,14 +526,24 @@
     function openDashboard(index) {
       currentIndex = index;
       var d = DASHBOARDS[index];
-      viewerFrame.src = d.file;
       viewerTitle.textContent = d.title;
       viewerCounter.textContent = (index + 1) + " / " + DASHBOARDS.length;
       btnPrev.disabled = (index === 0);
       btnNext.disabled = (index === DASHBOARDS.length - 1);
       viewer.classList.add("open");
       document.body.classList.add("viewer-active");
-      history.pushState({ dashboard: index }, "", "#" + encodeURIComponent(d.file));
+      history.pushState({ dashboard: index }, "", "#" + encodeURIComponent(d.folder));
+      // Fetch manifest.json to resolve the current live file for this dashboard
+      viewerFrame.src = "about:blank";
+      fetch(d.folder + "/manifest.json")
+        .then(function(r) { return r.json(); })
+        .then(function(manifest) {
+          viewerFrame.src = d.folder + "/" + manifest.current;
+        })
+        .catch(function() {
+          // manifest fetch failed — nothing to load
+          viewerTitle.textContent = d.title + " (unavailable)";
+        });
     }
 
     function closeDashboard() {
@@ -570,8 +580,8 @@
 
     // ── Deep-link on load ──
     if (window.location.hash) {
-      var file = decodeURIComponent(window.location.hash.slice(1));
-      var idx  = DASHBOARDS.findIndex(function(d) { return d.file === file; });
+      var slug = decodeURIComponent(window.location.hash.slice(1));
+      var idx  = DASHBOARDS.findIndex(function(d) { return d.folder === slug; });
       if (idx !== -1) openDashboard(idx);
     }
 
