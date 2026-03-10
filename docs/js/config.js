@@ -50,9 +50,11 @@ const CONFIG = {
    * Only used when API_BASE_URL is non-empty.
    */
   API_ENDPOINTS: {
-    kpis:    "/kpis",
-    orders:  "/orders/recent",
-    revenue: "/revenue/by-source",
+    kpis:       "/kpis",
+    orders:     "/orders/recent",
+    revenue:    "/revenue/by-source",
+    // Dataset management (Explore page + dynamic dashboards)
+    datasets:   "/datasets",          // GET → registry; POST /{name} → upload
   },
 
   /**

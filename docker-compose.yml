@@ -34,6 +34,7 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-pod_user}:${POSTGRES_PASSWORD:-pod_password}@postgres:5432/${POSTGRES_DB:-pod_warehouse}
+      DATASET_STORE_PATH: /app/datasets
       ENV: development
     ports:
       - "8000:8000"
@@ -42,6 +43,7 @@ services:
         condition: service_healthy
     volumes:
       - ./api:/app/api
+      - dataset_store:/app/datasets
 
   # ---------------------------------------------------------------------------
   # Airflow — pipeline orchestration (lightweight single-node setup)
@@ -85,3 +87,4 @@ services:
 volumes:
   postgres_data:
   airflow_logs:
+  dataset_store:

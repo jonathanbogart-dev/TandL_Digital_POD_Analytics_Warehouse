@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Explore · T&amp;L Digital POD</title>
 <script src="../js/theme.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/datasets.js"></script>
 <link rel="stylesheet" href="../css/design-system.css"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
@@ -728,11 +730,14 @@ function colLabel(m) { return AGG_LABEL[m.agg] + "(" + m.label + ")"; }
      SIDEBAR RENDERING
 ════════════════════════════════════════════════════════════ -->
 <script>
-(function buildDatasetList() {
+function buildDatasetList() {
   const list = document.getElementById("ds-list");
+  list.innerHTML = "";
   Object.entries(CATALOG).forEach(([key, catalog]) => {
+    if (document.getElementById("ds-card-" + key)) return; // already rendered
     const card = document.createElement("div");
     card.className   = "ds-card";
+    card.id          = "ds-card-" + key;
     card.dataset.key = key;
     card.innerHTML   = `
       <span class="ds-icon">${catalog.icon}</span>
@@ -744,7 +749,35 @@ function colLabel(m) { return AGG_LABEL[m.agg] + "(" + m.label + ")"; }
     card.addEventListener("click", () => selectDataset(key));
     list.appendChild(card);
   });
-})();
+}
+buildDatasetList();
+
+/** Pull the backend registry and add any unknown datasets to the CATALOG. */
+async function initDynamicDatasets() {
+  const registry = await DatasetLoader.getRegistry();
+  if (!registry.length) return;
+
+  let added = false;
+  registry.forEach(meta => {
+    if (CATALOG[meta.name]) return; // don't shadow hardcoded entries
+    CATALOG[meta.name] = {
+      label:   meta.name.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()),
+      icon:    "📂",
+      desc:    `${meta.row_count.toLocaleString()} rows · ${meta.source_filename}`,
+      _dynamic: true,
+      async load() {
+        return DatasetLoader.getRecords(meta.name);
+      },
+      // Schema is empty — will be auto-detected after first load.
+      dimensions: [],
+      metrics:    [],
+    };
+    added = true;
+  });
+
+  if (added) buildDatasetList();
+}
+initDynamicDatasets();
 
 function renderSidebarFields(catalog) {
   const dimList = document.getElementById("dims-list");
@@ -817,6 +850,19 @@ async function selectDataset(key) {
   try {
     ST.records    = await CATALOG[key].load();
     ST.loadStatus = "ready";
+
+    // Auto-detect schema for dynamic datasets that have no declared fields.
+    const entry = CATALOG[key];
+    if (ST.records.length && entry._dynamic &&
+        !entry.dimensions.length && !entry.metrics.length) {
+      const { dimensions, metrics } = DatasetLoader.inferSchema(ST.records[0]);
+      entry.dimensions = dimensions;
+      entry.metrics    = [
+        { key: "_count", label: "# Rows", typeTag: "count", defaultAgg: "count" },
+        ...metrics,
+      ];
+      renderSidebarFields(entry);
+    }
 
     // Update count badge
     const badge = document.getElementById("ds-count-" + key);
