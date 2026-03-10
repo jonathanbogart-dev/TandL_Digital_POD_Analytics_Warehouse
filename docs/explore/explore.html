@@ -662,11 +662,11 @@ const CATALOG = {
     icon:  "💬",
     desc:  "Chat records · sentiment, outcomes & engagement",
     async load() {
-      if (window.DATASET) return window.DATASET;
+      if (typeof DATASET !== "undefined" && Array.isArray(DATASET)) return DATASET;
       return new Promise((resolve, reject) => {
         const s   = document.createElement("script");
         s.src     = "../js/voya_backend_dataset_rebuilt.js";
-        s.onload  = () => resolve(window.DATASET || []);
+        s.onload  = () => resolve(typeof DATASET !== "undefined" ? DATASET : []);
         s.onerror = () => reject(new Error("Could not load Voya dataset"));
         document.head.appendChild(s);
       });
