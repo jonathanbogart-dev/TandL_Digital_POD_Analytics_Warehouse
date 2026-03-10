@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Digital POD · KPI Data Dictionary</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  /* ── DARK THEME (default) ── */
+  :root, [data-theme="dark"] {
+    --navy: #0d1b2a;
+    --navy-mid: #162336;
+    --navy-light: #1e3050;
+    --accent: #3b82f6;
+    --accent-light: #60a5fa;
+    --gold: #f59e0b;
+    --teal: #14b8a6;
+    --rose: #f43f5e;
+    --green: #22c55e;
+    --text: #e2e8f0;
+    --text-heading: #ffffff;
+    --muted: #94a3b8;
+    --border: rgba(148,163,184,.15);
+    --card-bg: rgba(30,48,80,.45);
+    --sidebar-w: 260px;
+    --body-bg: var(--navy);
+    --sidebar-bg: var(--navy-mid);
+    --search-bg: rgba(255,255,255,.06);
+    --hover-bg: rgba(255,255,255,.04);
+    --active-nav-bg: rgba(59,130,246,.08);
+    --row-hover: rgba(255,255,255,.03);
+    --thead-bg: rgba(59,130,246,.12);
+    --mark-bg: rgba(245,158,11,.3);
+    --mark-color: #fff;
+    --code-bg: rgba(20,184,166,.08);
+    --formula-bg: rgba(13,27,42,.7);
+    --formula-border: rgba(20,184,166,.2);
+    --info-bg: rgba(59,130,246,.07);
+    --info-border: rgba(59,130,246,.2);
+    --inflation-bg: rgba(245,158,11,.06);
+    --inflation-border: rgba(245,158,11,.2);
+    --inflation-color: #fde68a;
+    --hero-gradient: linear-gradient(135deg, rgba(59,130,246,.1) 0%, rgba(20,184,166,.05) 100%);
+    --hero-orb: rgba(59,130,246,.12);
+    --exec-gradient: linear-gradient(135deg, rgba(30,48,80,.7) 0%, rgba(13,27,42,.9) 100%);
+    --exec-orb: rgba(59,130,246,.08);
+    --card-hover-border: rgba(59,130,246,.4);
+    --pill-bg: rgba(255,255,255,.06);
+    --scrollbar-thumb: rgba(148,163,184,.2);
+    --scrollbar-hover: rgba(148,163,184,.4);
+    --toggle-bg: rgba(255,255,255,.08);
+    --toggle-hover: rgba(255,255,255,.14);
+    --badge-outcome-bg: rgba(34,197,94,.12);   --badge-outcome-color: #86efac;
+    --badge-owner-bg: rgba(251,191,36,.12);    --badge-owner-color: #fde68a;
+    --badge-funnel-bg: rgba(59,130,246,.14);   --badge-funnel-color: #93c5fd;
+    --badge-feature-bg: rgba(168,85,247,.14);  --badge-feature-color: #d8b4fe;
+    --badge-system-bg: rgba(244,63,94,.12);    --badge-system-color: #fda4af;
+    --badge-search-bg: rgba(20,184,166,.12);   --badge-search-color: #5eead4;
+    --badge-acq-bg: rgba(251,146,60,.12);      --badge-acq-color: #fed7aa;
+    --badge-auth-bg: rgba(99,102,241,.14);     --badge-auth-color: #c7d2fe;
+    --badge-sentiment-bg: rgba(236,72,153,.12);--badge-sentiment-color: #fbcfe8;
+    --badge-engagement-bg: rgba(14,165,233,.12);--badge-engagement-color: #bae6fd;
+    --badge-conversion-bg: rgba(34,197,94,.12);--badge-conversion-color: #86efac;
+    --badge-revenue-bg: rgba(251,191,36,.12);  --badge-revenue-color: #fde68a;
+    --badge-derived-bg: rgba(156,163,175,.12); --badge-derived-color: #d1d5db;
+  }
+
+  /* ── LIGHT THEME ── */
+  [data-theme="light"] {
+    --navy: #f8fafc;
+    --navy-mid: #ffffff;
+    --navy-light: #f1f5f9;
+    --accent: #2563eb;
+    --accent-light: #1d4ed8;
+    --gold: #d97706;
+    --teal: #0d9488;
+    --rose: #e11d48;
+    --green: #16a34a;
+    --text: #334155;
+    --text-heading: #0f172a;
+    --muted: #64748b;
+    --border: rgba(15,23,42,.1);
+    --card-bg: rgba(255,255,255,.8);
+    --body-bg: #f8fafc;
+    --sidebar-bg: #ffffff;
+    --search-bg: rgba(15,23,42,.04);
+    --hover-bg: rgba(15,23,42,.04);
+    --active-nav-bg: rgba(37,99,235,.06);
+    --row-hover: rgba(15,23,42,.03);
+    --thead-bg: rgba(37,99,235,.06);
+    --mark-bg: rgba(245,158,11,.2);
+    --mark-color: #0f172a;
+    --code-bg: rgba(13,148,136,.08);
+    --formula-bg: rgba(241,245,249,1);
+    --formula-border: rgba(13,148,136,.2);
+    --info-bg: rgba(37,99,235,.04);
+    --info-border: rgba(37,99,235,.15);
+    --inflation-bg: rgba(217,119,6,.05);
+    --inflation-border: rgba(217,119,6,.18);
+    --inflation-color: #92400e;
+    --hero-gradient: linear-gradient(135deg, rgba(37,99,235,.05) 0%, rgba(13,148,136,.03) 100%);
+    --hero-orb: rgba(37,99,235,.06);
+    --exec-gradient: linear-gradient(135deg, rgba(255,255,255,.9) 0%, rgba(241,245,249,.95) 100%);
+    --exec-orb: rgba(37,99,235,.05);
+    --card-hover-border: rgba(37,99,235,.3);
+    --pill-bg: rgba(15,23,42,.04);
+    --scrollbar-thumb: rgba(15,23,42,.12);
+    --scrollbar-hover: rgba(15,23,42,.25);
+    --toggle-bg: rgba(15,23,42,.06);
+    --toggle-hover: rgba(15,23,42,.1);
+    --badge-outcome-bg: rgba(22,163,74,.1);    --badge-outcome-color: #166534;
+    --badge-owner-bg: rgba(217,119,6,.1);      --badge-owner-color: #92400e;
+    --badge-funnel-bg: rgba(37,99,235,.08);    --badge-funnel-color: #1e40af;
+    --badge-feature-bg: rgba(147,51,234,.08);  --badge-feature-color: #7e22ce;
+    --badge-system-bg: rgba(225,29,72,.08);    --badge-system-color: #be123c;
+    --badge-search-bg: rgba(13,148,136,.08);   --badge-search-color: #115e59;
+    --badge-acq-bg: rgba(234,88,12,.08);       --badge-acq-color: #9a3412;
+    --badge-auth-bg: rgba(79,70,229,.08);      --badge-auth-color: #4338ca;
+    --badge-sentiment-bg: rgba(219,39,119,.08);--badge-sentiment-color: #9d174d;
+    --badge-engagement-bg: rgba(2,132,199,.08);--badge-engagement-color: #075985;
+    --badge-conversion-bg: rgba(22,163,74,.1); --badge-conversion-color: #166534;
+    --badge-revenue-bg: rgba(217,119,6,.1);    --badge-revenue-color: #92400e;
+    --badge-derived-bg: rgba(100,116,139,.1);  --badge-derived-color: #475569;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--body-bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-brand {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-brand .logo-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin-bottom: 6px;
+  }
+  .sidebar-brand h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    line-height: 1.2;
+    color: var(--text-heading);
+  }
+  .sidebar-brand .subtitle {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .sidebar-search {
+    padding: 16px 16px 8px;
+  }
+  .sidebar-search input {
+    width: 100%;
+    background: var(--search-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 9px 14px 9px 36px;
+    outline: none;
+    transition: border-color .2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 16px;
+  }
+  .sidebar-search input:focus { border-color: var(--accent); }
+  .sidebar-search input::placeholder { color: var(--muted); }
+
+  nav { padding: 8px 0 24px; flex: 1; }
+  .nav-section-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 24px 4px;
+  }
+  nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 24px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    border-left: 3px solid transparent;
+    transition: all .15s;
+  }
+  nav a:hover { color: var(--text); background: var(--hover-bg); }
+  nav a.active { color: var(--text-heading); border-left-color: var(--accent); background: var(--active-nav-bg); font-weight: 500; }
+  nav a .nav-icon { width: 16px; height: 16px; flex-shrink: 0; opacity: .7; }
+
+  /* ── MAIN ── */
+  #main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 56px 60px 48px;
+    background: var(--hero-gradient);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--hero-orb) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin-bottom: 12px;
+  }
+  .hero h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    line-height: 1.15;
+    color: var(--text-heading);
+    max-width: 620px;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 580px;
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .stats-row {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    background: var(--pill-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    min-width: 130px;
+  }
+  .stat-pill .num { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text-heading); }
+  .stat-pill .lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ── CONTENT SECTIONS ── */
+  .content-section {
+    padding: 48px 60px;
+    border-bottom: 1px solid var(--border);
+    display: none;
+  }
+  .content-section.active { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .section-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px;
+  }
+  .section-header-text h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    color: var(--text-heading);
+    margin-bottom: 4px;
+  }
+  .section-header-text p {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* ── DASHBOARD INDEX CARDS ── */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .dash-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    backdrop-filter: blur(8px);
+    transition: border-color .2s, transform .2s;
+    cursor: default;
+  }
+  .dash-card:hover { border-color: var(--card-hover-border); transform: translateY(-2px); }
+  .dash-card .dash-number {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .dash-card h4 { font-size: 14px; font-weight: 500; color: var(--text-heading); line-height: 1.4; }
+
+  /* ── KPI TABLE ── */
+  .kpi-table-wrap {
+    overflow-x: auto;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead tr {
+    background: var(--thead-bg);
+  }
+  thead th {
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background .15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--row-hover); }
+  tbody td {
+    padding: 14px 18px;
+    color: var(--text);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .td-metric {
+    font-weight: 500;
+    color: var(--text-heading);
+    white-space: nowrap;
+  }
+  .td-code {
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px;
+    color: var(--teal);
+    background: var(--code-bg);
+    padding: 3px 7px;
+    border-radius: 5px;
+    white-space: nowrap;
+  }
+  .td-source {
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .td-owner {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Category badges */
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .badge-outcome    { background: var(--badge-outcome-bg);    color: var(--badge-outcome-color); }
+  .badge-owner      { background: var(--badge-owner-bg);      color: var(--badge-owner-color); }
+  .badge-funnel     { background: var(--badge-funnel-bg);     color: var(--badge-funnel-color); }
+  .badge-feature    { background: var(--badge-feature-bg);    color: var(--badge-feature-color); }
+  .badge-system     { background: var(--badge-system-bg);     color: var(--badge-system-color); }
+  .badge-search     { background: var(--badge-search-bg);     color: var(--badge-search-color); }
+  .badge-acq        { background: var(--badge-acq-bg);        color: var(--badge-acq-color); }
+  .badge-auth       { background: var(--badge-auth-bg);       color: var(--badge-auth-color); }
+  .badge-sentiment  { background: var(--badge-sentiment-bg);  color: var(--badge-sentiment-color); }
+  .badge-engagement { background: var(--badge-engagement-bg); color: var(--badge-engagement-color); }
+  .badge-conversion { background: var(--badge-conversion-bg); color: var(--badge-conversion-color); }
+  .badge-revenue    { background: var(--badge-revenue-bg);    color: var(--badge-revenue-color); }
+  .badge-derived    { background: var(--badge-derived-bg);    color: var(--badge-derived-color); }
+
+  /* ── FORMULA BLOCK ── */
+  .formula-block {
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px;
+    color: var(--teal);
+    background: var(--formula-bg);
+    border: 1px solid var(--formula-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.6;
+  }
+
+  /* ── DETAIL CARDS (for richer sections) ── */
+  .kpi-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+  .kpi-detail-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    backdrop-filter: blur(8px);
+    transition: border-color .2s;
+  }
+  .kpi-detail-card:hover { border-color: var(--card-hover-border); }
+  .kdc-name { font-weight: 600; color: var(--text-heading); font-size: 14px; margin-bottom: 6px; }
+  .kdc-def { font-size: 12.5px; color: var(--muted); line-height: 1.55; margin-bottom: 12px; }
+  .kdc-row { display: flex; gap: 8px; align-items: flex-start; margin-top: 8px; }
+  .kdc-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); min-width: 64px; flex-shrink: 0; padding-top: 2px; }
+  .kdc-val { font-size: 12px; color: var(--text); }
+  .kdc-val code { font-family: 'Courier New', monospace; font-size: 11px; color: var(--teal); background: var(--code-bg); padding: 1px 6px; border-radius: 4px; }
+
+  /* ── INFLATION CALLOUT ── */
+  .inflation-note {
+    margin-top: 10px;
+    background: var(--inflation-bg);
+    border: 1px solid var(--inflation-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 11.5px;
+    color: var(--inflation-color);
+  }
+  .inflation-note strong { display: block; margin-bottom: 4px; color: var(--gold); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+  .inflation-note code { font-family: 'Courier New', monospace; color: var(--gold); font-size: 11px; }
+
+  /* ── EXEC SCORECARD LARGE CARDS ── */
+  .exec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .exec-card {
+    background: var(--exec-gradient);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .2s, transform .2s;
+  }
+  .exec-card:hover { border-color: var(--card-hover-border); transform: translateY(-3px); }
+  .exec-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--exec-orb) 0%, transparent 70%);
+  }
+  .exec-card-num {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .exec-card-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--text-heading);
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  .exec-card-def {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+  .exec-card-source {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .exec-card-source strong {
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* ── SEARCH HIGHLIGHT ── */
+  mark { background: var(--mark-bg); color: var(--mark-color); border-radius: 2px; padding: 0 2px; }
+
+  /* ── GLOSSARY NOTE ── */
+  .info-box {
+    background: var(--info-bg);
+    border: 1px solid var(--info-border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .info-box strong { color: var(--accent-light); }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 0 0 20px 0;
+  }
+  .filter-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-right: 4px;
+  }
+  .filter-pill {
+    background: var(--pill-bg);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .filter-pill:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+  .filter-pill.active {
+    background: rgba(59,130,246,.15);
+    border-color: var(--accent);
+    color: var(--accent-light);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 800px) {
+    #sidebar { display: none; }
+    .hero, .content-section { padding: 32px 24px; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
+
+  .no-results { padding: 40px; text-align: center; color: var(--muted); font-size: 14px; }
+
+  /* ── THEME TOGGLE ── */
+  .theme-toggle-wrap {
+    padding: 12px 16px 16px;
+    border-top: 1px solid var(--border);
+  }
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 9px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--toggle-bg);
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .theme-toggle:hover {
+    background: var(--toggle-hover);
+    color: var(--text);
+  }
+  .theme-toggle svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .theme-toggle .icon-sun,
+  .theme-toggle .label-light { display: none; }
+  [data-theme="dark"] .theme-toggle .icon-moon,
+  [data-theme="dark"] .theme-toggle .label-dark { display: none; }
+  [data-theme="dark"] .theme-toggle .icon-sun,
+  [data-theme="dark"] .theme-toggle .label-light { display: inline; }
+  [data-theme="light"] .theme-toggle .icon-moon,
+  [data-theme="light"] .theme-toggle .label-dark { display: inline; }
+  [data-theme="light"] .theme-toggle .icon-sun,
+  [data-theme="light"] .theme-toggle .label-light { display: none; }
+
+  /* Smooth theme transition */
+  body, #sidebar, .hero, .content-section, .dash-card, .kpi-detail-card, .exec-card,
+  .kpi-table-wrap, table, thead tr, .stat-pill, .info-box, .inflation-note, nav a,
+  .sidebar-brand, .badge, .formula-block, .theme-toggle {
+    transition: background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+
+  /* Light theme shadow refinements */
+  [data-theme="light"] .dash-card,
+  [data-theme="light"] .kpi-detail-card,
+  [data-theme="light"] .exec-card {
+    box-shadow: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  }
+  [data-theme="light"] .dash-card:hover,
+  [data-theme="light"] .kpi-detail-card:hover,
+  [data-theme="light"] .exec-card:hover {
+    box-shadow: 0 4px 12px rgba(15,23,42,.08), 0 2px 4px rgba(15,23,42,.04);
+  }
+  [data-theme="light"] .kpi-table-wrap {
+    box-shadow: 0 1px 3px rgba(15,23,42,.06);
+  }
+  [data-theme="light"] #sidebar {
+    box-shadow: 1px 0 4px rgba(15,23,42,.05);
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo-tag">Digital POD</div>
+    <h1>KPI Data<br/>Dictionary</h1>
+    <div class="subtitle">Last updated · 2025</div>
+  </div>
+  <div class="sidebar-search">
+    <input type="text" id="searchInput" placeholder="Search KPIs…" oninput="handleSearch(this.value)" />
+  </div>
+  <nav>
+    <div class="nav-section-label">Overview</div>
+    <a href="#" class="active" onclick="showSection('overview', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Overview &amp; Dashboards
+    </a>
+    <a href="#" onclick="showSection('exec', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Executive Scorecard
+    </a>
+
+    <div class="nav-section-label">KPI Reference</div>
+    <a href="#" onclick="showSection('kpidict', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      Full KPI Dictionary
+    </a>
+    <a href="#" onclick="showSection('arrivals', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Arrivals &amp; Owners
+    </a>
+    <a href="#" onclick="showSection('bookings', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Bookings &amp; Funnel
+    </a>
+    <a href="#" onclick="showSection('feature', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Feature Impact
+    </a>
+    <a href="#" onclick="showSection('system', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      System Health
+    </a>
+
+    <div class="nav-section-label">App KPIs</div>
+    <a href="#" onclick="showSection('appkpis', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      CW &amp; WM App KPIs
+    </a>
+    <a href="#" onclick="showSection('dashboard', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Dashboard KPIs
+    </a>
+    <a href="#" onclick="showSection('ga4ref', this)">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      GA4 Metrics Reference
+    </a>
+  </nav>
+  <div class="theme-toggle-wrap">
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <span class="label-light">Light mode</span>
+      <span class="label-dark">Dark mode</span>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+
+  <!-- ═══ OVERVIEW ═══ -->
+  <section class="content-section active" id="overview">
+    <div class="hero">
+      <div class="hero-eyebrow">KPI Data Dictionary · Digital POD</div>
+      <h2>Your single source of truth for Digital performance metrics</h2>
+      <p>This dictionary defines every KPI tracked across the Digital POD — from mobile app engagement and booking funnel health to owner-level outcomes and feature impact measurement. Use it to align reporting, resolve definitional disputes, and ensure stakeholders are speaking the same language.</p>
+      <div class="stats-row">
+        <div class="stat-pill"><div class="num">155+</div><div class="lbl">KPIs Defined</div></div>
+        <div class="stat-pill"><div class="num">6</div><div class="lbl">Dashboard Sources</div></div>
+        <div class="stat-pill"><div class="num">10</div><div class="lbl">KPI Categories</div></div>
+        <div class="stat-pill"><div class="num">GA4</div><div class="lbl">Primary Data Platform</div></div>
+      </div>
+    </div>
+    <div style="padding: 48px 60px;">
+      <div class="section-header">
+        <div class="section-icon" style="background:rgba(59,130,246,.12);">🗂️</div>
+        <div class="section-header-text">
+          <h3>Active Dashboards</h3>
+          <p>Six dashboards in production across Club Wyndham, WorldMark, and Travel &amp; Leisure</p>
+        </div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="dash-card"><div class="dash-number">Dashboard 01</div><h4>Club Wyndham Mobile App Performance Dashboard</h4></div>
+        <div class="dash-card"><div class="dash-number">Dashboard 02</div><h4>WorldMark App Performance Dashboard</h4></div>
+        <div class="dash-card"><div class="dash-number">Dashboard 03</div><h4>CW/WM Site Health Metrics — Error Code Tracking › WorldMark</h4></div>
+        <div class="dash-card"><div class="dash-number">Dashboard 04</div><h4>T+L4B Performance Skyview</h4></div>
+        <div class="dash-card"><div class="dash-number">Dashboard 05</div><h4>TravelandLeisureCo.com Site Traffic Dashboard › T+LCo.Com Overview</h4></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ EXECUTIVE SCORECARD ═══ -->
+  <section class="content-section" id="exec">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(34,197,94,.1);">📈</div>
+      <div class="section-header-text">
+        <h3>Executive Scorecard KPIs</h3>
+        <p>Top-line metrics surfaced directly to leadership for strategic decision-making</p>
+      </div>
+    </div>
+    <div class="info-box"><strong>Purpose:</strong> These 8 KPIs represent the clearest signal of Digital's impact on business outcomes — owner engagement, feature ROI, and arrival-driving efficiency. Each is designed to translate digital activity into business language.</div>
+    <div class="exec-grid">
+      <div class="exec-card"><div class="exec-card-num">01 · Outcome</div><div class="exec-card-name">Total Arrivals</div><div class="exec-card-def">Completed stays across all booking channels. Represents the primary business outcome — a guest physically arriving and checking in.</div><div class="exec-card-source">Source: <strong>RES_FACT</strong></div></div>
+      <div class="exec-card"><div class="exec-card-num">02 · Attribution</div><div class="exec-card-name">Digital Arrivals Share</div><div class="exec-card-def">Percentage of all arrivals that originated from a Web or App booking. Measures the share of business that digital channels are driving.</div><div class="exec-card-source">Source: <strong>RES_FACT + GA4</strong></div></div>
+      <div class="exec-card"><div class="exec-card-num">03 · Engagement</div><div class="exec-card-name">Arrivals per Owner (APO)</div><div class="exec-card-def">Average number of completed stays per unique owner. Normalizes arrival volume against owner base size for fair period-over-period comparison.</div><div class="exec-card-source">Source: <strong>RES_FACT + Membership</strong></div></div>
+      <div class="exec-card"><div class="exec-card-num">04 · Engagement</div><div class="exec-card-name">Bookings per Owner (BPO)</div><div class="exec-card-def">Average number of reservations placed per unique owner. A leading indicator of owner intent and platform engagement before stays are completed.</div><div class="exec-card-source">Source: <strong>RES_FACT + Membership</strong></div></div>
+      <div class="exec-card"><div class="exec-card-num">05 · Feature Value</div><div class="exec-card-name">Lift vs Control</div><div class="exec-card-def">Incremental improvement in a KPI (arrivals, bookings) driven by a specific feature, measured against a comparable control group.</div><div class="exec-card-source">Source: <strong>Experiment / Model</strong></div></div>
+      <div class="exec-card"><div class="exec-card-num">06 · Feature Value</div><div class="exec-card-name">Incremental Arrivals (YTD)</div><div class="exec-card-def">Estimated additional arrivals attributable to feature releases year-to-date. Translates engineering output into tangible business outcomes.</div><div class="exec-card-source">Source: <strong>Model Output</strong></div></div>
+      <div class="exec-card"><div class="exec-card-num">07 · ROI</div><div class="exec-card-name">Feature ROI</div><div class="exec-card-def">Financial return generated from feature-driven incremental outcomes. Calculated as (Incremental Revenue − Cost) / Cost. The core investment justification metric.</div><div class="exec-card-source">Source: <strong>Finance + Model</strong></div></div>
+      <div class="exec-card"><div class="exec-card-num">08 · Efficiency</div><div class="exec-card-name">Search-to-Arrival Ratio</div><div class="exec-card-def">Number of search sessions required to produce one arrival. A lower ratio indicates a more efficient path from discovery to booking to stay.</div><div class="exec-card-source">Source: <strong>GA4 + RES_FACT</strong></div></div>
+    </div>
+  </section>
+
+  <!-- ═══ FULL KPI DICTIONARY ═══ -->
+  <section class="content-section" id="kpidict">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(168,85,247,.1);">📘</div>
+      <div class="section-header-text">
+        <h3>Full KPI Dictionary</h3>
+        <p>Canonical definitions, formulas, data sources, and owners for all tracked KPIs</p>
+      </div>
+    </div>
+    <div class="filter-bar" id="kpiDictFilter">
+      <span class="filter-label">Filter by category:</span>
+      <button class="filter-pill active" data-cat="all" onclick="filterKpiDict('all', this)">All</button>
+      <button class="filter-pill" data-cat="Outcome" onclick="filterKpiDict('Outcome', this)">Outcome</button>
+      <button class="filter-pill" data-cat="Owner Metrics" onclick="filterKpiDict('Owner Metrics', this)">Owner Metrics</button>
+      <button class="filter-pill" data-cat="Funnel" onclick="filterKpiDict('Funnel', this)">Funnel</button>
+      <button class="filter-pill" data-cat="Feature Impact" onclick="filterKpiDict('Feature Impact', this)">Feature Impact</button>
+      <button class="filter-pill" data-cat="System Health" onclick="filterKpiDict('System Health', this)">System Health</button>
+      <button class="filter-pill" data-cat="App" onclick="filterKpiDict('App', this)">App</button>
+      <button class="filter-pill" data-cat="Dashboard" onclick="filterKpiDict('Dashboard', this)">Dashboard</button>
+    </div>
+    <div class="kpi-table-wrap">
+      <table id="kpiDictTable">
+        <thead>
+          <tr>
+            <th>KPI Name</th>
+            <th>Category</th>
+            <th>Definition</th>
+            <th>Formula</th>
+            <th>Primary Source</th>
+            <th>Owner</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="td-metric">Arrivals</td><td><span class="badge badge-outcome">Outcome</span></td><td>Completed stays (checked-out reservations).</td><td><code class="td-code">Count(res_num)</code></td><td class="td-source">RES_FACT</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Digital Arrivals</td><td><span class="badge badge-outcome">Outcome</span></td><td>Arrivals originating from Web or App channels.</td><td><code class="td-code">Filter(channel in Web/App)</code></td><td class="td-source">RES_FACT + GA4</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Arrivals per Owner (APO)</td><td><span class="badge badge-owner">Owner Metrics</span></td><td>Average arrivals per unique owner.</td><td><code class="td-code">Arrivals / Unique Owners</code></td><td class="td-source">RES_FACT + Membership</td><td class="td-owner">Analytics</td></tr>
+          <tr><td class="td-metric">Bookings per Owner (BPO)</td><td><span class="badge badge-owner">Owner Metrics</span></td><td>Average bookings per unique owner.</td><td><code class="td-code">Bookings / Unique Owners</code></td><td class="td-source">RES_FACT + Membership</td><td class="td-owner">Analytics</td></tr>
+          <tr><td class="td-metric">Search-to-Book Rate</td><td><span class="badge badge-funnel">Funnel</span></td><td>Percent of search sessions resulting in a booking.</td><td><code class="td-code">Bookings / Search Sessions</code></td><td class="td-source">GA4 + Bookings</td><td class="td-owner">Product Analytics</td></tr>
+          <tr><td class="td-metric">Search-to-Arrival Rate</td><td><span class="badge badge-funnel">Funnel</span></td><td>Percent of search sessions leading to an arrival.</td><td><code class="td-code">Arrivals / Search Sessions</code></td><td class="td-source">GA4 + RES_FACT</td><td class="td-owner">Product Analytics</td></tr>
+          <tr><td class="td-metric">Search Lift</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Conversion improvement of feature users vs baseline/control.</td><td><code class="td-code">Rate_treat − Rate_ctrl</code></td><td class="td-source">Experiment / Model</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Incremental Arrivals</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Additional arrivals attributable to a feature beyond baseline.</td><td><code class="td-code">Lift × Treated Users</code></td><td class="td-source">Model Output</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Cannibalization Rate</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Share of feature-driven bookings that shift from other channels rather than adding net-new volume.</td><td><code class="td-code">1 − Net Incremental / Gross Lift</code></td><td class="td-source">Model Output</td><td class="td-owner">Strategy</td></tr>
+          <tr><td class="td-metric">Feature ROI</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Financial return from incremental revenue vs cost of feature delivery.</td><td><code class="td-code">(Inc Rev − Cost) / Cost</code></td><td class="td-source">Finance + Model</td><td class="td-owner">Leadership</td></tr>
+          <tr><td class="td-metric">Error Rate</td><td><span class="badge badge-system">System Health</span></td><td>Percentage of sessions impacted by system or API errors.</td><td><code class="td-code">Errors / Sessions</code></td><td class="td-source">Splunk / AppD</td><td class="td-owner">Engineering</td></tr>
+          <tr><td class="td-metric">Page Load Time</td><td><span class="badge badge-system">System Health</span></td><td>Average page or screen load performance.</td><td><code class="td-code">Avg(load_time)</code></td><td class="td-source">AppD / GA4</td><td class="td-owner">Engineering</td></tr>
+          <tr><td class="td-metric">Crash Rate</td><td><span class="badge badge-system">System Health</span></td><td>Percentage of app sessions ending in a crash.</td><td><code class="td-code">Crashes / Sessions</code></td><td class="td-source">Mobile Analytics</td><td class="td-owner">Engineering</td></tr>
+          <tr><td class="td-metric">App Logins</td><td><span class="badge badge-engagement">App</span></td><td>Count of App opens where member credentials were successfully authenticated.</td><td><code class="td-code">See App KPIs detail</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">App Store Impressions</td><td><span class="badge badge-derived">Dashboard</span></td><td>Total times the app listing was viewed in the App Store or Google Play.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">App Store Connect / Play Console</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Arrival Lift</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Difference in arrival rates between treated and control groups.</td><td><code class="td-code">Rate_treat − Rate_ctrl</code></td><td class="td-source">Model Output</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Arrival Rate (Control)</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Percent of control users who had an arrival in the window.</td><td><code class="td-code">Arrivals_ctrl / Users_ctrl</code></td><td class="td-source">RES_FACT + Model</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Arrival Rate (Treated)</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Percent of feature users who had an arrival in the defined window.</td><td><code class="td-code">Arrivals_treat / Users_treat</code></td><td class="td-source">RES_FACT + GA4</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Arrival Rate per Owner</td><td><span class="badge badge-owner">Owner Metrics</span></td><td>Percent of owners with at least one arrival in the period.</td><td><code class="td-code">Owners with Arrivals / Total Owners</code></td><td class="td-source">RES_FACT + Membership</td><td class="td-owner">Analytics</td></tr>
+          <tr><td class="td-metric">Availability Error Rate</td><td><span class="badge badge-system">System Health</span></td><td>Percent of availability requests returning no inventory or errors.</td><td><code class="td-code">Availability Errors / Total Requests</code></td><td class="td-source">Splunk / API Monitoring</td><td class="td-owner">Engineering</td></tr>
+          <tr><td class="td-metric">Avg App Store Rating</td><td><span class="badge badge-derived">Dashboard</span></td><td>Average star rating across all app store reviews in the period.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">App Store Connect / Play Console</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Avg. Session Duration</td><td><span class="badge badge-derived">Dashboard</span></td><td>Average engagement time per session = sum(user_engagement time) ÷ sessions.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Begin Checkout</td><td><span class="badge badge-engagement">App</span></td><td>Count of how many times the first step of the checkout flow has been initiated.</td><td><code class="td-code">See App KPIs detail</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Booking Completion Rate</td><td><span class="badge badge-system">System Health</span></td><td>Percent of initiated bookings that complete successfully.</td><td><code class="td-code">Completed Bookings / Booking Starts</code></td><td class="td-source">GA4 + Splunk</td><td class="td-owner">Engineering</td></tr>
+          <tr><td class="td-metric">Booking Conversion Rate (Search-to-Book)</td><td><span class="badge badge-funnel">Funnel</span></td><td>Percent of search sessions resulting in a completed booking.</td><td><code class="td-code">Bookings / Search Sessions</code></td><td class="td-source">GA4 + RES_FACT</td><td class="td-owner">Product Analytics</td></tr>
+          <tr><td class="td-metric">Booking Lift</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Difference in booking rates between treated and control groups.</td><td><code class="td-code">Rate_treat − Rate_ctrl</code></td><td class="td-source">Model Output</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Booking Lift (Treated vs Control)</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Difference in booking rates between feature users and baseline.</td><td><code class="td-code">Rate_treat − Rate_ctrl</code></td><td class="td-source">Experiment / Model</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Booking Rate (Control)</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Percent of control users who completed a booking.</td><td><code class="td-code">Bookings_ctrl / Users_ctrl</code></td><td class="td-source">RES_FACT + Model</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Booking Rate (Treated)</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Percent of feature users who completed a booking.</td><td><code class="td-code">Bookings_treat / Users_treat</code></td><td class="td-source">RES_FACT + GA4</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Booking Rate per Owner</td><td><span class="badge badge-owner">Owner Metrics</span></td><td>Percent of owners who booked at least once in the period.</td><td><code class="td-code">Owners with Bookings / Total Owners</code></td><td class="td-source">RES_FACT + Membership</td><td class="td-owner">Analytics</td></tr>
+          <tr><td class="td-metric">Booking-to-Arrival Conversion Rate</td><td><span class="badge badge-outcome">Outcome</span></td><td>Percent of bookings that convert into completed arrivals.</td><td><code class="td-code">Arrivals / Bookings</code></td><td class="td-source">RES_FACT</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Checkout Failure Rate</td><td><span class="badge badge-system">System Health</span></td><td>Percent of checkout attempts failing due to errors.</td><td><code class="td-code">Failed Checkouts / Total Checkouts</code></td><td class="td-source">GA4 + Splunk</td><td class="td-owner">Engineering</td></tr>
+          <tr><td class="td-metric">Checkout Funnel Conversion Rate</td><td><span class="badge badge-derived">Dashboard</span></td><td>purchase events ÷ begin_checkout events</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4 (derived)</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Checkout Started</td><td><span class="badge badge-derived">Dashboard</span></td><td>Count of GA4 begin_checkout events.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Control Users</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Comparable owners who did not use the feature (baseline group).</td><td><code class="td-code">Used for incrementality comparison</code></td><td class="td-source">GA4 + Model</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Digital Arrivals Share</td><td><span class="badge badge-outcome">Outcome</span></td><td>Percentage of all arrivals that originated from a Web or App booking. Measures the share of business that digital channels are driving.</td><td><code class="td-code">—</code></td><td class="td-source">—</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Digital Bookings</td><td><span class="badge badge-funnel">Funnel</span></td><td>Bookings originating from digital channels (Web + App).</td><td><code class="td-code">Subset of Total Bookings</code></td><td class="td-source">RES_FACT + GA4</td><td class="td-owner">Product Analytics</td></tr>
+          <tr><td class="td-metric">Download Conversion Rate</td><td><span class="badge badge-derived">Dashboard</span></td><td>Percent of app store impressions resulting in a download.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">App Store Connect / Play Console</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Engaged Sessions</td><td><span class="badge badge-engagement">App</span></td><td>Sessions likely driven by shoppers or high-intent users. GA4 definition: sessions with ≥10s engagement, a conversion event, or ≥2 screenviews.</td><td><code class="td-code">See App KPIs detail</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Feature Adoption</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Number of unique owners who used the feature (treated group).</td><td><code class="td-code">Measures feature reach</code></td><td class="td-source">GA4</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Feature Adoption Rate</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Share of digital users adopting the feature.</td><td><code class="td-code">Feature Users / Total Digital Users</code></td><td class="td-source">GA4</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Feature Penetration Rate</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Percent of owners exposed to or using the feature.</td><td><code class="td-code">Feature Owners / Total Owners</code></td><td class="td-source">GA4 + Membership</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Feature Users (Treated Group)</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Owners who used the specific feature during the period.</td><td><code class="td-code">Defines impacted population</code></td><td class="td-source">GA4</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Funnel Drop-Off Rate</td><td><span class="badge badge-funnel">Funnel</span></td><td>Percent of users who exit between funnel steps (e.g., Search → Booking).</td><td><code class="td-code">1 − Conversion Rate</code></td><td class="td-source">GA4</td><td class="td-owner">Product Analytics</td></tr>
+          <tr><td class="td-metric">Gross Bookings (App)</td><td><span class="badge badge-derived">Dashboard</span></td><td>GA4 purchase events scoped to the App data stream only.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4 — App stream</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Gross Web Desktop</td><td><span class="badge badge-derived">Dashboard</span></td><td>GA4 purchase events in web streams filtered where device_category = desktop.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4 — Web stream</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Gross Web Mobile</td><td><span class="badge badge-derived">Dashboard</span></td><td>GA4 purchase events in web streams filtered where device_category = mobile.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4 — Web stream</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">In App CR</td><td><span class="badge badge-derived">Dashboard</span></td><td>Overall app conversion rate: purchase ÷ sessions or purchase ÷ engagedSessions (match the report's base metric).</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4 — App stream</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Incremental Arrivals (Feature)</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Additional arrivals attributed to a feature beyond baseline behavior.</td><td><code class="td-code">Lift × Feature Users</code></td><td class="td-source">Model Output</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Incremental Arrivals (YTD)</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Estimated additional arrivals attributable to feature releases year-to-date. Translates engineering output into tangible business outcomes.</td><td><code class="td-code">—</code></td><td class="td-source">—</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Incremental Bookings</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Additional bookings attributable to the feature beyond baseline.</td><td><code class="td-code">Lift × Feature Users</code></td><td class="td-source">Model Output</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Lift in Owner Arrival Rate</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Difference in arrival rate between feature users and control owners.</td><td><code class="td-code">Rate_treat − Rate_ctrl</code></td><td class="td-source">Experiment / Model</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Lift vs Control</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Incremental improvement in a KPI (arrivals, bookings) driven by a specific feature, measured against a comparable control group.</td><td><code class="td-code">—</code></td><td class="td-source">—</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">List Search Views</td><td><span class="badge badge-engagement">App</span></td><td>Count of how many times the user group initiates a search and views results (GA4: view_item_list when resort list is shown).</td><td><code class="td-code">See App KPIs detail</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Login Success Rate</td><td><span class="badge badge-system">System Health</span></td><td>Percent of login attempts completed successfully.</td><td><code class="td-code">Successful Logins / Total Login Attempts</code></td><td class="td-source">Splunk / AppDynamics</td><td class="td-owner">Engineering</td></tr>
+          <tr><td class="td-metric">MoM Adoption Growth</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Month-over-month growth in feature usage.</td><td><code class="td-code">(Users_current − Users_prior) / Users_prior</code></td><td class="td-source">GA4 (derived)</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">MoM Change in Arrivals</td><td><span class="badge badge-outcome">Outcome</span></td><td>Month-over-month change in arrivals or APO.</td><td><code class="td-code">(Current − Prior) / Prior</code></td><td class="td-source">RES_FACT (derived)</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">MoM Change in Bookings</td><td><span class="badge badge-funnel">Funnel</span></td><td>Month-over-month change in bookings or BPO.</td><td><code class="td-code">(Current − Prior) / Prior</code></td><td class="td-source">RES_FACT (derived)</td><td class="td-owner">Product Analytics</td></tr>
+          <tr><td class="td-metric">MoM Change in Errors</td><td><span class="badge badge-system">System Health</span></td><td>Month-over-month change in error volume or error rate.</td><td><code class="td-code">(Current − Prior) / Prior</code></td><td class="td-source">Splunk (derived)</td><td class="td-owner">Engineering</td></tr>
+          <tr><td class="td-metric">Net Incremental Impact</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Incremental impact after accounting for cannibalization.</td><td><code class="td-code">Incremental × (1 − Cannibalization)</code></td><td class="td-source">Model Output</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">New Users</td><td><span class="badge badge-engagement">App</span></td><td>Count of unique devices that opened the Mobile App for the first time within the time frame.</td><td><code class="td-code">See App KPIs detail</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">ROI per Feature</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Estimated financial return per feature release.</td><td><code class="td-code">Incremental Revenue / Cost</code></td><td class="td-source">Finance + Model</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">Registrations</td><td><span class="badge badge-derived">Dashboard</span></td><td>Count of GA4 sign_up or create_account events.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Reservations (App)</td><td><span class="badge badge-engagement">App</span></td><td>Count of gross reservations booked within the Mobile App during the time frame.</td><td><code class="td-code">See App KPIs detail</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Resort Searches</td><td><span class="badge badge-engagement">App</span></td><td>Total count of resort availability search events (not sessions — counts each individual search).</td><td><code class="td-code">See App KPIs detail</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Resv Confirmed / Bookings</td><td><span class="badge badge-derived">Dashboard</span></td><td>Count of GA4 purchase events representing successful reservations (1 booking per purchase).</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Return Users</td><td><span class="badge badge-engagement">App</span></td><td>Count of unique devices that have opened the Mobile App two or more times during the time frame. Excludes first opens.</td><td><code class="td-code">See App KPIs detail</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Revenue / AOV</td><td><span class="badge badge-derived">Dashboard</span></td><td>Average order value = sum(purchase value) ÷ purchase events. Verify tax/fee treatment.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4 — Ecommerce</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Search Refinement</td><td><span class="badge badge-engagement">App</span></td><td>Count of how many times the user group uses the filter function within Resort Search to narrow results.</td><td><code class="td-code">See App KPIs detail</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Search Sessions</td><td><span class="badge badge-funnel">Funnel</span></td><td>Total number of search events or sessions initiated.</td><td><code class="td-code">Top-of-funnel demand indicator</code></td><td class="td-source">GA4</td><td class="td-owner">Product Analytics</td></tr>
+          <tr><td class="td-metric">Search Success Rate</td><td><span class="badge badge-system">System Health</span></td><td>Percent of searches returning valid results without errors.</td><td><code class="td-code">Successful Searches / Total Searches</code></td><td class="td-source">Splunk + GA4</td><td class="td-owner">Engineering</td></tr>
+          <tr><td class="td-metric">Search-to-Arrival Ratio</td><td><span class="badge badge-outcome">Outcome</span></td><td>Number of search sessions required to produce one arrival. A lower ratio indicates a more efficient path from discovery to booking to stay.</td><td><code class="td-code">—</code></td><td class="td-source">—</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Search-to-Booking Ratio</td><td><span class="badge badge-funnel">Funnel</span></td><td>Number of searches required to generate one booking.</td><td><code class="td-code">Example: 10:1 (searches per booking)</code></td><td class="td-source">GA4 + RES_FACT</td><td class="td-owner">Product Analytics</td></tr>
+          <tr><td class="td-metric">Searches Per Active User</td><td><span class="badge badge-derived">Dashboard</span></td><td>Resort Searches ÷ Unique Active Users</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4 (derived)</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Searches Per Booking</td><td><span class="badge badge-derived">Dashboard</span></td><td>Resort Searches ÷ Bookings</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4 + RES_FACT</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Searches per Active User</td><td><span class="badge badge-engagement">App</span></td><td>Average number of resort searches performed per active user. Active users divided by 4 as the denominator normalizes for weekly periodicity.</td><td><code class="td-code">See App KPIs detail</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Session-to-Book Conversion Rate</td><td><span class="badge badge-funnel">Funnel</span></td><td>Percent of total site/app sessions resulting in a booking.</td><td><code class="td-code">Bookings / Total Sessions</code></td><td class="td-source">GA4 + RES_FACT</td><td class="td-owner">Product Analytics</td></tr>
+          <tr><td class="td-metric">Sessions</td><td><span class="badge badge-engagement">App</span></td><td>Total traffic, regardless of user intent or engagement quality.</td><td><code class="td-code">See App KPIs detail</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Sessions (Overall)</td><td><span class="badge badge-derived">Dashboard</span></td><td>GA4 sessions — all sessions regardless of quality or intent.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Sessions with Search</td><td><span class="badge badge-engagement">App</span></td><td>Count of sessions in which the user group reaches the resort search function at least once.</td><td><code class="td-code">See App KPIs detail</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Total App Downloads</td><td><span class="badge badge-derived">Dashboard</span></td><td>Total installs across iOS and Android app stores (requires Store Connect / Play Console integration).</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">App Store Connect / Play Console</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Total Arrivals</td><td><span class="badge badge-outcome">Outcome</span></td><td>Total completed stays (checked-out reservations) across all channels.</td><td><code class="td-code">Primary business outcome</code></td><td class="td-source">RES_FACT</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Total Bookings</td><td><span class="badge badge-funnel">Funnel</span></td><td>Total reservations created during the period across all channels.</td><td><code class="td-code">Primary booking demand KPI</code></td><td class="td-source">RES_FACT</td><td class="td-owner">Product Analytics</td></tr>
+          <tr><td class="td-metric">Unique Booking Owners</td><td><span class="badge badge-owner">Owner Metrics</span></td><td>Number of distinct owners who completed at least one booking.</td><td><code class="td-code">Engaged booking population</code></td><td class="td-source">RES_FACT + Membership</td><td class="td-owner">Analytics</td></tr>
+          <tr><td class="td-metric">Unique Owners (Active)</td><td><span class="badge badge-owner">Owner Metrics</span></td><td>Number of distinct owners who booked or arrived within the period.</td><td><code class="td-code">Engaged owner base</code></td><td class="td-source">Membership + RES_FACT</td><td class="td-owner">Analytics</td></tr>
+          <tr><td class="td-metric">Unique Users</td><td><span class="badge badge-engagement">App</span></td><td>Count of distinct devices that have opened the Mobile App within the time frame.</td><td><code class="td-code">See App KPIs detail</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Unique Users / Unique Active Users</td><td><span class="badge badge-derived">Dashboard</span></td><td>GA4 users metric — distinct app_instance_id or user. Active Users is the default users metric in GA4.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">VAS Revenue</td><td><span class="badge badge-derived">Dashboard</span></td><td>sum(purchase item revenue) where item_category = 'VAS'. Requires item-level categorization.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4 — Item-level</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">Web CR</td><td><span class="badge badge-derived">Dashboard</span></td><td>Same logic as In App CR, scoped to web streams.</td><td><code class="td-code">See Dashboard section</code></td><td class="td-source">GA4 — Web stream</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">YTD Incremental Arrivals Projection</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Full-year forecast of incremental arrivals based on lift and adoption scaling.</td><td><code class="td-code">Exec value translation</code></td><td class="td-source">Model Output</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">YTD Incremental Booking Projection</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Full-year forecast of incremental bookings based on lift and adoption scaling.</td><td><code class="td-code">Exec value translation</code></td><td class="td-source">Model Output</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">YTD Incremental Projection</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Full-year estimate of incremental arrivals/bookings based on lift + adoption scaling.</td><td><code class="td-code">Exec business value KPI</code></td><td class="td-source">Model Output</td><td class="td-owner">Digital POD</td></tr>
+          <tr><td class="td-metric">YoY Change in Arrivals</td><td><span class="badge badge-outcome">Outcome</span></td><td>Year-over-year change in arrivals or APO.</td><td><code class="td-code">(Current − LastYear) / LastYear</code></td><td class="td-source">RES_FACT (derived)</td><td class="td-owner">Digital Analytics</td></tr>
+          <tr><td class="td-metric">YoY Change in Bookings</td><td><span class="badge badge-funnel">Funnel</span></td><td>Year-over-year change in bookings or booking rate.</td><td><code class="td-code">(Current − LastYear) / LastYear</code></td><td class="td-source">RES_FACT (derived)</td><td class="td-owner">Product Analytics</td></tr>
+          <tr><td class="td-metric">YoY Feature Impact Growth</td><td><span class="badge badge-feature">Feature Impact</span></td><td>Year-over-year change in lift or incremental outcomes.</td><td><code class="td-code">(Current − LastYear) / LastYear</code></td><td class="td-source">Model Output (derived)</td><td class="td-owner">Digital POD</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ ARRIVALS & OWNERS ═══ -->
+  <section class="content-section" id="arrivals">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(34,197,94,.1);">👥</div>
+      <div class="section-header-text">
+        <h3>Arrivals &amp; Owners</h3>
+        <p>Owner engagement and stay completion metrics — the core business outcome layer</p>
+      </div>
+    </div>
+    <div class="kpi-table-wrap">
+      <table>
+        <thead><tr><th>KPI</th><th>Definition</th><th>Formula / Notes</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td class="td-metric">Total Arrivals</td><td>Total completed stays (checked-out reservations) across all channels.</td><td><code class="td-code">Primary business outcome</code></td><td class="td-source">RES_FACT</td></tr>
+          <tr><td class="td-metric">Digital Arrivals</td><td>Arrivals originating from digital channels (Web + App).</td><td><code class="td-code">Subset of Total Arrivals</code></td><td class="td-source">RES_FACT + GA4</td></tr>
+          <tr><td class="td-metric">Unique Owners (Active)</td><td>Number of distinct owners who booked or arrived within the period.</td><td><code class="td-code">Engaged owner base</code></td><td class="td-source">Membership + RES_FACT</td></tr>
+          <tr><td class="td-metric">Arrivals per Owner (APO)</td><td>Average arrivals per unique owner.</td><td><code class="td-code">Total Arrivals / Unique Owners</code></td><td class="td-source">RES_FACT + Membership</td></tr>
+          <tr><td class="td-metric">Bookings per Owner (BPO)</td><td>Average bookings per unique owner.</td><td><code class="td-code">Total Bookings / Unique Owners</code></td><td class="td-source">RES_FACT + Membership</td></tr>
+          <tr><td class="td-metric">Arrival Rate per Owner</td><td>Percent of owners with at least one arrival in the period.</td><td><code class="td-code">Owners with Arrivals / Total Owners</code></td><td class="td-source">RES_FACT + Membership</td></tr>
+          <tr><td class="td-metric">Incremental Arrivals (Feature)</td><td>Additional arrivals attributed to a feature beyond baseline behavior.</td><td><code class="td-code">Lift × Feature Users</code></td><td class="td-source">Model Output</td></tr>
+          <tr><td class="td-metric">Lift in Owner Arrival Rate</td><td>Difference in arrival rate between feature users and control owners.</td><td><code class="td-code">Rate_treat − Rate_ctrl</code></td><td class="td-source">Experiment / Model</td></tr>
+          <tr><td class="td-metric">Feature Adoption</td><td>Number of unique owners who used the feature (treated group).</td><td><code class="td-code">Measures feature reach</code></td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">Feature Penetration Rate</td><td>Share of digital owners adopting the feature.</td><td><code class="td-code">Feature Owners / Total Digital Owners</code></td><td class="td-source">GA4 + Membership</td></tr>
+          <tr><td class="td-metric">MoM Change in Arrivals</td><td>Month-over-month change in arrivals or APO.</td><td><code class="td-code">(Current − Prior) / Prior</code></td><td class="td-source">RES_FACT (derived)</td></tr>
+          <tr><td class="td-metric">YoY Change in Arrivals</td><td>Year-over-year change in arrivals or APO.</td><td><code class="td-code">(Current − LastYear) / LastYear</code></td><td class="td-source">RES_FACT (derived)</td></tr>
+          <tr><td class="td-metric">YTD Incremental Arrivals Projection</td><td>Full-year forecast of incremental arrivals based on lift and adoption scaling.</td><td><code class="td-code">Exec value translation</code></td><td class="td-source">Model Output</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ BOOKINGS & FUNNEL ═══ -->
+  <section class="content-section" id="bookings">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(59,130,246,.1);">📋</div>
+      <div class="section-header-text">
+        <h3>Bookings &amp; Funnel</h3>
+        <p>Reservation demand, search-to-booking conversion, and funnel efficiency</p>
+      </div>
+    </div>
+    <div class="kpi-table-wrap">
+      <table>
+        <thead><tr><th>KPI</th><th>Definition</th><th>Formula / Notes</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td class="td-metric">Total Bookings</td><td>Total reservations created during the period across all channels.</td><td><code class="td-code">Primary booking demand KPI</code></td><td class="td-source">RES_FACT</td></tr>
+          <tr><td class="td-metric">Digital Bookings</td><td>Bookings originating from digital channels (Web + App).</td><td><code class="td-code">Subset of Total Bookings</code></td><td class="td-source">RES_FACT + GA4</td></tr>
+          <tr><td class="td-metric">Unique Booking Owners</td><td>Number of distinct owners who completed at least one booking.</td><td><code class="td-code">Engaged booking population</code></td><td class="td-source">RES_FACT + Membership</td></tr>
+          <tr><td class="td-metric">Bookings per Owner (BPO)</td><td>Average number of bookings per unique owner.</td><td><code class="td-code">Total Bookings / Unique Owners</code></td><td class="td-source">RES_FACT + Membership</td></tr>
+          <tr><td class="td-metric">Booking Rate per Owner</td><td>Percent of owners who booked at least once in the period.</td><td><code class="td-code">Owners with Bookings / Total Owners</code></td><td class="td-source">RES_FACT + Membership</td></tr>
+          <tr><td class="td-metric">Search Sessions</td><td>Total number of search events or sessions initiated.</td><td><code class="td-code">Top-of-funnel demand indicator</code></td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">Booking Conversion Rate (Search-to-Book)</td><td>Percent of search sessions resulting in a completed booking.</td><td><code class="td-code">Bookings / Search Sessions</code></td><td class="td-source">GA4 + RES_FACT</td></tr>
+          <tr><td class="td-metric">Booking-to-Arrival Conversion Rate</td><td>Percent of bookings that convert into completed arrivals.</td><td><code class="td-code">Arrivals / Bookings</code></td><td class="td-source">RES_FACT</td></tr>
+          <tr><td class="td-metric">Session-to-Book Conversion Rate</td><td>Percent of total site/app sessions resulting in a booking.</td><td><code class="td-code">Bookings / Total Sessions</code></td><td class="td-source">GA4 + RES_FACT</td></tr>
+          <tr><td class="td-metric">Funnel Drop-Off Rate</td><td>Percent of users who exit between funnel steps (e.g., Search → Booking).</td><td><code class="td-code">1 − Conversion Rate</code></td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">Search-to-Booking Ratio</td><td>Number of searches required to generate one booking.</td><td><code class="td-code">Example: 10:1 (searches per booking)</code></td><td class="td-source">GA4 + RES_FACT</td></tr>
+          <tr><td class="td-metric">Booking Lift (Treated vs Control)</td><td>Difference in booking rates between feature users and baseline.</td><td><code class="td-code">Rate_treat − Rate_ctrl</code></td><td class="td-source">Experiment / Model</td></tr>
+          <tr><td class="td-metric">Incremental Bookings</td><td>Additional bookings attributable to a feature beyond baseline.</td><td><code class="td-code">Lift × Feature Users</code></td><td class="td-source">Model Output</td></tr>
+          <tr><td class="td-metric">MoM Change in Bookings</td><td>Month-over-month change in bookings or BPO.</td><td><code class="td-code">(Current − Prior) / Prior</code></td><td class="td-source">RES_FACT (derived)</td></tr>
+          <tr><td class="td-metric">YoY Change in Bookings</td><td>Year-over-year change in bookings or booking rate.</td><td><code class="td-code">(Current − LastYear) / LastYear</code></td><td class="td-source">RES_FACT (derived)</td></tr>
+          <tr><td class="td-metric">YTD Incremental Booking Projection</td><td>Full-year forecast of incremental bookings based on lift and adoption scaling.</td><td><code class="td-code">Exec value translation</code></td><td class="td-source">Model Output</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ FEATURE IMPACT ═══ -->
+  <section class="content-section" id="feature">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(168,85,247,.1);">⭐</div>
+      <div class="section-header-text">
+        <h3>Feature Impact</h3>
+        <p>Incrementality measurement, lift analysis, and ROI attribution for product features</p>
+      </div>
+    </div>
+    <div class="info-box"><strong>Measurement approach:</strong> Feature impact is measured using a treated group (owners who used the feature) vs. a control group (comparable owners who did not). The difference in rates between groups is the "lift" — the incremental uplift attributable to the feature.</div>
+    <div class="kpi-table-wrap">
+      <table>
+        <thead><tr><th>KPI</th><th>Definition</th><th>Formula / Notes</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td class="td-metric">Feature Users (Treated Group)</td><td>Owners who used the specific feature during the period.</td><td><code class="td-code">Defines impacted population</code></td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">Control Users</td><td>Comparable owners who did not use the feature (baseline group).</td><td><code class="td-code">Used for incrementality comparison</code></td><td class="td-source">GA4 + Model</td></tr>
+          <tr><td class="td-metric">Feature Adoption Rate</td><td>Share of digital users adopting the feature.</td><td><code class="td-code">Feature Users / Total Digital Users</code></td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">Feature Penetration Rate</td><td>Percent of owners exposed to or using the feature.</td><td><code class="td-code">Feature Owners / Total Owners</code></td><td class="td-source">GA4 + Membership</td></tr>
+          <tr><td class="td-metric">Arrival Rate (Treated)</td><td>Percent of feature users who had an arrival in the defined window.</td><td><code class="td-code">Arrivals_treat / Users_treat</code></td><td class="td-source">RES_FACT + GA4</td></tr>
+          <tr><td class="td-metric">Arrival Rate (Control)</td><td>Percent of control users who had an arrival in the window.</td><td><code class="td-code">Arrivals_ctrl / Users_ctrl</code></td><td class="td-source">RES_FACT + Model</td></tr>
+          <tr><td class="td-metric">Booking Rate (Treated)</td><td>Percent of feature users who completed a booking.</td><td><code class="td-code">Bookings_treat / Users_treat</code></td><td class="td-source">RES_FACT + GA4</td></tr>
+          <tr><td class="td-metric">Booking Rate (Control)</td><td>Percent of control users who completed a booking.</td><td><code class="td-code">Bookings_ctrl / Users_ctrl</code></td><td class="td-source">RES_FACT + Model</td></tr>
+          <tr><td class="td-metric">Arrival Lift</td><td>Difference in arrival rates between treated and control groups.</td><td><code class="td-code">Rate_treat − Rate_ctrl</code></td><td class="td-source">Model Output</td></tr>
+          <tr><td class="td-metric">Booking Lift</td><td>Difference in booking rates between treated and control groups.</td><td><code class="td-code">Rate_treat − Rate_ctrl</code></td><td class="td-source">Model Output</td></tr>
+          <tr><td class="td-metric">Incremental Arrivals</td><td>Additional arrivals attributable to the feature beyond baseline.</td><td><code class="td-code">Lift × Feature Users</code></td><td class="td-source">Model Output</td></tr>
+          <tr><td class="td-metric">Incremental Bookings</td><td>Additional bookings attributable to the feature beyond baseline.</td><td><code class="td-code">Lift × Feature Users</code></td><td class="td-source">Model Output</td></tr>
+          <tr><td class="td-metric">Cannibalization Rate</td><td>Share of feature-driven bookings that replace other channels rather than adding net new volume.</td><td><code class="td-code">Requires cross-channel baseline</code></td><td class="td-source">Model Output</td></tr>
+          <tr><td class="td-metric">Net Incremental Impact</td><td>Incremental impact after accounting for cannibalization.</td><td><code class="td-code">Incremental × (1 − Cannibalization)</code></td><td class="td-source">Model Output</td></tr>
+          <tr><td class="td-metric">MoM Adoption Growth</td><td>Month-over-month growth in feature usage.</td><td><code class="td-code">(Users_current − Users_prior) / Users_prior</code></td><td class="td-source">GA4 (derived)</td></tr>
+          <tr><td class="td-metric">YoY Feature Impact Growth</td><td>Year-over-year change in lift or incremental outcomes.</td><td><code class="td-code">(Current − LastYear) / LastYear</code></td><td class="td-source">Model Output (derived)</td></tr>
+          <tr><td class="td-metric">YTD Incremental Projection</td><td>Full-year estimate of incremental arrivals/bookings based on lift + adoption scaling.</td><td><code class="td-code">Exec business value KPI</code></td><td class="td-source">Model Output</td></tr>
+          <tr><td class="td-metric">ROI per Feature</td><td>Estimated financial return per feature release.</td><td><code class="td-code">Incremental Revenue / Cost</code></td><td class="td-source">Finance + Model</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ SYSTEM HEALTH ═══ -->
+  <section class="content-section" id="system">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(244,63,94,.1);">🖥️</div>
+      <div class="section-header-text">
+        <h3>System Health</h3>
+        <p>Technical reliability and platform performance indicators</p>
+      </div>
+    </div>
+    <div class="kpi-table-wrap">
+      <table>
+        <thead><tr><th>KPI</th><th>Definition</th><th>Formula / Notes</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td class="td-metric">Error Rate</td><td>Percent of sessions impacted by system or application errors.</td><td><code class="td-code">Error Sessions / Total Sessions</code></td><td class="td-source">Splunk / AppDynamics</td></tr>
+          <tr><td class="td-metric">Login Success Rate</td><td>Percent of login attempts completed successfully.</td><td><code class="td-code">Successful Logins / Total Login Attempts</code></td><td class="td-source">Splunk / AppDynamics</td></tr>
+          <tr><td class="td-metric">Search Success Rate</td><td>Percent of searches returning valid results without errors.</td><td><code class="td-code">Successful Searches / Total Searches</code></td><td class="td-source">Splunk + GA4</td></tr>
+          <tr><td class="td-metric">Booking Completion Rate</td><td>Percent of initiated bookings that complete successfully.</td><td><code class="td-code">Completed Bookings / Booking Starts</code></td><td class="td-source">GA4 + Splunk</td></tr>
+          <tr><td class="td-metric">Checkout Failure Rate</td><td>Percent of checkout attempts failing due to errors.</td><td><code class="td-code">Failed Checkouts / Total Checkouts</code></td><td class="td-source">GA4 + Splunk</td></tr>
+          <tr><td class="td-metric">Availability Error Rate</td><td>Percent of availability requests returning no inventory or errors.</td><td><code class="td-code">Availability Errors / Total Requests</code></td><td class="td-source">Splunk / API Monitoring</td></tr>
+          <tr><td class="td-metric">MoM Change in Errors</td><td>Month-over-month change in error volume or error rate.</td><td><code class="td-code">(Current − Prior) / Prior</code></td><td class="td-source">Splunk (derived)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ APP KPIs (CW + WM) ═══ -->
+  <section class="content-section" id="appkpis">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(20,184,166,.1);">📱</div>
+      <div class="section-header-text">
+        <h3>CW &amp; WM App KPIs</h3>
+        <p>Shared metric definitions for the Club Wyndham and WorldMark mobile applications, including GA4 inflation adjustment logic</p>
+      </div>
+    </div>
+    <div class="info-box">
+      <strong>GA4 Inflation Note:</strong> Several metrics use an inflation-adjusted fallback when real-time GA4 data is unavailable. When "Estimated (Inflated) Metrics" are used, they are multiplied by a correction factor (typically <strong>1.71</strong> for session-type metrics, <strong>1.975</strong> for checkout, <strong>2.169</strong> for searches) to approximate real-time values. The formula pattern is: <code>IF(actual &gt; 0, actual, ROUND(estimated × factor, 0))</code>.
+    </div>
+    <div class="kpi-detail-grid">
+
+      <div class="kpi-detail-card">
+        <div class="kdc-name">Unique Users</div>
+        <div class="kdc-def">Count of distinct devices that have opened the Mobile App within the time frame.</div>
+        <div class="kdc-row"><span class="kdc-label">Source</span><span class="kdc-val"><code>GA4</code> — App data stream</span></div>
+        <div class="kdc-row"><span class="kdc-label">GA4 Field</span><span class="kdc-val"><code>app_instance_id / users</code></span></div>
+      </div>
+
+      <div class="kpi-detail-card">
+        <div class="kdc-name">New Users</div>
+        <div class="kdc-def">Count of unique devices that opened the Mobile App for the first time within the time frame.</div>
+        <div class="kdc-row"><span class="kdc-label">Source</span><span class="kdc-val"><code>GA4</code> — App data stream</span></div>
+        <div class="kdc-row"><span class="kdc-label">GA4 Field</span><span class="kdc-val"><code>newUsers (first_open)</code></span></div>
+      </div>
+
+      <div class="kpi-detail-card">
+        <div class="kdc-name">Return Users</div>
+        <div class="kdc-def">Count of unique devices that have opened the Mobile App two or more times during the time frame. Excludes first opens.</div>
+        <div class="kdc-row"><span class="kdc-label">Source</span><span class="kdc-val"><code>GA4</code> — App data stream</span></div>
+        <div class="kdc-row"><span class="kdc-label">Logic</span><span class="kdc-val"><code>session_count ≥ 2 per user</code></span></div>
+      </div>
+
+      <div class="kpi-detail-card">
+        <div class="kdc-name">Sessions</div>
+        <div class="kdc-def">Total traffic, regardless of user intent or engagement quality.</div>
+        <div class="kdc-row"><span class="kdc-label">Source</span><span class="kdc-val"><code>GA4</code> — App data stream (real-time or estimated)</span></div>
+        <div class="inflation-note"><strong>⚡ Inflation Formula</strong><code>IF(sessions_realtime &gt; 0, sessions_realtime, ROUND(sessions_estimated × 1.71, 0))</code></div>
+      </div>
+
+      <div class="kpi-detail-card">
+        <div class="kdc-name">Engaged Sessions</div>
+        <div class="kdc-def">Sessions likely driven by shoppers or high-intent users. GA4 definition: sessions with ≥10s engagement, a conversion event, or ≥2 screenviews.</div>
+        <div class="kdc-row"><span class="kdc-label">Source</span><span class="kdc-val"><code>GA4</code> — App data stream (real-time or estimated)</span></div>
+        <div class="inflation-note"><strong>⚡ Inflation Formula</strong><code>IF(engaged_sessions_realtime &gt; 0, engaged_realtime, ROUND(engaged_estimated × 1.71, 0))</code></div>
+      </div>
+
+      <div class="kpi-detail-card">
+        <div class="kdc-name">App Logins</div>
+        <div class="kdc-def">Count of App opens where member credentials were successfully authenticated.</div>
+        <div class="kdc-row"><span class="kdc-label">Source</span><span class="kdc-val"><code>GA4</code> — Custom event</span></div>
+        <div class="kdc-row"><span class="kdc-label">GA4 Event</span><span class="kdc-val"><code>login (custom event)</code></span></div>
+      </div>
+
+      <div class="kpi-detail-card">
+        <div class="kdc-name">Sessions with Search</div>
+        <div class="kdc-def">Count of sessions in which the user group reaches the resort search function at least once.</div>
+        <div class="kdc-row"><span class="kdc-label">Source</span><span class="kdc-val"><code>GA4</code> — Custom event</span></div>
+        <div class="kdc-row"><span class="kdc-label">GA4 Event</span><span class="kdc-val"><code>view_search_results / custom search event</code></span></div>
+      </div>
+
+      <div class="kpi-detail-card">
+        <div class="kdc-name">Resort Searches</div>
+        <div class="kdc-def">Total count of resort availability search events (not sessions — counts each individual search).</div>
+        <div class="kdc-row"><span class="kdc-label">Source</span><span class="kdc-val"><code>GA4</code> — Custom event (real-time or estimated)</span></div>
+        <div class="inflation-note"><strong>⚡ Inflation Formula</strong><code>IF(actual &gt; 0, actual, ROUND(inflated × 2.169, 0))</code></div>
+      </div>
+
+      <div class="kpi-detail-card">
+        <div class="kdc-name">List Search Views</div>
+        <div class="kdc-def">Count of how many times the user group initiates a search and views results (GA4: view_item_list when resort list is shown).</div>
+        <div class="kdc-row"><span class="kdc-label">Source</span><span class="kdc-val"><code>GA4</code> — Enhanced ecommerce event</span></div>
+        <div class="kdc-row"><span class="kdc-label">GA4 Event</span><span class="kdc-val"><code>view_item_list</code></span></div>
+      </div>
+
+      <div class="kpi-detail-card">
+        <div class="kdc-name">Search Refinement</div>
+        <div class="kdc-def">Count of how many times the user group uses the filter function within Resort Search to narrow results.</div>
+        <div class="kdc-row"><span class="kdc-label">Source</span><span class="kdc-val"><code>GA4</code> — Custom event</span></div>
+      </div>
+
+      <div class="kpi-detail-card">
+        <div class="kdc-name">Searches per Active User</div>
+        <div class="kdc-def">Average number of resort searches performed per active user. Active users divided by 4 as the denominator normalizes for weekly periodicity.</div>
+        <div class="kdc-row"><span class="kdc-label">Source</span><span class="kdc-val"><code>GA4</code> — Derived (real-time or estimated)</span></div>
+        <div class="inflation-note"><strong>⚡ Inflation Formula</strong><code>IF(actual &gt; 0, actual / (active_users / 4), ROUND(inflated × 2.169, 0) / (active_users / 4))</code></div>
+      </div>
+
+      <div class="kpi-detail-card">
+        <div class="kdc-name">Reservations (App)</div>
+        <div class="kdc-def">Count of gross reservations booked within the Mobile App during the time frame.</div>
+        <div class="kdc-row"><span class="kdc-label">Source</span><span class="kdc-val"><code>GA4</code> — Ecommerce purchase event (real-time or estimated)</span></div>
+        <div class="inflation-note"><strong>⚡ Inflation Formula</strong><code>IF(ecommerce_purchases &gt; 0, ecommerce_purchases, ROUND(estimated_transactions × 1.71, 0))</code></div>
+      </div>
+
+      <div class="kpi-detail-card">
+        <div class="kdc-name">Begin Checkout</div>
+        <div class="kdc-def">Count of how many times the first step of the checkout flow has been initiated.</div>
+        <div class="kdc-row"><span class="kdc-label">Source</span><span class="kdc-val"><code>GA4</code> — Enhanced ecommerce event (real-time or estimated)</span></div>
+        <div class="inflation-note"><strong>⚡ Inflation Formula</strong><code>IF(actual &gt; 0, actual, ROUND(inflated × 1.975, 0))</code></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══ DASHBOARD KPIs (GA4) ═══ -->
+  <section class="content-section" id="dashboard">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(251,146,60,.1);">📊</div>
+      <div class="section-header-text">
+        <h3>Dashboard KPIs — GA4 Definitions</h3>
+        <p>Expected GA4 event and metric logic for all KPIs surfaced in Looker Studio dashboards</p>
+      </div>
+    </div>
+    <div class="kpi-table-wrap">
+      <table>
+        <thead><tr><th>KPI</th><th>Category</th><th>GA4 Definition / Logic</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td class="td-metric">Resv Confirmed / Bookings</td><td><span class="badge badge-conversion">Conversion</span></td><td>Count of GA4 <code>purchase</code> events representing successful reservations (1 booking per purchase).</td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">Gross Bookings (App)</td><td><span class="badge badge-conversion">Conversion</span></td><td>GA4 <code>purchase</code> events scoped to the App data stream only.</td><td class="td-source">GA4 — App stream</td></tr>
+          <tr><td class="td-metric">Gross Web Desktop</td><td><span class="badge badge-conversion">Conversion</span></td><td>GA4 <code>purchase</code> events in web streams filtered where <code>device_category = desktop</code>.</td><td class="td-source">GA4 — Web stream</td></tr>
+          <tr><td class="td-metric">Gross Web Mobile</td><td><span class="badge badge-conversion">Conversion</span></td><td>GA4 <code>purchase</code> events in web streams filtered where <code>device_category = mobile</code>.</td><td class="td-source">GA4 — Web stream</td></tr>
+          <tr><td class="td-metric">Checkout Started</td><td><span class="badge badge-funnel">Checkout Funnel</span></td><td>Count of GA4 <code>begin_checkout</code> events.</td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">Checkout Funnel Conversion Rate</td><td><span class="badge badge-funnel">Checkout Funnel</span></td><td><code>purchase events ÷ begin_checkout events</code></td><td class="td-source">GA4 (derived)</td></tr>
+          <tr><td class="td-metric">In App CR</td><td><span class="badge badge-conversion">Conversion</span></td><td>Overall app conversion rate: <code>purchase ÷ sessions</code> or <code>purchase ÷ engagedSessions</code> (match the report's base metric).</td><td class="td-source">GA4 — App stream</td></tr>
+          <tr><td class="td-metric">Web CR</td><td><span class="badge badge-conversion">Conversion</span></td><td>Same logic as In App CR, scoped to web streams.</td><td class="td-source">GA4 — Web stream</td></tr>
+          <tr><td class="td-metric">Engaged Sessions</td><td><span class="badge badge-engagement">Engagement</span></td><td>GA4 <code>engagedSessions</code>: sessions with ≥10s engagement, a conversion event, or ≥2 screenviews.</td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">Sessions (Overall)</td><td><span class="badge badge-engagement">Engagement</span></td><td>GA4 <code>sessions</code> — all sessions regardless of quality or intent.</td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">Sessions with Search</td><td><span class="badge badge-search">Search</span></td><td>Sessions containing ≥1 <code>search</code> or <code>view_search_results</code> (custom) event.</td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">Unique Users / Unique Active Users</td><td><span class="badge badge-engagement">Engagement</span></td><td>GA4 <code>users</code> metric — distinct <code>app_instance_id</code> or user. Active Users is the default users metric in GA4.</td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">New Users</td><td><span class="badge badge-engagement">Engagement</span></td><td>GA4 <code>newUsers</code> — triggered by <code>first_open</code> event within the date range.</td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">Return Users</td><td><span class="badge badge-engagement">Engagement</span></td><td>Users with ≥2 sessions in the period. Derived via <code>session_count ≥ 2</code> per user.</td><td class="td-source">GA4 (derived)</td></tr>
+          <tr><td class="td-metric">Avg. Session Duration</td><td><span class="badge badge-engagement">Engagement</span></td><td>Average engagement time per session = <code>sum(user_engagement time) ÷ sessions</code>.</td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">App Logins</td><td><span class="badge badge-auth">Auth</span></td><td>Count of GA4 <code>login</code> (custom) events for successful member authentication.</td><td class="td-source">GA4 — Custom event</td></tr>
+          <tr><td class="td-metric">Registrations</td><td><span class="badge badge-auth">Auth</span></td><td>Count of GA4 <code>sign_up</code> or <code>create_account</code> events.</td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">Resort Searches</td><td><span class="badge badge-search">Search</span></td><td>Count of GA4 <code>search</code> (custom) or <code>view_search_results</code> events for resort availability.</td><td class="td-source">GA4 — Custom event</td></tr>
+          <tr><td class="td-metric">List Search Views</td><td><span class="badge badge-search">Search</span></td><td>GA4 <code>view_item_list</code> (or custom "list_search_view") when the resort list is shown.</td><td class="td-source">GA4</td></tr>
+          <tr><td class="td-metric">Searches Per Active User</td><td><span class="badge badge-derived">Derived</span></td><td><code>Resort Searches ÷ Unique Active Users</code></td><td class="td-source">GA4 (derived)</td></tr>
+          <tr><td class="td-metric">Searches Per Booking</td><td><span class="badge badge-derived">Derived</span></td><td><code>Resort Searches ÷ Bookings</code></td><td class="td-source">GA4 + RES_FACT</td></tr>
+          <tr><td class="td-metric">Revenue / AOV</td><td><span class="badge badge-revenue">Revenue</span></td><td>Average order value = <code>sum(purchase value) ÷ purchase events</code>. Verify tax/fee treatment.</td><td class="td-source">GA4 — Ecommerce</td></tr>
+          <tr><td class="td-metric">VAS Revenue</td><td><span class="badge badge-revenue">Revenue</span></td><td><code>sum(purchase item revenue)</code> where <code>item_category = 'VAS'</code>. Requires item-level categorization.</td><td class="td-source">GA4 — Item-level</td></tr>
+          <tr><td class="td-metric">Total App Downloads</td><td><span class="badge badge-acq">Acquisition</span></td><td>Total installs across iOS and Android app stores (requires Store Connect / Play Console integration).</td><td class="td-source">App Store Connect / Play Console</td></tr>
+          <tr><td class="td-metric">App Store Impressions</td><td><span class="badge badge-acq">Acquisition</span></td><td>Total times the app listing was viewed in the App Store or Google Play.</td><td class="td-source">App Store Connect / Play Console</td></tr>
+          <tr><td class="td-metric">Avg App Store Rating</td><td><span class="badge badge-sentiment">Sentiment</span></td><td>Average star rating across all app store reviews in the period.</td><td class="td-source">App Store Connect / Play Console</td></tr>
+          <tr><td class="td-metric">Download Conversion Rate</td><td><span class="badge badge-acq">Acquisition</span></td><td>Percent of app store impressions resulting in a download.</td><td class="td-source">App Store Connect / Play Console</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Search Results Section -->
+
+  <!-- ═══ GA4 METRICS REFERENCE ═══ -->
+  <section class="content-section" id="ga4ref">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(251,146,60,.1);">🔬</div>
+      <div class="section-header-text">
+        <h3>GA4 Metrics Reference</h3>
+        <p>Comprehensive reference of the top 100 Google Analytics 4 metrics — API names, definitions, formulas, and data sources</p>
+      </div>
+    </div>
+    <div class="info-box"><strong>About this reference:</strong> These are the standard metrics available in the GA4 Data API and reporting interface. Metrics marked <em>Auto-collected</em> are gathered automatically; <em>Enhanced Measurement</em> requires enabling the feature in GA4 settings; <em>Ecommerce</em> requires sending purchase/item events; <em>Derived</em> and <em>Calculated</em> metrics are computed from other base metrics.</div>
+    <div class="kpi-table-wrap">
+      <table id="ga4RefTable">
+        <thead>
+          <tr>
+            <th>Metric Name</th>
+            <th>Category</th>
+            <th>Definition</th>
+            <th>API Name</th>
+            <th>Formula / Logic</th>
+            <th>Collection Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="td-metric">Active Users</td><td><span class="badge badge-engagement">User</span></td><td>Users who had an engaged session or triggered first_visit / first_open.</td><td><code class="td-code">activeUsers</code></td><td><code class="td-code">Default 'Users' in GA4 UI</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">Total Users</td><td><span class="badge badge-engagement">User</span></td><td>Total unique users who logged any event.</td><td><code class="td-code">totalUsers</code></td><td><code class="td-code">Broader than Active Users</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">New Users</td><td><span class="badge badge-engagement">User</span></td><td>Users who interacted with the site/app for the first time (first_visit or first_open).</td><td><code class="td-code">newUsers</code></td><td><code class="td-code">first_visit / first_open event</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">Returning Users</td><td><span class="badge badge-engagement">User</span></td><td>Users who have had at least one previous session.</td><td><code class="td-code">returningUsers</code></td><td><code class="td-code">Derived: totalUsers − newUsers</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">Total Buyers</td><td><span class="badge badge-engagement">User</span></td><td>Users who completed a purchase event.</td><td><code class="td-code">totalBuyers</code></td><td><code class="td-code">Requires purchase event</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">New Buyers</td><td><span class="badge badge-engagement">User</span></td><td>Users who completed their first purchase event.</td><td><code class="td-code">newBuyers</code></td><td><code class="td-code">First-time purchasers</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">DAU / MAU</td><td><span class="badge badge-engagement">User</span></td><td>Rolling ratio of daily active users to monthly active users.</td><td><code class="td-code">dau/mau</code></td><td><code class="td-code">activeUsers(1d) / activeUsers(30d)</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">DAU / WAU</td><td><span class="badge badge-engagement">User</span></td><td>Rolling ratio of daily active users to weekly active users.</td><td><code class="td-code">dau/wau</code></td><td><code class="td-code">activeUsers(1d) / activeUsers(7d)</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">WAU / MAU</td><td><span class="badge badge-engagement">User</span></td><td>Rolling ratio of weekly active users to monthly active users.</td><td><code class="td-code">wau/mau</code></td><td><code class="td-code">activeUsers(7d) / activeUsers(30d)</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Crash-Affected Users</td><td><span class="badge badge-engagement">User</span></td><td>Number of users who experienced an app crash.</td><td><code class="td-code">crashAffectedUsers</code></td><td><code class="td-code">app_exception event</code></td><td class="td-source">Auto-collected (App)</td></tr>
+          <tr><td class="td-metric">Crash-Free Users Rate</td><td><span class="badge badge-engagement">User</span></td><td>Percentage of users who did not experience an app crash.</td><td><code class="td-code">crashFreeUsersRate</code></td><td><code class="td-code">1 − (crashAffectedUsers / activeUsers)</code></td><td class="td-source">Auto-collected (App)</td></tr>
+          <tr><td class="td-metric">Sessions</td><td><span class="badge badge-funnel">Session</span></td><td>Total number of sessions that began on the site or app.</td><td><code class="td-code">sessions</code></td><td><code class="td-code">session_start event</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">Engaged Sessions</td><td><span class="badge badge-funnel">Session</span></td><td>Sessions lasting >10s, or with ≥1 key event, or ≥2 page/screen views.</td><td><code class="td-code">engagedSessions</code></td><td><code class="td-code">GA4 engaged session criteria</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">Sessions per User</td><td><span class="badge badge-funnel">Session</span></td><td>Average number of sessions per user.</td><td><code class="td-code">sessionsPerUser</code></td><td><code class="td-code">sessions / activeUsers</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Engaged Sessions per User</td><td><span class="badge badge-funnel">Session</span></td><td>Average engaged sessions per user.</td><td><code class="td-code">engagedSessionsPerUser</code></td><td><code class="td-code">engagedSessions / activeUsers</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Engagement Rate</td><td><span class="badge badge-engagement">Engagement</span></td><td>Percentage of sessions that were engaged sessions.</td><td><code class="td-code">engagementRate</code></td><td><code class="td-code">engagedSessions / sessions</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Bounce Rate</td><td><span class="badge badge-engagement">Engagement</span></td><td>Percentage of sessions that were not engaged (inverse of engagement rate).</td><td><code class="td-code">bounceRate</code></td><td><code class="td-code">1 − engagementRate</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Avg. Session Duration</td><td><span class="badge badge-engagement">Engagement</span></td><td>Average duration of sessions in seconds.</td><td><code class="td-code">averageSessionDuration</code></td><td><code class="td-code">totalSessionDuration / sessions</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">User Engagement Duration</td><td><span class="badge badge-engagement">Engagement</span></td><td>Total active engagement time across all sessions in seconds.</td><td><code class="td-code">userEngagementDuration</code></td><td><code class="td-code">engagement_time_msec parameter</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">Active User Engagement</td><td><span class="badge badge-engagement">Engagement</span></td><td>Active engagement time for active users.</td><td><code class="td-code">activeUserEngagementDuration</code></td><td><code class="td-code">Sum of engagement_time_msec</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">Views (Page/Screen)</td><td><span class="badge badge-engagement">Engagement</span></td><td>Number of app screens or web pages viewed. Repeated views are counted.</td><td><code class="td-code">screenPageViews</code></td><td><code class="td-code">page_view / screen_view events</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">Views per Session</td><td><span class="badge badge-engagement">Engagement</span></td><td>Average page/screen views per session.</td><td><code class="td-code">screenPageViewsPerSession</code></td><td><code class="td-code">screenPageViews / sessions</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Views per User</td><td><span class="badge badge-engagement">Engagement</span></td><td>Average page/screen views per user.</td><td><code class="td-code">screenPageViewsPerUser</code></td><td><code class="td-code">screenPageViews / activeUsers</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Scrolled Users</td><td><span class="badge badge-engagement">Engagement</span></td><td>Number of users who scrolled ≥90% of any page.</td><td><code class="td-code">scrolledUsers</code></td><td><code class="td-code">scroll event (90% threshold)</code></td><td class="td-source">Enhanced Measurement</td></tr>
+          <tr><td class="td-metric">Event Count</td><td><span class="badge badge-search">Event</span></td><td>Total count of all events triggered.</td><td><code class="td-code">eventCount</code></td><td><code class="td-code">All events aggregated</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">Events per User</td><td><span class="badge badge-search">Event</span></td><td>Average events triggered per user.</td><td><code class="td-code">eventCountPerUser</code></td><td><code class="td-code">eventCount / activeUsers</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Event Value</td><td><span class="badge badge-search">Event</span></td><td>Sum of the value parameter sent with events.</td><td><code class="td-code">eventValue</code></td><td><code class="td-code">value event parameter</code></td><td class="td-source">Custom / Ecommerce</td></tr>
+          <tr><td class="td-metric">Events per Session</td><td><span class="badge badge-search">Event</span></td><td>Average events triggered per session.</td><td><code class="td-code">eventsPerSession</code></td><td><code class="td-code">eventCount / sessions</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">First-Time Purchaser Rate</td><td><span class="badge badge-search">Event</span></td><td>Percentage of active users who made their first purchase.</td><td><code class="td-code">firstTimePurchaserConversionRate</code></td><td><code class="td-code">newBuyers / activeUsers</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Key Events</td><td><span class="badge badge-conversion">Conversion</span></td><td>Count of events marked as key events (conversions).</td><td><code class="td-code">keyEvents</code></td><td><code class="td-code">Events marked as key events in GA4</code></td><td class="td-source">Custom Config</td></tr>
+          <tr><td class="td-metric">Session Key Event Rate</td><td><span class="badge badge-conversion">Conversion</span></td><td>Percentage of sessions in which a key event occurred.</td><td><code class="td-code">sessionKeyEventRate</code></td><td><code class="td-code">sessionsWithKeyEvent / sessions</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">User Key Event Rate</td><td><span class="badge badge-conversion">Conversion</span></td><td>Percentage of users who triggered at least one key event.</td><td><code class="td-code">userKeyEventRate</code></td><td><code class="td-code">usersWithKeyEvent / activeUsers</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Total Revenue</td><td><span class="badge badge-revenue">Revenue</span></td><td>Sum of purchase, subscription, and ad revenue.</td><td><code class="td-code">totalRevenue</code></td><td><code class="td-code">purchaseRevenue + subscriptionRevenue + adRevenue</code></td><td class="td-source">Ecommerce + Ads</td></tr>
+          <tr><td class="td-metric">Purchase Revenue</td><td><span class="badge badge-revenue">Revenue</span></td><td>Revenue from purchase events.</td><td><code class="td-code">purchaseRevenue</code></td><td><code class="td-code">Sum of purchase event value</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Ecommerce Purchases</td><td><span class="badge badge-revenue">Revenue</span></td><td>Number of completed purchase events.</td><td><code class="td-code">ecommercePurchases</code></td><td><code class="td-code">Count of purchase events</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Purchase-to-View Rate</td><td><span class="badge badge-revenue">Revenue</span></td><td>Ratio of item purchases to item views.</td><td><code class="td-code">purchaseToViewRate</code></td><td><code class="td-code">itemsPurchased / itemsViewed</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Purchases per User</td><td><span class="badge badge-revenue">Revenue</span></td><td>Average purchases per user for the selected period.</td><td><code class="td-code">totalPurchasersPerUser</code></td><td><code class="td-code">ecommercePurchases / activeUsers</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Avg. Purchase Revenue</td><td><span class="badge badge-revenue">Revenue</span></td><td>Average revenue per purchase event.</td><td><code class="td-code">averagePurchaseRevenue</code></td><td><code class="td-code">purchaseRevenue / ecommercePurchases</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">ARPU (Revenue per User)</td><td><span class="badge badge-revenue">Revenue</span></td><td>Average revenue per active user.</td><td><code class="td-code">averagePurchaseRevenuePerUser</code></td><td><code class="td-code">totalRevenue / activeUsers</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">ARPPU</td><td><span class="badge badge-revenue">Revenue</span></td><td>Average revenue per paying user.</td><td><code class="td-code">averagePurchaseRevenuePerPayingUser</code></td><td><code class="td-code">purchaseRevenue / totalBuyers</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Total Ad Revenue</td><td><span class="badge badge-revenue">Revenue</span></td><td>Total ad revenue from AdMob or other ad sources.</td><td><code class="td-code">totalAdRevenue</code></td><td><code class="td-code">Sum of ad_impression value</code></td><td class="td-source">Ad Monetization</td></tr>
+          <tr><td class="td-metric">Publisher Ad Revenue</td><td><span class="badge badge-revenue">Revenue</span></td><td>Revenue earned from publisher ads.</td><td><code class="td-code">publisherAdRevenue</code></td><td><code class="td-code">Sum of publisher ad impressions value</code></td><td class="td-source">Ad Monetization</td></tr>
+          <tr><td class="td-metric">Item Revenue</td><td><span class="badge badge-revenue">Revenue</span></td><td>Total revenue from individual items sold.</td><td><code class="td-code">itemRevenue</code></td><td><code class="td-code">Sum of item-level purchase revenue</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Item Quantity</td><td><span class="badge badge-revenue">Revenue</span></td><td>Total number of items sold.</td><td><code class="td-code">itemQuantity</code></td><td><code class="td-code">Sum of item quantity in purchase events</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Items Viewed</td><td><span class="badge badge-revenue">Revenue</span></td><td>Number of items viewed (view_item events).</td><td><code class="td-code">itemsViewed</code></td><td><code class="td-code">Count of view_item events</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Items Added to Cart</td><td><span class="badge badge-revenue">Revenue</span></td><td>Number of items added to cart.</td><td><code class="td-code">itemsAddedToCart</code></td><td><code class="td-code">Count of add_to_cart item events</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Items Checked Out</td><td><span class="badge badge-revenue">Revenue</span></td><td>Number of items in begin_checkout events.</td><td><code class="td-code">itemsCheckedOut</code></td><td><code class="td-code">Count of begin_checkout item events</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Items Purchased</td><td><span class="badge badge-revenue">Revenue</span></td><td>Number of items in purchase events.</td><td><code class="td-code">itemsPurchased</code></td><td><code class="td-code">Count of purchase item events</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Cart-to-View Rate</td><td><span class="badge badge-revenue">Revenue</span></td><td>Ratio of items added to cart vs items viewed.</td><td><code class="td-code">cartToViewRate</code></td><td><code class="td-code">itemsAddedToCart / itemsViewed</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Item Promo CTR</td><td><span class="badge badge-revenue">Revenue</span></td><td>Click-through rate on item promotions.</td><td><code class="td-code">itemPromotionClickThroughRate</code></td><td><code class="td-code">promotionClicks / promotionViews</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Refund Amount</td><td><span class="badge badge-revenue">Revenue</span></td><td>Total refund amount.</td><td><code class="td-code">refundAmount</code></td><td><code class="td-code">Sum of refund event value</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Shipping Amount</td><td><span class="badge badge-revenue">Revenue</span></td><td>Total shipping charges.</td><td><code class="td-code">shippingAmount</code></td><td><code class="td-code">Sum of shipping parameter</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Tax Amount</td><td><span class="badge badge-revenue">Revenue</span></td><td>Total tax amount.</td><td><code class="td-code">taxAmount</code></td><td><code class="td-code">Sum of tax parameter</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Transactions per Purchaser</td><td><span class="badge badge-revenue">Revenue</span></td><td>Average transactions per buyer.</td><td><code class="td-code">transactionsPerPurchaser</code></td><td><code class="td-code">ecommercePurchases / totalBuyers</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Publisher Ad Clicks</td><td><span class="badge badge-acq">Advertising</span></td><td>Number of ad click events.</td><td><code class="td-code">publisherAdClicks</code></td><td><code class="td-code">Count of ad_click events</code></td><td class="td-source">Ad Monetization</td></tr>
+          <tr><td class="td-metric">Publisher Ad Impressions</td><td><span class="badge badge-acq">Advertising</span></td><td>Number of ad impression events.</td><td><code class="td-code">publisherAdImpressions</code></td><td><code class="td-code">Count of ad_impression events</code></td><td class="td-source">Ad Monetization</td></tr>
+          <tr><td class="td-metric">Return on Ad Spend (ROAS)</td><td><span class="badge badge-acq">Advertising</span></td><td>Revenue earned per dollar of ad spend.</td><td><code class="td-code">returnOnAdSpend</code></td><td><code class="td-code">totalRevenue / googleAdsCost</code></td><td class="td-source">Google Ads Integration</td></tr>
+          <tr><td class="td-metric">Advertiser Ad Clicks</td><td><span class="badge badge-acq">Advertising</span></td><td>Total clicks on ads from Google Ads.</td><td><code class="td-code">advertiserAdClicks</code></td><td><code class="td-code">Imported from Google Ads</code></td><td class="td-source">Google Ads Integration</td></tr>
+          <tr><td class="td-metric">Advertiser Ad Cost</td><td><span class="badge badge-acq">Advertising</span></td><td>Total cost of Google Ads campaigns.</td><td><code class="td-code">advertiserAdCost</code></td><td><code class="td-code">Imported from Google Ads</code></td><td class="td-source">Google Ads Integration</td></tr>
+          <tr><td class="td-metric">Advertiser CPC</td><td><span class="badge badge-acq">Advertising</span></td><td>Average cost per click for Google Ads.</td><td><code class="td-code">advertiserAdCostPerClick</code></td><td><code class="td-code">advertiserAdCost / advertiserAdClicks</code></td><td class="td-source">Google Ads Integration</td></tr>
+          <tr><td class="td-metric">Cost per Key Event</td><td><span class="badge badge-acq">Advertising</span></td><td>Average ad cost per key event.</td><td><code class="td-code">advertiserAdCostPerKeyEvent</code></td><td><code class="td-code">advertiserAdCost / keyEvents</code></td><td class="td-source">Google Ads Integration</td></tr>
+          <tr><td class="td-metric">Advertiser Ad Impressions</td><td><span class="badge badge-acq">Advertising</span></td><td>Total impressions from Google Ads.</td><td><code class="td-code">advertiserAdImpressions</code></td><td><code class="td-code">Imported from Google Ads</code></td><td class="td-source">Google Ads Integration</td></tr>
+          <tr><td class="td-metric">Purchase Probability</td><td><span class="badge badge-feature">Predictive</span></td><td>Likelihood a user will purchase in the next 7 days.</td><td><code class="td-code">purchaseProbability</code></td><td><code class="td-code">GA4 machine learning prediction</code></td><td class="td-source">ML Model</td></tr>
+          <tr><td class="td-metric">Churn Probability</td><td><span class="badge badge-feature">Predictive</span></td><td>Likelihood an active user will not return in the next 7 days.</td><td><code class="td-code">churnProbability</code></td><td><code class="td-code">GA4 machine learning prediction</code></td><td class="td-source">ML Model</td></tr>
+          <tr><td class="td-metric">Predicted Revenue</td><td><span class="badge badge-feature">Predictive</span></td><td>Expected revenue from a user in the next 28 days.</td><td><code class="td-code">predictedRevenue</code></td><td><code class="td-code">GA4 machine learning prediction</code></td><td class="td-source">ML Model</td></tr>
+          <tr><td class="td-metric">Entrances</td><td><span class="badge badge-search">Page / Content</span></td><td>Number of times the first event in a session occurred on a page or screen.</td><td><code class="td-code">entrances</code></td><td><code class="td-code">First page_view / screen_view in session</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">Exits</td><td><span class="badge badge-search">Page / Content</span></td><td>Number of times the last event in a session occurred on a page or screen.</td><td><code class="td-code">exits</code></td><td><code class="td-code">Last page_view / screen_view in session</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">Exit Rate</td><td><span class="badge badge-search">Page / Content</span></td><td>Percentage of sessions that ended on a specific page.</td><td><code class="td-code">exitRate</code></td><td><code class="td-code">exits / sessions per page</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Views per Session</td><td><span class="badge badge-search">Page / Content</span></td><td>Average number of pages/screens viewed per session.</td><td><code class="td-code">viewsPerSession</code></td><td><code class="td-code">screenPageViews / sessions</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Avg. Position (Organic)</td><td><span class="badge badge-search">Page / Content</span></td><td>Average ranking position in Google search results.</td><td><code class="td-code">organicGoogleSearchAveragePosition</code></td><td><code class="td-code">Imported from Search Console</code></td><td class="td-source">Search Console Integration</td></tr>
+          <tr><td class="td-metric">Organic Search Clicks</td><td><span class="badge badge-search">Page / Content</span></td><td>Clicks from Google organic search results.</td><td><code class="td-code">organicGoogleSearchClicks</code></td><td><code class="td-code">Imported from Search Console</code></td><td class="td-source">Search Console Integration</td></tr>
+          <tr><td class="td-metric">Organic CTR</td><td><span class="badge badge-search">Page / Content</span></td><td>Click-through rate from Google organic results.</td><td><code class="td-code">organicGoogleSearchClickThroughRate</code></td><td><code class="td-code">Imported from Search Console</code></td><td class="td-source">Search Console Integration</td></tr>
+          <tr><td class="td-metric">Organic Search Impressions</td><td><span class="badge badge-search">Page / Content</span></td><td>Impressions in Google organic search results.</td><td><code class="td-code">organicGoogleSearchImpressions</code></td><td><code class="td-code">Imported from Search Console</code></td><td class="td-source">Search Console Integration</td></tr>
+          <tr><td class="td-metric">Cohort Active Users</td><td><span class="badge badge-derived">Cohort</span></td><td>Active users in a specific cohort period.</td><td><code class="td-code">cohortActiveUsers</code></td><td><code class="td-code">Users from a defined cohort who were active</code></td><td class="td-source">Cohort Report</td></tr>
+          <tr><td class="td-metric">Cohort Total Users</td><td><span class="badge badge-derived">Cohort</span></td><td>Total users in a specific cohort.</td><td><code class="td-code">cohortTotalUsers</code></td><td><code class="td-code">All users in the cohort group</code></td><td class="td-source">Cohort Report</td></tr>
+          <tr><td class="td-metric">Cohort Retention Rate</td><td><span class="badge badge-derived">Cohort</span></td><td>Percentage of a cohort's users who return in a subsequent period.</td><td><code class="td-code">cohortRetentionRate</code></td><td><code class="td-code">cohortActiveUsers / cohortTotalUsers</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">Sessions with Search</td><td><span class="badge badge-funnel">Session</span></td><td>Sessions containing at least one search event.</td><td><code class="td-code">sessionsWithSearch</code></td><td><code class="td-code">Sessions with view_search_results event</code></td><td class="td-source">Auto-collected / Custom</td></tr>
+          <tr><td class="td-metric">Organic Sessions</td><td><span class="badge badge-funnel">Session</span></td><td>Sessions attributed to organic search traffic.</td><td><code class="td-code">organicSessions</code></td><td><code class="td-code">Sessions where medium = organic</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">Session Conversion Rate</td><td><span class="badge badge-conversion">Conversion</span></td><td>Percentage of sessions resulting in at least one conversion.</td><td><code class="td-code">sessionConversionRate</code></td><td><code class="td-code">convertedSessions / sessions</code></td><td class="td-source">Derived</td></tr>
+          <tr><td class="td-metric">First-Time Purchasers</td><td><span class="badge badge-conversion">App / Ecommerce</span></td><td>Count of users making their first purchase.</td><td><code class="td-code">firstTimePurchasers</code></td><td><code class="td-code">Users with first purchase event</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">First Open Retention (N-day)</td><td><span class="badge badge-system">App</span></td><td>Percentage of users who return N days after first app open.</td><td><code class="td-code">firstOpenCohortNdayRetention</code></td><td><code class="td-code">Retained users / cohort users</code></td><td class="td-source">App Analytics</td></tr>
+          <tr><td class="td-metric">Crash Count</td><td><span class="badge badge-system">App</span></td><td>Total number of app crash events.</td><td><code class="td-code">crashCount</code></td><td><code class="td-code">app_exception events (fatal=true)</code></td><td class="td-source">Auto-collected (App)</td></tr>
+          <tr><td class="td-metric">ANR (App Not Responding)</td><td><span class="badge badge-system">App</span></td><td>Number of ANR events on Android.</td><td><code class="td-code">ANR</code></td><td><code class="td-code">ANR-type app_exception events</code></td><td class="td-source">Auto-collected (Android)</td></tr>
+          <tr><td class="td-metric">User Lifetime Value</td><td><span class="badge badge-owner">Lifetime</span></td><td>Total revenue attributed to a user across their entire lifetime.</td><td><code class="td-code">userLifetimeValue</code></td><td><code class="td-code">Sum of all purchase values per user</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">User Lifetime Engagement</td><td><span class="badge badge-owner">Lifetime</span></td><td>Total engagement duration across a user's lifetime.</td><td><code class="td-code">userLifetimeEngagement</code></td><td><code class="td-code">Cumulative engagement_time_msec</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">User Lifetime Sessions</td><td><span class="badge badge-owner">Lifetime</span></td><td>Total sessions across a user's lifetime.</td><td><code class="td-code">userLifetimeSessions</code></td><td><code class="td-code">Cumulative session count per user</code></td><td class="td-source">Auto-collected</td></tr>
+          <tr><td class="td-metric">Sessions per User per Day</td><td><span class="badge badge-derived">Derived</span></td><td>Average daily sessions per user.</td><td><code class="td-code">sessionsPerUserPerDay</code></td><td><code class="td-code">sessions / activeUsers / days</code></td><td class="td-source">Calculated</td></tr>
+          <tr><td class="td-metric">Revenue per Session</td><td><span class="badge badge-derived">Derived</span></td><td>Average revenue generated per session.</td><td><code class="td-code">revenuePerSession</code></td><td><code class="td-code">totalRevenue / sessions</code></td><td class="td-source">Calculated</td></tr>
+          <tr><td class="td-metric">Key Events per Session</td><td><span class="badge badge-derived">Derived</span></td><td>Average key events triggered per session.</td><td><code class="td-code">keyEventsPerSession</code></td><td><code class="td-code">keyEvents / sessions</code></td><td class="td-source">Calculated</td></tr>
+          <tr><td class="td-metric">Key Events per User</td><td><span class="badge badge-derived">Derived</span></td><td>Average key events triggered per user.</td><td><code class="td-code">keyEventsPerUser</code></td><td><code class="td-code">keyEvents / activeUsers</code></td><td class="td-source">Calculated</td></tr>
+          <tr><td class="td-metric">Page Views per Session</td><td><span class="badge badge-derived">Derived</span></td><td>Average page views per session.</td><td><code class="td-code">pageViewsPerSession</code></td><td><code class="td-code">screenPageViews / sessions</code></td><td class="td-source">Calculated</td></tr>
+          <tr><td class="td-metric">New User Conversion Rate</td><td><span class="badge badge-derived">Derived</span></td><td>Percentage of new users who triggered a key event.</td><td><code class="td-code">newUserConversionRate</code></td><td><code class="td-code">convertedNewUsers / newUsers</code></td><td class="td-source">Calculated</td></tr>
+          <tr><td class="td-metric">Engaged Session Conv. Rate</td><td><span class="badge badge-derived">Derived</span></td><td>Percentage of engaged sessions with at least one conversion.</td><td><code class="td-code">engagedSessionConversionRate</code></td><td><code class="td-code">convertedEngagedSessions / engagedSessions</code></td><td class="td-source">Calculated</td></tr>
+          <tr><td class="td-metric">Item List CTR</td><td><span class="badge badge-revenue">Ecommerce</span></td><td>Click-through rate from item list views to item detail views.</td><td><code class="td-code">itemListClickThroughRate</code></td><td><code class="td-code">itemListClicks / itemListViews</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Item List Click Events</td><td><span class="badge badge-revenue">Ecommerce</span></td><td>Number of clicks on items in a product list.</td><td><code class="td-code">itemListClickEvents</code></td><td><code class="td-code">select_item events</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Item List View Events</td><td><span class="badge badge-revenue">Ecommerce</span></td><td>Number of times an item list was viewed.</td><td><code class="td-code">itemListViewEvents</code></td><td><code class="td-code">view_item_list events</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Add to Cart Events</td><td><span class="badge badge-revenue">Ecommerce</span></td><td>Total number of add_to_cart events.</td><td><code class="td-code">addToCarts</code></td><td><code class="td-code">Count of add_to_cart events</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">Checkout Events</td><td><span class="badge badge-revenue">Ecommerce</span></td><td>Total number of begin_checkout events.</td><td><code class="td-code">checkouts</code></td><td><code class="td-code">Count of begin_checkout events</code></td><td class="td-source">Ecommerce</td></tr>          <tr><td class="td-metric">Transactions</td><td><span class="badge badge-revenue">Revenue</span></td><td>Total number of completed transactions (equivalent to purchase event count).</td><td><code class="td-code">transactions</code></td><td><code class="td-code">Count of purchase events</code></td><td class="td-source">Ecommerce</td></tr>
+          <tr><td class="td-metric">User Conversion Rate</td><td><span class="badge badge-conversion">Conversion</span></td><td>Percentage of users who triggered at least one key event during the period.</td><td><code class="td-code">userConversionRate</code></td><td><code class="td-code">convertedUsers / activeUsers</code></td><td class="td-source">Derived</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="content-section" id="search-results">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(59,130,246,.1);">🔍</div>
+      <div class="section-header-text">
+        <h3>Search Results</h3>
+        <p id="search-results-count">Showing results…</p>
+      </div>
+    </div>
+    <div id="search-results-body" class="kpi-table-wrap">
+      <table>
+        <thead><tr><th>KPI</th><th>Section</th><th>Definition</th></tr></thead>
+        <tbody id="search-tbody"></tbody>
+      </table>
+    </div>
+    <div id="no-results" class="no-results" style="display:none;">No KPIs matched your search. Try a different term.</div>
+  </section>
+
+</main>
+
+<script>
+  // ── Theme toggle ──
+  function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    try { localStorage.setItem('kpi-dict-theme', next); } catch(e) {}
+  }
+  // Restore saved preference
+  (function() {
+    try {
+      const saved = localStorage.getItem('kpi-dict-theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    } catch(e) {}
+  })();
+</script>
+
+<script>
+  // All KPI data for search
+  const allKPIs = [
+    // KPI Dictionary
+    {name:"Arrivals", section:"Full KPI Dictionary", def:"Completed stays (checked-out reservations).", target:"kpidict"},
+    {name:"Digital Arrivals", section:"Full KPI Dictionary", def:"Arrivals originating from Web or App channels.", target:"kpidict"},
+    {name:"Arrivals per Owner (APO)", section:"Full KPI Dictionary", def:"Average arrivals per unique owner.", target:"kpidict"},
+    {name:"Bookings per Owner (BPO)", section:"Full KPI Dictionary", def:"Average bookings per unique owner.", target:"kpidict"},
+    {name:"Search-to-Book Rate", section:"Full KPI Dictionary", def:"Percent of search sessions resulting in a booking.", target:"kpidict"},
+    {name:"Search-to-Arrival Rate", section:"Full KPI Dictionary", def:"Percent of search sessions leading to an arrival.", target:"kpidict"},
+    {name:"Search Lift", section:"Full KPI Dictionary", def:"Conversion improvement of feature users vs baseline/control.", target:"kpidict"},
+    {name:"Incremental Arrivals", section:"Arrivals & Owners", def:"Additional arrivals attributable to a feature beyond baseline.", target:"arrivals"},
+    {name:"Cannibalization Rate", section:"Feature Impact", def:"Share of feature-driven bookings shifting from other channels.", target:"feature"},
+    {name:"Feature ROI", section:"Feature Impact", def:"Financial return from incremental revenue vs cost.", target:"feature"},
+    {name:"Error Rate", section:"System Health", def:"Percentage of sessions impacted by system or API errors.", target:"system"},
+    {name:"Page Load Time", section:"System Health", def:"Average page or screen load performance.", target:"system"},
+    {name:"Crash Rate", section:"System Health", def:"Percentage of app sessions ending in a crash.", target:"system"},
+    // Arrivals & Owners
+    {name:"Total Arrivals", section:"Arrivals & Owners", def:"Total completed stays (checked-out reservations) across all channels.", target:"arrivals"},
+    {name:"Digital Arrivals", section:"Arrivals & Owners", def:"Arrivals originating from digital channels (Web + App).", target:"arrivals"},
+    {name:"Unique Owners (Active)", section:"Arrivals & Owners", def:"Number of distinct owners who booked or arrived within the period.", target:"arrivals"},
+    {name:"Arrival Rate per Owner", section:"Arrivals & Owners", def:"Percent of owners with at least one arrival in the period.", target:"arrivals"},
+    {name:"Lift in Owner Arrival Rate", section:"Arrivals & Owners", def:"Difference in arrival rate between feature users and control owners.", target:"arrivals"},
+    {name:"Feature Adoption", section:"Arrivals & Owners", def:"Number of unique owners who used the feature.", target:"arrivals"},
+    {name:"Feature Penetration Rate", section:"Arrivals & Owners", def:"Share of digital owners adopting the feature.", target:"arrivals"},
+    {name:"YTD Incremental Arrivals Projection", section:"Arrivals & Owners", def:"Full-year forecast of incremental arrivals.", target:"arrivals"},
+    // Bookings & Funnel
+    {name:"Total Bookings", section:"Bookings & Funnel", def:"Total reservations created during the period across all channels.", target:"bookings"},
+    {name:"Digital Bookings", section:"Bookings & Funnel", def:"Bookings originating from digital channels (Web + App).", target:"bookings"},
+    {name:"Booking Conversion Rate (Search-to-Book)", section:"Bookings & Funnel", def:"Percent of search sessions resulting in a completed booking.", target:"bookings"},
+    {name:"Booking-to-Arrival Conversion Rate", section:"Bookings & Funnel", def:"Percent of bookings that convert into completed arrivals.", target:"bookings"},
+    {name:"Session-to-Book Conversion Rate", section:"Bookings & Funnel", def:"Percent of total site/app sessions resulting in a booking.", target:"bookings"},
+    {name:"Funnel Drop-Off Rate", section:"Bookings & Funnel", def:"Percent of users who exit between funnel steps.", target:"bookings"},
+    {name:"Search-to-Booking Ratio", section:"Bookings & Funnel", def:"Number of searches required to generate one booking.", target:"bookings"},
+    {name:"Booking Lift", section:"Bookings & Funnel", def:"Difference in booking rates between treated and control.", target:"bookings"},
+    {name:"Incremental Bookings", section:"Bookings & Funnel", def:"Additional bookings attributable to a feature beyond baseline.", target:"bookings"},
+    // Feature Impact
+    {name:"Feature Users (Treated Group)", section:"Feature Impact", def:"Owners who used the specific feature during the period.", target:"feature"},
+    {name:"Control Users", section:"Feature Impact", def:"Comparable owners who did not use the feature.", target:"feature"},
+    {name:"Feature Adoption Rate", section:"Feature Impact", def:"Share of digital users adopting the feature.", target:"feature"},
+    {name:"Arrival Rate (Treated)", section:"Feature Impact", def:"Percent of feature users who had an arrival.", target:"feature"},
+    {name:"Arrival Rate (Control)", section:"Feature Impact", def:"Percent of control users who had an arrival.", target:"feature"},
+    {name:"Arrival Lift", section:"Feature Impact", def:"Difference in arrival rates between treated and control.", target:"feature"},
+    {name:"Booking Lift", section:"Feature Impact", def:"Difference in booking rates between treated and control.", target:"feature"},
+    {name:"Net Incremental Impact", section:"Feature Impact", def:"Incremental impact after accounting for cannibalization.", target:"feature"},
+    {name:"ROI per Feature", section:"Feature Impact", def:"Estimated financial return per feature release.", target:"feature"},
+    // System Health
+    {name:"Login Success Rate", section:"System Health", def:"Percent of login attempts completed successfully.", target:"system"},
+    {name:"Search Success Rate", section:"System Health", def:"Percent of searches returning valid results without errors.", target:"system"},
+    {name:"Booking Completion Rate", section:"System Health", def:"Percent of initiated bookings that complete successfully.", target:"system"},
+    {name:"Checkout Failure Rate", section:"System Health", def:"Percent of checkout attempts failing due to errors.", target:"system"},
+    {name:"Availability Error Rate", section:"System Health", def:"Percent of availability requests returning no inventory or errors.", target:"system"},
+    // App KPIs
+    {name:"Unique Users", section:"CW & WM App KPIs", def:"Count of distinct devices that have opened the Mobile App.", target:"appkpis"},
+    {name:"New Users", section:"CW & WM App KPIs", def:"Count of unique devices that opened the app for the first time.", target:"appkpis"},
+    {name:"Return Users", section:"CW & WM App KPIs", def:"Devices that opened the app two or more times (excludes first opens).", target:"appkpis"},
+    {name:"Sessions", section:"CW & WM App KPIs", def:"Total traffic, regardless of user intent.", target:"appkpis"},
+    {name:"Engaged Sessions", section:"CW & WM App KPIs", def:"Sessions driven by high-intent users (≥10s, conversion, or ≥2 screenviews).", target:"appkpis"},
+    {name:"App Logins", section:"CW & WM App KPIs", def:"Count of app opens with successful member credential authentication.", target:"appkpis"},
+    {name:"Sessions with Search", section:"CW & WM App KPIs", def:"Count of sessions in which the user reaches the resort search function.", target:"appkpis"},
+    {name:"Resort Searches", section:"CW & WM App KPIs", def:"Total count of resort availability search events.", target:"appkpis"},
+    {name:"List Search Views", section:"CW & WM App KPIs", def:"Count of how many times the user views resort search results.", target:"appkpis"},
+    {name:"Search Refinement", section:"CW & WM App KPIs", def:"Count of filter uses within Resort Search.", target:"appkpis"},
+    {name:"Searches per Active User", section:"CW & WM App KPIs", def:"Average resort searches per active user (normalized weekly).", target:"appkpis"},
+    {name:"Reservations (App)", section:"CW & WM App KPIs", def:"Count of gross reservations booked within the Mobile App.", target:"appkpis"},
+    {name:"Begin Checkout", section:"CW & WM App KPIs", def:"Count of how many times the first checkout step has been initiated.", target:"appkpis"},
+    // Dashboard KPIs
+    {name:"Resv Confirmed / Bookings", section:"Dashboard KPIs", def:"Count of GA4 purchase events representing successful reservations.", target:"dashboard"},
+    {name:"Gross Bookings (App)", section:"Dashboard KPIs", def:"GA4 purchase events scoped to the App data stream.", target:"dashboard"},
+    {name:"Gross Web Desktop", section:"Dashboard KPIs", def:"GA4 purchase events on web where device_category = desktop.", target:"dashboard"},
+    {name:"Gross Web Mobile", section:"Dashboard KPIs", def:"GA4 purchase events on web where device_category = mobile.", target:"dashboard"},
+    {name:"Checkout Started", section:"Dashboard KPIs", def:"Count of GA4 begin_checkout events.", target:"dashboard"},
+    {name:"Checkout Funnel Conversion Rate", section:"Dashboard KPIs", def:"purchase events ÷ begin_checkout events.", target:"dashboard"},
+    {name:"In App CR", section:"Dashboard KPIs", def:"App conversion rate: purchase ÷ sessions or engagedSessions.", target:"dashboard"},
+    {name:"Web CR", section:"Dashboard KPIs", def:"Same as In App CR, scoped to web streams.", target:"dashboard"},
+    {name:"Avg. Session Duration", section:"Dashboard KPIs", def:"Average engagement time per session.", target:"dashboard"},
+    {name:"Registrations", section:"Dashboard KPIs", def:"Count of GA4 sign_up or create_account events.", target:"dashboard"},
+    {name:"Searches Per Booking", section:"Dashboard KPIs", def:"Resort Searches ÷ Bookings.", target:"dashboard"},
+    {name:"Revenue / AOV", section:"Dashboard KPIs", def:"Average order value = sum(purchase value) ÷ purchase events.", target:"dashboard"},
+    {name:"VAS Revenue", section:"Dashboard KPIs", def:"Sum of purchase item revenue where item_category = 'VAS'.", target:"dashboard"},
+    {name:"App Store Impressions", section:"Dashboard KPIs", def:"Total times the app listing was viewed in the App Store or Google Play.", target:"dashboard"},
+    {name:"Avg App Store Rating", section:"Dashboard KPIs", def:"Average star rating across all app store reviews.", target:"dashboard"},
+    {name:"Download Conversion Rate", section:"Dashboard KPIs", def:"Percent of app store impressions resulting in a download.", target:"dashboard"},
+    // GA4 Metrics Reference
+    {name:"Active Users", section:"GA4 Metrics Reference", def:"Users who had an engaged session or triggered first_visit / first_open.", target:"ga4ref"},
+    {name:"Total Users", section:"GA4 Metrics Reference", def:"Total unique users who logged any event.", target:"ga4ref"},
+    {name:"New Users", section:"GA4 Metrics Reference", def:"Users who interacted with the site/app for the first time.", target:"ga4ref"},
+    {name:"Returning Users", section:"GA4 Metrics Reference", def:"Users who have had at least one previous session.", target:"ga4ref"},
+    {name:"Total Buyers", section:"GA4 Metrics Reference", def:"Users who completed a purchase event.", target:"ga4ref"},
+    {name:"New Buyers", section:"GA4 Metrics Reference", def:"Users who completed their first purchase event.", target:"ga4ref"},
+    {name:"DAU / MAU", section:"GA4 Metrics Reference", def:"Rolling ratio of daily active users to monthly active users.", target:"ga4ref"},
+    {name:"DAU / WAU", section:"GA4 Metrics Reference", def:"Rolling ratio of daily active users to weekly active users.", target:"ga4ref"},
+    {name:"WAU / MAU", section:"GA4 Metrics Reference", def:"Rolling ratio of weekly active users to monthly active users.", target:"ga4ref"},
+    {name:"Crash-Affected Users", section:"GA4 Metrics Reference", def:"Number of users who experienced an app crash.", target:"ga4ref"},
+    {name:"Crash-Free Users Rate", section:"GA4 Metrics Reference", def:"Percentage of users who did not experience an app crash.", target:"ga4ref"},
+    {name:"Sessions", section:"GA4 Metrics Reference", def:"Total number of sessions that began on the site or app.", target:"ga4ref"},
+    {name:"Engaged Sessions", section:"GA4 Metrics Reference", def:"Sessions lasting >10s, or with key event, or 2+ page views.", target:"ga4ref"},
+    {name:"Sessions per User", section:"GA4 Metrics Reference", def:"Average number of sessions per user.", target:"ga4ref"},
+    {name:"Engaged Sessions per User", section:"GA4 Metrics Reference", def:"Average engaged sessions per user.", target:"ga4ref"},
+    {name:"Engagement Rate", section:"GA4 Metrics Reference", def:"Percentage of sessions that were engaged sessions.", target:"ga4ref"},
+    {name:"Bounce Rate", section:"GA4 Metrics Reference", def:"Percentage of sessions that were not engaged.", target:"ga4ref"},
+    {name:"Avg. Session Duration", section:"GA4 Metrics Reference", def:"Average duration of sessions in seconds.", target:"ga4ref"},
+    {name:"User Engagement Duration", section:"GA4 Metrics Reference", def:"Total active engagement time across all sessions.", target:"ga4ref"},
+    {name:"Views (Page/Screen)", section:"GA4 Metrics Reference", def:"Number of app screens or web pages viewed.", target:"ga4ref"},
+    {name:"Views per Session", section:"GA4 Metrics Reference", def:"Average page/screen views per session.", target:"ga4ref"},
+    {name:"Views per User", section:"GA4 Metrics Reference", def:"Average page/screen views per user.", target:"ga4ref"},
+    {name:"Scrolled Users", section:"GA4 Metrics Reference", def:"Number of users who scrolled 90%+ of any page.", target:"ga4ref"},
+    {name:"Event Count", section:"GA4 Metrics Reference", def:"Total count of all events triggered.", target:"ga4ref"},
+    {name:"Events per User", section:"GA4 Metrics Reference", def:"Average events triggered per user.", target:"ga4ref"},
+    {name:"Event Value", section:"GA4 Metrics Reference", def:"Sum of the value parameter sent with events.", target:"ga4ref"},
+    {name:"Events per Session", section:"GA4 Metrics Reference", def:"Average events triggered per session.", target:"ga4ref"},
+    {name:"First-Time Purchaser Rate", section:"GA4 Metrics Reference", def:"Percentage of active users who made first purchase.", target:"ga4ref"},
+    {name:"Key Events", section:"GA4 Metrics Reference", def:"Count of events marked as key events (conversions).", target:"ga4ref"},
+    {name:"Session Key Event Rate", section:"GA4 Metrics Reference", def:"Percentage of sessions with a key event.", target:"ga4ref"},
+    {name:"User Key Event Rate", section:"GA4 Metrics Reference", def:"Percentage of users who triggered a key event.", target:"ga4ref"},
+    {name:"Total Revenue", section:"GA4 Metrics Reference", def:"Sum of purchase, subscription, and ad revenue.", target:"ga4ref"},
+    {name:"Purchase Revenue", section:"GA4 Metrics Reference", def:"Revenue from purchase events.", target:"ga4ref"},
+    {name:"Ecommerce Purchases", section:"GA4 Metrics Reference", def:"Number of completed purchase events.", target:"ga4ref"},
+    {name:"Purchase-to-View Rate", section:"GA4 Metrics Reference", def:"Ratio of item purchases to item views.", target:"ga4ref"},
+    {name:"Purchases per User", section:"GA4 Metrics Reference", def:"Average purchases per user.", target:"ga4ref"},
+    {name:"Avg. Purchase Revenue", section:"GA4 Metrics Reference", def:"Average revenue per purchase event.", target:"ga4ref"},
+    {name:"ARPU (Revenue per User)", section:"GA4 Metrics Reference", def:"Average revenue per active user.", target:"ga4ref"},
+    {name:"ARPPU", section:"GA4 Metrics Reference", def:"Average revenue per paying user.", target:"ga4ref"},
+    {name:"Total Ad Revenue", section:"GA4 Metrics Reference", def:"Total ad revenue from AdMob or other sources.", target:"ga4ref"},
+    {name:"Publisher Ad Revenue", section:"GA4 Metrics Reference", def:"Revenue earned from publisher ads.", target:"ga4ref"},
+    {name:"Item Revenue", section:"GA4 Metrics Reference", def:"Total revenue from individual items sold.", target:"ga4ref"},
+    {name:"Item Quantity", section:"GA4 Metrics Reference", def:"Total number of items sold.", target:"ga4ref"},
+    {name:"Items Viewed", section:"GA4 Metrics Reference", def:"Number of items viewed (view_item events).", target:"ga4ref"},
+    {name:"Items Added to Cart", section:"GA4 Metrics Reference", def:"Number of items added to cart.", target:"ga4ref"},
+    {name:"Items Checked Out", section:"GA4 Metrics Reference", def:"Number of items in begin_checkout events.", target:"ga4ref"},
+    {name:"Items Purchased", section:"GA4 Metrics Reference", def:"Number of items in purchase events.", target:"ga4ref"},
+    {name:"Cart-to-View Rate", section:"GA4 Metrics Reference", def:"Ratio of items added to cart vs items viewed.", target:"ga4ref"},
+    {name:"Item Promo CTR", section:"GA4 Metrics Reference", def:"Click-through rate on item promotions.", target:"ga4ref"},
+    {name:"Refund Amount", section:"GA4 Metrics Reference", def:"Total refund amount.", target:"ga4ref"},
+    {name:"Shipping Amount", section:"GA4 Metrics Reference", def:"Total shipping charges.", target:"ga4ref"},
+    {name:"Tax Amount", section:"GA4 Metrics Reference", def:"Total tax amount.", target:"ga4ref"},
+    {name:"Transactions per Purchaser", section:"GA4 Metrics Reference", def:"Average transactions per buyer.", target:"ga4ref"},
+    {name:"Publisher Ad Clicks", section:"GA4 Metrics Reference", def:"Number of ad click events.", target:"ga4ref"},
+    {name:"Publisher Ad Impressions", section:"GA4 Metrics Reference", def:"Number of ad impression events.", target:"ga4ref"},
+    {name:"Return on Ad Spend (ROAS)", section:"GA4 Metrics Reference", def:"Revenue earned per dollar of ad spend.", target:"ga4ref"},
+    {name:"Advertiser Ad Clicks", section:"GA4 Metrics Reference", def:"Total clicks on ads from Google Ads.", target:"ga4ref"},
+    {name:"Advertiser Ad Cost", section:"GA4 Metrics Reference", def:"Total cost of Google Ads campaigns.", target:"ga4ref"},
+    {name:"Advertiser CPC", section:"GA4 Metrics Reference", def:"Average cost per click for Google Ads.", target:"ga4ref"},
+    {name:"Cost per Key Event", section:"GA4 Metrics Reference", def:"Average ad cost per key event.", target:"ga4ref"},
+    {name:"Advertiser Ad Impressions", section:"GA4 Metrics Reference", def:"Total impressions from Google Ads.", target:"ga4ref"},
+    {name:"Purchase Probability", section:"GA4 Metrics Reference", def:"Likelihood a user will purchase in the next 7 days.", target:"ga4ref"},
+    {name:"Churn Probability", section:"GA4 Metrics Reference", def:"Likelihood an active user will not return in 7 days.", target:"ga4ref"},
+    {name:"Predicted Revenue", section:"GA4 Metrics Reference", def:"Expected revenue from a user in the next 28 days.", target:"ga4ref"},
+    {name:"Entrances", section:"GA4 Metrics Reference", def:"Number of times first event in a session was on a page.", target:"ga4ref"},
+    {name:"Exits", section:"GA4 Metrics Reference", def:"Number of times last event in a session was on a page.", target:"ga4ref"},
+    {name:"Exit Rate", section:"GA4 Metrics Reference", def:"Percentage of sessions that ended on a specific page.", target:"ga4ref"},
+    {name:"Avg. Position (Organic)", section:"GA4 Metrics Reference", def:"Average ranking position in Google search results.", target:"ga4ref"},
+    {name:"Organic Search Clicks", section:"GA4 Metrics Reference", def:"Clicks from Google organic search results.", target:"ga4ref"},
+    {name:"Organic CTR", section:"GA4 Metrics Reference", def:"Click-through rate from Google organic results.", target:"ga4ref"},
+    {name:"Organic Search Impressions", section:"GA4 Metrics Reference", def:"Impressions in Google organic search results.", target:"ga4ref"},
+    {name:"Cohort Active Users", section:"GA4 Metrics Reference", def:"Active users in a specific cohort period.", target:"ga4ref"},
+    {name:"Cohort Total Users", section:"GA4 Metrics Reference", def:"Total users in a specific cohort.", target:"ga4ref"},
+    {name:"Cohort Retention Rate", section:"GA4 Metrics Reference", def:"Percentage of cohort users who return.", target:"ga4ref"},
+    {name:"Sessions with Search", section:"GA4 Metrics Reference", def:"Sessions containing at least one search event.", target:"ga4ref"},
+    {name:"Organic Sessions", section:"GA4 Metrics Reference", def:"Sessions attributed to organic search traffic.", target:"ga4ref"},
+    {name:"Session Conversion Rate", section:"GA4 Metrics Reference", def:"Percentage of sessions with at least one conversion.", target:"ga4ref"},
+    {name:"First-Time Purchasers", section:"GA4 Metrics Reference", def:"Count of users making their first purchase.", target:"ga4ref"},
+    {name:"First Open Retention (N-day)", section:"GA4 Metrics Reference", def:"Percentage of users returning N days after first open.", target:"ga4ref"},
+    {name:"Crash Count", section:"GA4 Metrics Reference", def:"Total number of app crash events.", target:"ga4ref"},
+    {name:"ANR (App Not Responding)", section:"GA4 Metrics Reference", def:"Number of ANR events on Android.", target:"ga4ref"},
+    {name:"User Lifetime Value", section:"GA4 Metrics Reference", def:"Total revenue attributed to a user across their lifetime.", target:"ga4ref"},
+    {name:"User Lifetime Engagement", section:"GA4 Metrics Reference", def:"Total engagement duration across a user's lifetime.", target:"ga4ref"},
+    {name:"User Lifetime Sessions", section:"GA4 Metrics Reference", def:"Total sessions across a user's lifetime.", target:"ga4ref"},
+    {name:"Sessions per User per Day", section:"GA4 Metrics Reference", def:"Average daily sessions per user.", target:"ga4ref"},
+    {name:"Revenue per Session", section:"GA4 Metrics Reference", def:"Average revenue generated per session.", target:"ga4ref"},
+    {name:"Key Events per Session", section:"GA4 Metrics Reference", def:"Average key events triggered per session.", target:"ga4ref"},
+    {name:"Key Events per User", section:"GA4 Metrics Reference", def:"Average key events triggered per user.", target:"ga4ref"},
+    {name:"Page Views per Session", section:"GA4 Metrics Reference", def:"Average page views per session.", target:"ga4ref"},
+    {name:"New User Conversion Rate", section:"GA4 Metrics Reference", def:"Percentage of new users who triggered a key event.", target:"ga4ref"},
+    {name:"Engaged Session Conv. Rate", section:"GA4 Metrics Reference", def:"Percentage of engaged sessions with a conversion.", target:"ga4ref"},
+    {name:"Item List CTR", section:"GA4 Metrics Reference", def:"Click-through rate from item list views to detail views.", target:"ga4ref"},
+    {name:"Item List Click Events", section:"GA4 Metrics Reference", def:"Number of clicks on items in a product list.", target:"ga4ref"},
+    {name:"Item List View Events", section:"GA4 Metrics Reference", def:"Number of times an item list was viewed.", target:"ga4ref"},
+    {name:"Add to Cart Events", section:"GA4 Metrics Reference", def:"Total number of add_to_cart events.", target:"ga4ref"},
+    {name:"Checkout Events", section:"GA4 Metrics Reference", def:"Total number of begin_checkout events.", target:"ga4ref"},
+    {name:"Active User Engagement", section:"GA4 Metrics Reference", def:"Active engagement time for active users.", target:"ga4ref"},
+    {name:"Transactions", section:"GA4 Metrics Reference", def:"Total number of completed transactions.", target:"ga4ref"},
+    {name:"User Conversion Rate", section:"GA4 Metrics Reference", def:"Percentage of users who triggered a key event.", target:"ga4ref"},
+    {name:"Views per Session", section:"GA4 Metrics Reference", def:"Average number of pages/screens viewed per session.", target:"ga4ref"},
+
+    // Exec Scorecard
+    {name:"Total Arrivals", section:"Executive Scorecard", def:"Completed stays across all booking channels.", target:"exec"},
+    {name:"Digital Arrivals Share", section:"Executive Scorecard", def:"Percent of arrivals originating from Web/App.", target:"exec"},
+    {name:"Lift vs Control", section:"Executive Scorecard", def:"Incremental improvement in a KPI driven by a specific feature.", target:"exec"},
+    {name:"Incremental Arrivals (YTD)", section:"Executive Scorecard", def:"Estimated additional arrivals attributable to feature releases year-to-date.", target:"exec"},
+    {name:"Search-to-Arrival Ratio", section:"Executive Scorecard", def:"Number of search sessions required to produce one arrival.", target:"exec"},
+  ];
+
+  // ── KPI Dictionary category filter ──
+  function filterKpiDict(cat, btn) {
+    // Update active pill
+    document.querySelectorAll('#kpiDictFilter .filter-pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    // Filter rows
+    const rows = document.querySelectorAll('#kpiDictTable tbody tr');
+    rows.forEach(row => {
+      if (cat === 'all') { row.style.display = ''; return; }
+      const badge = row.querySelector('.badge');
+      const rowCat = badge ? badge.textContent.trim() : '';
+      row.style.display = rowCat === cat ? '' : 'none';
+    });
+  }
+
+  function showSection(id, el) {
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+    if (el) el.classList.add('active');
+    document.getElementById('searchInput').value = '';
+    window.scrollTo ? document.getElementById('main').scrollTop = 0 : null;
+    return false;
+  }
+
+  function highlight(text, query) {
+    if (!query) return text;
+    const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return text.replace(re, '<mark>$1</mark>');
+  }
+
+  function handleSearch(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) {
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      document.querySelector('nav a[onclick*="overview"]').classList.add('active');
+      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('overview').classList.add('active');
+      return;
+    }
+    const matches = allKPIs.filter(k =>
+      k.name.toLowerCase().includes(q) || k.def.toLowerCase().includes(q) || k.section.toLowerCase().includes(q)
+    );
+    const tbody = document.getElementById('search-tbody');
+    const noRes = document.getElementById('no-results');
+    const wrap = document.getElementById('search-results-body');
+    document.getElementById('search-results-count').textContent =
+      matches.length ? `${matches.length} result${matches.length !== 1 ? 's' : ''} for "${query}"` : '';
+    tbody.innerHTML = matches.map(k => `
+      <tr>
+        <td class="td-metric">${highlight(k.name, query)}</td>
+        <td><small style="color:var(--muted)">${highlight(k.section, query)}</small></td>
+        <td>${highlight(k.def, query)}</td>
+      </tr>
+    `).join('');
+    wrap.style.display = matches.length ? '' : 'none';
+    noRes.style.display = matches.length ? 'none' : 'block';
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('search-results').classList.add('active');
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  }
+</script>
+</body>
+</html>
