@@ -442,6 +442,16 @@
       <div class="card-grid" id="grid-sales"></div>
     </div>
 
+    <!-- ════ BUCKET: REFERENCE ════ -->
+    <div class="bucket">
+      <div class="section-header">
+        <h2>Reference</h2>
+        <div class="section-line"></div>
+        <span class="badge-count">1 document</span>
+      </div>
+      <div class="card-grid" id="grid-reference"></div>
+    </div>
+
   </main>
 
   <footer class="site-footer">
@@ -495,6 +505,14 @@
         icon:   "🏪",
         bucket: "cx",
         kpi:    "329 YTD bookings"
+      },
+      {
+        folder: "reference/kpi-dictionary",
+        title:  "KPI Data Dictionary",
+        desc:   "Definitions, formulas, owners, and data lineage for every KPI across all POD dashboards",
+        icon:   "📖",
+        bucket: "reference",
+        kpi:    "Single source of truth"
       }
     ];
 
@@ -510,7 +528,7 @@
     let currentIndex = -1;
 
     // ── Build bucketed card grids ──
-    const gridMap = { sales: "grid-sales", cx: "grid-cx", portfolio: "grid-portfolio" };
+    const gridMap = { sales: "grid-sales", cx: "grid-cx", portfolio: "grid-portfolio", reference: "grid-reference" };
 
     DASHBOARDS.forEach(function(d, i) {
       var grid = document.getElementById(gridMap[d.bucket]);

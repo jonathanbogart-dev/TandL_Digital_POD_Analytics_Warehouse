@@ -4,6 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Digital POD · KPI Data Dictionary</title>
+<!-- T&L Design System — must precede page <style> so variables are available -->
+<script src="../../js/theme.js"></script>
+<link rel="stylesheet" href="../../css/design-system.css" />
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
   /* ── DARK THEME (default) ── */
@@ -1358,9 +1361,11 @@
     html.setAttribute('data-theme', next);
     try { localStorage.setItem('kpi-dict-theme', next); } catch(e) {}
   }
-  // Restore saved preference
+  // Restore saved preference — hub-wide tl_theme takes priority over per-page key
   (function() {
     try {
+      const hubPrefs = JSON.parse(localStorage.getItem('tl_theme') || '{}');
+      if (hubPrefs.theme) return; // already applied by theme.js in <head>
       const saved = localStorage.getItem('kpi-dict-theme');
       if (saved === 'light' || saved === 'dark') {
         document.documentElement.setAttribute('data-theme', saved);
