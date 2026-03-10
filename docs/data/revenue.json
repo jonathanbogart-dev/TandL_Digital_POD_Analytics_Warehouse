@@ -1,5 +1,20 @@
 [
-  { "source": "Etsy",    "revenue_usd": 28540 },
-  { "source": "Shopify", "revenue_usd": 19870 },
-  { "source": "Other",   "revenue_usd": 5910 }
+  { "source": "Etsy",    "period": "2025-10-01", "revenue_usd": 4210 },
+  { "source": "Shopify", "period": "2025-10-01", "revenue_usd": 3050 },
+  { "source": "Other",   "period": "2025-10-01", "revenue_usd":  890 },
+  { "source": "Etsy",    "period": "2025-11-01", "revenue_usd": 4820 },
+  { "source": "Shopify", "period": "2025-11-01", "revenue_usd": 3410 },
+  { "source": "Other",   "period": "2025-11-01", "revenue_usd": 1020 },
+  { "source": "Etsy",    "period": "2025-12-01", "revenue_usd": 5630 },
+  { "source": "Shopify", "period": "2025-12-01", "revenue_usd": 4180 },
+  { "source": "Other",   "period": "2025-12-01", "revenue_usd": 1240 },
+  { "source": "Etsy",    "period": "2026-01-01", "revenue_usd": 4090 },
+  { "source": "Shopify", "period": "2026-01-01", "revenue_usd": 2980 },
+  { "source": "Other",   "period": "2026-01-01", "revenue_usd":  780 },
+  { "source": "Etsy",    "period": "2026-02-01", "revenue_usd": 4650 },
+  { "source": "Shopify", "period": "2026-02-01", "revenue_usd": 3270 },
+  { "source": "Other",   "period": "2026-02-01", "revenue_usd":  870 },
+  { "source": "Etsy",    "period": "2026-03-01", "revenue_usd": 5140 },
+  { "source": "Shopify", "period": "2026-03-01", "revenue_usd": 2980 },
+  { "source": "Other",   "period": "2026-03-01", "revenue_usd": 1110 }
 ]

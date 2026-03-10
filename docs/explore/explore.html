@@ -615,18 +615,43 @@ const CATALOG = {
   revenue: {
     label: "Revenue by Source",
     icon:  "💰",
-    desc:  "Total revenue by sales channel",
+    desc:  "Monthly revenue by sales channel",
     async load() {
       const r = await fetch("../data/revenue.json");
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.json();
     },
     dimensions: [
-      { key: "source", label: "Source", typeTag: "string" },
+      { key: "period", label: "Period",  typeTag: "date"   },
+      { key: "source", label: "Source",  typeTag: "string" },
     ],
     metrics: [
       { key: "_count",      label: "# Rows",       typeTag: "count",  defaultAgg: "count" },
       { key: "revenue_usd", label: "Revenue (USD)", typeTag: "number", defaultAgg: "sum"   },
+    ],
+  },
+
+  qualtrics: {
+    label: "Owner Sentiment",
+    icon:  "📋",
+    desc:  "Qualtrics survey · CW owner satisfaction & sentiment",
+    async load() {
+      const r = await fetch("../data/owner_sentiment.json");
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    },
+    dimensions: [
+      { key: "survey_date",    label: "Survey Date",    typeTag: "date"   },
+      { key: "brand",          label: "Brand",          typeTag: "string" },
+      { key: "channel",        label: "Channel",        typeTag: "string" },
+      { key: "sentiment",      label: "Sentiment",      typeTag: "string" },
+      { key: "purpose",        label: "Purpose",        typeTag: "string" },
+      { key: "ease_rating",    label: "Ease Rating",    typeTag: "string" },
+      { key: "achieved_goal",  label: "Achieved Goal",  typeTag: "string" },
+    ],
+    metrics: [
+      { key: "_count",             label: "# Responses",        typeTag: "count",  defaultAgg: "count" },
+      { key: "satisfaction_score", label: "Satisfaction Score",  typeTag: "number", defaultAgg: "avg"   },
     ],
   },
 
@@ -672,7 +697,7 @@ const CATALOG = {
 <script>
 const AGG_OPTS   = ["count","sum","avg","min","max","countd"];
 const AGG_LABEL  = { count:"COUNT", sum:"SUM", avg:"AVG", min:"MIN", max:"MAX", countd:"CNTD" };
-const FILTER_OPS = ["=","≠","contains","not contains",">","<","≥","≤","is blank","is not blank"];
+const FILTER_OPS = ["=","≠","contains","not contains",">","<","≥","≤","between","is blank","is not blank"];
 
 const ST = {
   dsKey:        null,
@@ -905,11 +930,18 @@ function renderConfig() {
      FILTERS
 ════════════════════════════════════════════════════════════ -->
 <script>
+function fieldMeta(key) {
+  if (!ST.dsKey) return null;
+  return [...ds().dimensions, ...ds().metrics].find(f => f.key === key) || null;
+}
+
 function addFilter() {
   if (!ST.dsKey) return;
   const fields = allFields();
   if (!fields.length) return;
-  ST.filters.push({ id: ST.nextFid++, field: fields[0].key, op: "=", value: "" });
+  const first = fields[0];
+  const defaultOp = first.typeTag === "date" ? "between" : "=";
+  ST.filters.push({ id: ST.nextFid++, field: first.key, op: defaultOp, value: "", value2: "" });
   renderFilters();
 }
 function removeFilter(id) {
@@ -936,7 +968,16 @@ function renderFilters() {
       o.selected    = fd.key === f.field;
       fSel.appendChild(o);
     });
-    fSel.addEventListener("change", e => { f.field = e.target.value; });
+    fSel.addEventListener("change", e => {
+      f.field = e.target.value;
+      // Auto-switch to between when a date field is chosen
+      const meta = fieldMeta(f.field);
+      if (meta && meta.typeTag === "date" && f.op !== "between" &&
+          f.op !== "is blank" && f.op !== "is not blank") {
+        f.op = "between"; f.value = ""; f.value2 = "";
+      }
+      renderFilters();
+    });
 
     const sep1 = document.createElement("span");
     sep1.className   = "fc-sep";
@@ -950,19 +991,35 @@ function renderFilters() {
       o.selected    = op === f.op;
       opSel.appendChild(o);
     });
+
+    // Value inputs (built after opSel so we can reference them in the change handler)
+    const noVal  = f.op === "is blank" || f.op === "is not blank";
+    const isBetween = f.op === "between";
+    const meta   = fieldMeta(f.field);
+    const isDate = meta && meta.typeTag === "date";
+
+    function makeInput(val, placeholder, onInput) {
+      const inp = document.createElement("input");
+      inp.type        = isDate && (isBetween || ["=","≠",">","<","≥","≤"].includes(f.op)) ? "date" : "text";
+      inp.placeholder = placeholder;
+      inp.value       = val;
+      inp.addEventListener("input", onInput);
+      return inp;
+    }
+
+    const valInput  = makeInput(f.value,  "from", e => { f.value  = e.target.value; });
+    const sep2      = document.createElement("span");
+    sep2.className   = "fc-sep";
+    sep2.textContent = "→";
+    const valInput2 = makeInput(f.value2 || "", "to", e => { f.value2 = e.target.value; });
+
+    if (noVal)     { valInput.style.display = "none"; sep2.style.display = "none"; valInput2.style.display = "none"; }
+    if (!isBetween){ sep2.style.display = "none"; valInput2.style.display = "none"; }
+
     opSel.addEventListener("change", e => {
       f.op = e.target.value;
-      valInput.style.display =
-        (f.op === "is blank" || f.op === "is not blank") ? "none" : "";
+      renderFilters();
     });
-
-    // Value input
-    const valInput = document.createElement("input");
-    valInput.type        = "text";
-    valInput.placeholder = "value";
-    valInput.value       = f.value;
-    if (f.op === "is blank" || f.op === "is not blank") valInput.style.display = "none";
-    valInput.addEventListener("input", e => { f.value = e.target.value; });
 
     // Remove
     const rm = document.createElement("button");
@@ -971,7 +1028,7 @@ function renderFilters() {
     rm.style.cssText = "margin-left:2px;";
     rm.addEventListener("click", () => removeFilter(f.id));
 
-    chip.append(fSel, sep1, opSel, valInput, rm);
+    chip.append(fSel, sep1, opSel, valInput, sep2, valInput2, rm);
     container.appendChild(chip);
   });
 }
@@ -996,6 +1053,16 @@ function applyFilters(records) {
         case "<":            return Number(raw) <  Number(f.value);
         case "≥":            return Number(raw) >= Number(f.value);
         case "≤":            return Number(raw) <= Number(f.value);
+        case "between": {
+          if (!f.value && !f.value2) return true;
+          const d  = String(raw ?? "");
+          const lo = f.value  || "";
+          const hi = f.value2 || "";
+          if (lo && hi) return d >= lo && d <= hi;
+          if (lo)       return d >= lo;
+          if (hi)       return d <= hi;
+          return true;
+        }
         case "is blank":     return raw === null || raw === undefined || raw === "";
         case "is not blank": return raw !== null  && raw !== undefined && raw !== "";
         default:             return true;
